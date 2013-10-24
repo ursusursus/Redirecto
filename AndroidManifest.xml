@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="sk.tuke.ursus.redirecto"
+    android:versionCode="1"
+    android:versionName="0.1" >
+
+    <uses-sdk
+        android:minSdkVersion="9"
+        android:targetSdkVersion="17" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:name="sk.tuke.ursus.redirecto.MyApplication"
+        android:allowBackup="true"
+        android:hardwareAccelerated="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.MyStyle" >
+        <activity
+            android:name="sk.tuke.ursus.redirecto.ui.LoginActivity"
+            android:theme="@style/Theme.MyStyle.Login"
+            android:windowSoftInputMode="stateHidden" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="sk.tuke.ursus.redirecto.ui.MainActivity"
+            android:label="@string/app_name" >
+        </activity>
+
+        <service android:name="sk.tuke.ursus.redirecto.net.RestService" />
+
+        <provider
+            android:name="sk.tuke.ursus.redirecto.provider.RedirectoProvider"
+            android:authorities="sk.tuke.ursus.redirecto"
+            android:exported="false" >
+        </provider>
+    </application>
+
+</manifest>

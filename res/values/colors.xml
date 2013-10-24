@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="action_item_pressed">#77FFFFFF</color>
+    <color name="item_pressed">#55ebe516</color>
+    <color name="base_blue">#088A29</color>
+
+</resources>

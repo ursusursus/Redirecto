@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" tools:ignore="NewApi">
+
+    <style name="Theme.MyStyle" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="actionBarItemBackground">@drawable/action_item_selector</item>
+        <item name="actionBarStyle">@style/SolidActionBar.MyStyle</item>
+        <item name="android:actionBarItemBackground">@drawable/action_item_selector</item>
+        <item name="android:actionBarStyle">@style/SolidActionBar.MyStyle</item>
+    </style>
+
+    <style name="Theme.MyStyle.Login" parent="@style/Theme.MyStyle">
+        <item name="android:windowBackground">@drawable/background</item>
+        <item name="android:windowDisablePreview">true</item>
+    </style>
+
+    <style name="SolidActionBar.MyStyle" parent="@style/Widget.AppCompat.Light.ActionBar.Solid">
+        <item name="background">@color/base_blue</item>
+        <item name="titleTextStyle">@style/ActionBarTitleTextStyle.MyStyle</item>
+        <item name="android:background">@color/base_blue</item>
+        <item name="android:titleTextStyle">@style/ActionBarTitleTextStyle.MyStyle</item>
+    </style>
+
+    <style name="ActionBarTitleTextStyle.MyStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textStyle">italic|bold</item>
+    </style>
+
+    <style name="BigButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">20dp</item>
+        <item name="android:textColor">#FFF</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+</resources>
