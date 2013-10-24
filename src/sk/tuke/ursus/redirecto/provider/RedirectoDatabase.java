@@ -19,6 +19,7 @@ public class RedirectoDatabase extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL("CREATE TABLE " + Rooms.TABLE + "("
 				+ Rooms.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+				+ Rooms.COLUMN_CURRENT + " INTEGER DEFAULT 0,"
 				+ Rooms.COLUMN_NAME + " TEXT NOT NULL)");
 	}
 

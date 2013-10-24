@@ -13,7 +13,7 @@ public class MainActivity extends ActionBarActivity {
 		if (savedInstanceState == null) {
 			getSupportFragmentManager()
 					.beginTransaction()
-					.replace(R.id.container, MyFragment.newInstance())
+					.replace(R.id.container, RoomsListFragment.newInstance())
 					.commit();
 		}
 

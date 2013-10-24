@@ -15,7 +15,7 @@ public class MyApplication extends Application {
 		super.onCreate();
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		mToken = prefs.getString(Utils.PREFS_TOKEN_KEY, null);
-		LOG.i("Token: " + mToken);
+		// LOG.i("Token: " + mToken);
 	}
 
 	public String getToken() {

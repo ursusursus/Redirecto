@@ -31,6 +31,14 @@
             android:name="sk.tuke.ursus.redirecto.ui.MainActivity"
             android:label="@string/app_name" >
         </activity>
+        <activity
+            android:name="sk.tuke.ursus.redirecto.ui.AboutActivity"
+            android:label="O aplikácií" >
+        </activity>
+        <activity
+            android:name="sk.tuke.ursus.redirecto.ui.MyPreferencesActivity"
+            android:label="Nastavenia" >
+        </activity>
 
         <service android:name="sk.tuke.ursus.redirecto.net.RestService" />
 

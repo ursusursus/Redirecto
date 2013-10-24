@@ -2,7 +2,7 @@
 <resources>
 
     <color name="action_item_pressed">#77FFFFFF</color>
-    <color name="item_pressed">#55ebe516</color>
+    <color name="item_pressed">#55088A29</color>
     <color name="base_blue">#088A29</color>
 
 </resources>

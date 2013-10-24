@@ -20,7 +20,20 @@ public class RedirectoProvider extends ContentProvider {
 	@Override
 	public boolean onCreate() {
 		mDbHelper = new RedirectoDatabase(getContext());
+		//
+		// insertMockData();
+		//
 		return true;
+	}
+
+	private void insertMockData() {
+		SQLiteDatabase db = mDbHelper.getWritableDatabase();
+		for (int i = 0; i < 10; i++) {
+			ContentValues values = new ContentValues();
+			values.put(RedirectoContract.Rooms.COLUMN_NAME, "A52" + i);
+			db.insert(RedirectoContract.Rooms.TABLE, null, values);
+		}
+
 	}
 
 	private static UriMatcher buildUriMatcher() {
@@ -44,8 +57,8 @@ public class RedirectoProvider extends ContentProvider {
 
 	@Override
 	public Uri insert(Uri uri, ContentValues values) {
-		/* final SQLiteDatabase db = mDbHelper.getWritableDatabase();
-		
+		final SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
 		final int match = sUriMatcher.match(uri);
 		switch (match) {
 			case ROOMS:
@@ -57,8 +70,7 @@ public class RedirectoProvider extends ContentProvider {
 				throw new UnsupportedOperationException("Unknown uri: " + uri);
 
 		}
-		return uri; */
-		return null;
+		return uri;
 	}
 
 	@Override
@@ -73,9 +85,9 @@ public class RedirectoProvider extends ContentProvider {
 
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-		/* final SQLiteDatabase db = mDbHelper.getReadableDatabase();
+		final SQLiteDatabase db = mDbHelper.getReadableDatabase();
 		Cursor cursor = null;
-		
+
 		final int match = sUriMatcher.match(uri);
 		switch (match) {
 			case ROOMS:
@@ -86,8 +98,7 @@ public class RedirectoProvider extends ContentProvider {
 				throw new UnsupportedOperationException("Unknown uri: " + uri);
 
 		}
-		return cursor; */
-		return null;
+		return cursor;
 	}
 
 }

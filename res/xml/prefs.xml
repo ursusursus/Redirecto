@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="Dude" >
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="auto_sync"
+            android:summary="Ever"
+            android:title="What" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
