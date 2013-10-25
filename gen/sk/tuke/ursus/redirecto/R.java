@@ -794,12 +794,14 @@ containing a value of this type.
         public static final int abc_split_action_bar_is_narrow=0x7f070002;
     }
     public static final class color {
-        public static final int abc_search_url_text_holo=0x7f080006;
+        public static final int abc_search_url_text_holo=0x7f080008;
         public static final int abc_search_url_text_normal=0x7f080000;
         public static final int abc_search_url_text_pressed=0x7f080002;
         public static final int abc_search_url_text_selected=0x7f080001;
+        public static final int accent_green=0x7f080006;
         public static final int action_item_pressed=0x7f080003;
-        public static final int base_blue=0x7f080005;
+        public static final int base_green=0x7f080005;
+        public static final int gray=0x7f080007;
         public static final int item_pressed=0x7f080004;
     }
     public static final class dimen {
@@ -978,7 +980,7 @@ containing a value of this type.
         public static final int text_field1=0x7f02005b;
     }
     public static final class id {
-        public static final int action_about=0x7f06004a;
+        public static final int action_about=0x7f06004d;
         public static final int action_bar=0x7f06001a;
         public static final int action_bar_activity_content=0x7f060015;
         public static final int action_bar_container=0x7f060019;
@@ -987,13 +989,14 @@ containing a value of this type.
         public static final int action_bar_subtitle=0x7f060021;
         public static final int action_bar_title=0x7f060020;
         public static final int action_context_bar=0x7f06001b;
-        public static final int action_logout=0x7f060049;
+        public static final int action_localize=0x7f06004b;
+        public static final int action_logout=0x7f06004c;
         public static final int action_menu_divider=0x7f060016;
         public static final int action_menu_presenter=0x7f060017;
         public static final int action_mode_bar=0x7f06002f;
         public static final int action_mode_bar_stub=0x7f06002e;
         public static final int action_mode_close_button=0x7f060022;
-        public static final int action_settings=0x7f06004b;
+        public static final int action_settings=0x7f06004e;
         public static final int activity_chooser_view_content=0x7f060023;
         public static final int always=0x7f06000b;
         public static final int beginning=0x7f060011;
@@ -1020,7 +1023,7 @@ containing a value of this type.
         public static final int loginButton=0x7f060045;
         public static final int logo=0x7f060042;
         public static final int middle=0x7f060012;
-        public static final int nameTextView=0x7f060048;
+        public static final int nameTextView=0x7f060049;
         public static final int never=0x7f060009;
         public static final int none=0x7f060010;
         public static final int normal=0x7f060000;
@@ -1045,6 +1048,7 @@ containing a value of this type.
         public static final int showHome=0x7f060004;
         public static final int showTitle=0x7f060006;
         public static final int split_action_bar=0x7f06001c;
+        public static final int subTitleTextView=0x7f06004a;
         public static final int submit_area=0x7f06003f;
         public static final int tabMode=0x7f060002;
         public static final int title=0x7f060029;
@@ -1053,6 +1057,7 @@ containing a value of this type.
         public static final int up=0x7f06001f;
         public static final int useLogo=0x7f060003;
         public static final int usernameEditText=0x7f060043;
+        public static final int view=0x7f060048;
         public static final int withText=0x7f06000c;
     }
     public static final class integer {

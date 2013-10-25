@@ -41,6 +41,7 @@
         </activity>
 
         <service android:name="sk.tuke.ursus.redirecto.net.RestService" />
+        <service android:name="sk.tuke.ursus.redirecto.SnifferService" />
 
         <provider
             android:name="sk.tuke.ursus.redirecto.provider.RedirectoProvider"

@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.GridView;
 
 public class RoomsListFragment extends Fragment implements LoaderCallbacks<Cursor> {
@@ -37,7 +38,6 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 	private RoomsAdapter mAdapter;
 
 	private ProgressDialogFragment mProgressDialog;
-
 
 	public static RoomsListFragment newInstance() {
 		return new RoomsListFragment();
@@ -68,17 +68,22 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+			case R.id.action_localize: {
+				localize();
+				return true;
+			}
+			
 			case R.id.action_logout: {
 				logout();
 				return true;
 			}
-			
+
 			case R.id.action_about: {
 				Intent intent = new Intent(mContext, AboutActivity.class);
 				startActivity(intent);
 				return true;
 			}
-			
+
 			case R.id.action_settings: {
 				Intent intent = new Intent(mContext, MyPreferencesActivity.class);
 				startActivity(intent);
@@ -89,7 +94,11 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 				return false;
 		}
 	}
-	
+
+	private void localize() {
+		RestService.localize(mContext, mApp.getToken(), mLocalizeCallback);
+	}
+
 	private void logout() {
 		MyApplication app = (MyApplication) getActivity().getApplication();
 		RestService.logout(mContext, app.getToken(), mLogoutCallback);
@@ -97,13 +106,14 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);	
+		super.onViewCreated(view, savedInstanceState);
 		mAdapter = new RoomsAdapter(mContext);
-		
+
 		mGridView = (GridView) view.findViewById(R.id.gridView);
 		mGridView.setOnItemClickListener(mItemClickListener);
+		mGridView.setOnItemLongClickListener(mItemLongClickListener);
 		mGridView.setAdapter(mAdapter);
-		
+
 	}
 
 	@Override
@@ -111,14 +121,14 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		super.onActivityCreated(savedInstanceState);
 		getLoaderManager().initLoader(LOADER_ID, null, this);
 	}
-	
+
 	protected void showProgressDialog() {
 		if (mProgressDialog == null) {
 			mProgressDialog = ProgressDialogFragment.newInstance("Odhlasujem sa...");
 		}
 		mProgressDialog.show(getFragmentManager(), ProgressDialogFragment.TAG);
 	}
-	
+
 	protected void dismissProgressDialog() {
 		if (mProgressDialog != null) {
 			mProgressDialog.dismiss();
@@ -140,15 +150,33 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 	public void onLoaderReset(Loader<Cursor> loaderId) {
 		mAdapter.swapCursor(null);
 	}
-	
+
 	private OnItemClickListener mItemClickListener = new OnItemClickListener() {
 
 		@Override
 		public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-			LOG.d("Position: " + position);
+			Cursor cursor = (Cursor) mAdapter.getItem(position);
+			int id = cursor.getInt(cursor.getColumnIndex(Rooms.COLUMN_ID));
+
+			LOG.d("Position: " + position + " - Id: " + id);
 		}
 	};
-	
+
+	private OnItemLongClickListener mItemLongClickListener = new OnItemLongClickListener() {
+
+		@Override
+		public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+			Cursor cursor = (Cursor) mAdapter.getItem(position);
+			int id = cursor.getInt(cursor.getColumnIndex(Rooms.COLUMN_ID));
+
+			//
+			RestService.localizeManually(mContext, id, mApp.getToken(), mSetLocationCallback);
+			//
+			return true;
+		}
+
+	};
+
 	private RestUtils.Callback mLogoutCallback = new RestUtils.Callback() {
 
 		@Override
@@ -172,13 +200,62 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 
 		@Override
 		public void onError(int code, String message) {
-			
+
 		}
 
 		@Override
 		public void onException() {
+
+		}
+
+	};
+
+	private RestUtils.Callback mSetLocationCallback = new RestUtils.Callback() {
+
+		@Override
+		public void onSuccess(Bundle data) {
+
+		}
+
+		@Override
+		public void onStarted() {
+
+		}
+
+		@Override
+		public void onException() {
+
+		}
+
+		@Override
+		public void onError(int code, String message) {
+
+		}
+	};
+	
+	private RestUtils.Callback mLocalizeCallback = new RestUtils.Callback() {
+		
+		@Override
+		public void onSuccess(Bundle data) {
 			
 		}
 		
+		@Override
+		public void onStarted() {
+			// TODO Auto-generated method stub
+			
+		}
+		
+		@Override
+		public void onException() {
+			// TODO Auto-generated method stub
+			
+		}
+		
+		@Override
+		public void onError(int code, String message) {
+			// TODO Auto-generated method stub
+			
+		}
 	};
 }

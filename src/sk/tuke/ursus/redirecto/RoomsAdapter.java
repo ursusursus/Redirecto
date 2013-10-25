@@ -23,16 +23,23 @@ public class RoomsAdapter extends CursorAdapter {
 		final ViewHolder holder = (ViewHolder) view.getTag();
 
 		holder.name.setText(cursor.getString(cursor.getColumnIndex(Rooms.COLUMN_NAME)));
-		
+		boolean isCurrentRoom = (cursor.getInt(cursor.getColumnIndex(Rooms.COLUMN_CURRENT)) == 1);
+		if (isCurrentRoom) {
+			holder.view.setBackgroundResource(R.color.accent_green);
+		} else {
+			holder.view.setBackgroundResource(R.color.gray);
+		}
+
 	}
 
 	@Override
 	public View newView(Context arg0, Cursor arg1, ViewGroup parent) {
-		View view = mInflater.inflate(R.layout.item_room, parent, false); 
+		View view = mInflater.inflate(R.layout.item_room, parent, false);
 		ViewHolder holder = new ViewHolder();
 
 		holder.name = (TextView) view.findViewById(R.id.nameTextView);
-		
+		holder.view = view.findViewById(R.id.view);
+
 		view.setTag(holder);
 		return view;
 	}
@@ -40,6 +47,7 @@ public class RoomsAdapter extends CursorAdapter {
 	private class ViewHolder {
 
 		public TextView name;
+		public View view;
 
 	}
 

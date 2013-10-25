@@ -80,7 +80,20 @@ public class RedirectoProvider extends ContentProvider {
 
 	@Override
 	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-		return -1;
+		int count;
+		final SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+		final int match = sUriMatcher.match(uri);
+		switch (match) {
+			case ROOMS:
+				count = db.update(Rooms.TABLE, values, selection, selectionArgs);
+				break;
+
+			default:
+				throw new UnsupportedOperationException("Unknown uri: " + uri);
+
+		}
+		return count;
 	}
 
 	@Override
@@ -92,6 +105,7 @@ public class RedirectoProvider extends ContentProvider {
 		switch (match) {
 			case ROOMS:
 				cursor = db.query(Rooms.TABLE, projection, selection, selectionArgs, null, null, sortOrder);
+				cursor.setNotificationUri(getContext().getContentResolver(), uri);
 				break;
 
 			default:

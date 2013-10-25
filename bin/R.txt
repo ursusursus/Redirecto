@@ -116,12 +116,14 @@ int bool abc_config_actionMenuItemAllCaps 0x7f070005
 int bool abc_config_allowActionMenuItemTextWithIcon 0x7f070004
 int bool abc_config_showMenuShortcutsWhenKeyboardPresent 0x7f070003
 int bool abc_split_action_bar_is_narrow 0x7f070002
-int color abc_search_url_text_holo 0x7f080006
+int color abc_search_url_text_holo 0x7f080008
 int color abc_search_url_text_normal 0x7f080000
 int color abc_search_url_text_pressed 0x7f080002
 int color abc_search_url_text_selected 0x7f080001
+int color accent_green 0x7f080006
 int color action_item_pressed 0x7f080003
-int color base_blue 0x7f080005
+int color base_green 0x7f080005
+int color gray 0x7f080007
 int color item_pressed 0x7f080004
 int dimen abc_action_bar_default_height 0x7f090002
 int dimen abc_action_bar_icon_vertical_padding 0x7f090003
@@ -231,7 +233,7 @@ int drawable background 0x7f020058
 int drawable ic_launcher 0x7f020059
 int drawable item_selector 0x7f02005a
 int drawable text_field1 0x7f02005b
-int id action_about 0x7f06004a
+int id action_about 0x7f06004d
 int id action_bar 0x7f06001a
 int id action_bar_activity_content 0x7f060015
 int id action_bar_container 0x7f060019
@@ -240,13 +242,14 @@ int id action_bar_root 0x7f060018
 int id action_bar_subtitle 0x7f060021
 int id action_bar_title 0x7f060020
 int id action_context_bar 0x7f06001b
-int id action_logout 0x7f060049
+int id action_localize 0x7f06004b
+int id action_logout 0x7f06004c
 int id action_menu_divider 0x7f060016
 int id action_menu_presenter 0x7f060017
 int id action_mode_bar 0x7f06002f
 int id action_mode_bar_stub 0x7f06002e
 int id action_mode_close_button 0x7f060022
-int id action_settings 0x7f06004b
+int id action_settings 0x7f06004e
 int id activity_chooser_view_content 0x7f060023
 int id always 0x7f06000b
 int id beginning 0x7f060011
@@ -273,7 +276,7 @@ int id list_item 0x7f060027
 int id loginButton 0x7f060045
 int id logo 0x7f060042
 int id middle 0x7f060012
-int id nameTextView 0x7f060048
+int id nameTextView 0x7f060049
 int id never 0x7f060009
 int id none 0x7f060010
 int id normal 0x7f060000
@@ -298,6 +301,7 @@ int id showCustom 0x7f060007
 int id showHome 0x7f060004
 int id showTitle 0x7f060006
 int id split_action_bar 0x7f06001c
+int id subTitleTextView 0x7f06004a
 int id submit_area 0x7f06003f
 int id tabMode 0x7f060002
 int id title 0x7f060029
@@ -306,6 +310,7 @@ int id top_action_bar 0x7f06001e
 int id up 0x7f06001f
 int id useLogo 0x7f060003
 int id usernameEditText 0x7f060043
+int id view 0x7f060048
 int id withText 0x7f06000c
 int integer abc_max_action_buttons 0x7f0a0000
 int layout abc_action_bar_decor 0x7f030000

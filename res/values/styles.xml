@@ -14,9 +14,9 @@
     </style>
 
     <style name="SolidActionBar.MyStyle" parent="@style/Widget.AppCompat.Light.ActionBar.Solid">
-        <item name="background">@color/base_blue</item>
+        <item name="background">@color/base_green</item>
         <item name="titleTextStyle">@style/ActionBarTitleTextStyle.MyStyle</item>
-        <item name="android:background">@color/base_blue</item>
+        <item name="android:background">@color/base_green</item>
         <item name="android:titleTextStyle">@style/ActionBarTitleTextStyle.MyStyle</item>
     </style>
 
