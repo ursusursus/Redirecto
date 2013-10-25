@@ -60,6 +60,10 @@ public class NewRoomFragment extends Fragment {
 		RestService.getAllRooms(mContext, mApp.getToken(), mAllRoomsCallback);
 	}
 
+	protected void addMyNewRoom(int id) {
+		RestService.addMyRoom(mApp, id, mApp.getToken(), mAddMyRoomCallback);
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.fragment_new_room, container, false);
@@ -73,7 +77,7 @@ public class NewRoomFragment extends Fragment {
 
 		mListView = (ListView) view.findViewById(R.id.listView);
 		mListView.setAdapter(mAdapter);
-		
+
 		mFilterEditText = (EditText) view.findViewById(R.id.filterEditText);
 		mFilterEditText.addTextChangedListener(mTextChangedListener);
 	}
@@ -83,22 +87,22 @@ public class NewRoomFragment extends Fragment {
 		super.onSaveInstanceState(outState);
 		outState.putParcelableArrayList(EXTRA_ROOMS_KEY, mRooms);
 	}
-	
+
 	private TextWatcher mTextChangedListener = new TextWatcher() {
-		
+
 		@Override
 		public void onTextChanged(CharSequence cs, int start, int before, int count) {
 			mAdapter.filter(cs.toString());
 		}
-		
+
 		@Override
 		public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-			
+
 		}
-		
+
 		@Override
 		public void afterTextChanged(Editable s) {
-			
+
 		}
 	};
 
@@ -107,6 +111,7 @@ public class NewRoomFragment extends Fragment {
 		@Override
 		public void onRoomAdded(int position, int id) {
 			LOG.d("Position: " + position + " - Id: " + id);
+			addMyNewRoom(id);
 		}
 	};
 
@@ -124,6 +129,32 @@ public class NewRoomFragment extends Fragment {
 
 				mRooms = newRooms;
 			}
+		}
+
+		@Override
+		public void onStarted() {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onException() {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onError(int code, String message) {
+			// TODO Auto-generated method stub
+
+		}
+	};
+
+	private RestUtils.Callback mAddMyRoomCallback = new RestUtils.Callback() {
+
+		@Override
+		public void onSuccess(Bundle data) {
+			
 		}
 
 		@Override

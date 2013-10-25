@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/action_delete_room"
+        android:orderInCategory="99"
+        android:title="Odstrániť miestnosť"/>
+    <item
+        android:id="@+id/action_localize_manually"
+        android:orderInCategory="100"
+        android:title="Nastaviť ako aktúalnu"/>
+
+</menu>

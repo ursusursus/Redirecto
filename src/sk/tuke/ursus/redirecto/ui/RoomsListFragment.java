@@ -3,8 +3,10 @@ package sk.tuke.ursus.redirecto.ui;
 import sk.tuke.ursus.redirecto.MyApplication;
 import sk.tuke.ursus.redirecto.R;
 import sk.tuke.ursus.redirecto.RoomsCursorAdapter;
+import sk.tuke.ursus.redirecto.RoomsCursorAdapter.RoomOverflowCallback;
 import sk.tuke.ursus.redirecto.net.RestService;
 import sk.tuke.ursus.redirecto.net.RestUtils;
+import sk.tuke.ursus.redirecto.net.processor.LocalizeMeManuallyProcessor;
 import sk.tuke.ursus.redirecto.provider.RedirectoContract.Rooms;
 import sk.tuke.ursus.redirecto.ui.dialog.ProgressDialogFragment;
 import sk.tuke.ursus.redirecto.util.LOG;
@@ -74,7 +76,7 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 				return true;
 			}
 			case R.id.action_localize: {
-				localize();
+				localizeMe();
 				return true;
 			}
 
@@ -100,12 +102,21 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		}
 	}
 
-	private void syncMyRooms() {
+	protected void fetchMyRooms() {
 		RestService.getMyRooms(mContext, mApp.getToken(), mMyRoomsCallback);
 	}
+
 	
-	private void localize() {
-		RestService.localize(mContext, mApp.getToken(), mLocalizeCallback);
+	protected void localizeMe() {
+		RestService.localizeMe(mContext, mApp.getToken(), mLocalizeMeCallback);
+	}
+
+	protected void localizeMeManually(int id) {
+		RestService.localizeMeManually(mContext, id, mApp.getToken(), mLocalizeMeManuallyCallback);
+	}
+
+	protected void removeMyRoom(int id) {
+		RestService.removeMyRoom(mContext, id, mApp.getToken(), mRemoveMyRoomCallback);
 	}
 
 	private void logout() {
@@ -116,7 +127,7 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		mAdapter = new RoomsCursorAdapter(mContext);
+		mAdapter = new RoomsCursorAdapter(mContext, mRoomOverflowCallback);
 
 		mGridView = (GridView) view.findViewById(R.id.gridView);
 		mGridView.setOnItemClickListener(mItemClickListener);
@@ -130,7 +141,6 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		super.onActivityCreated(savedInstanceState);
 		getLoaderManager().initLoader(LOADER_ID, null, this);
 	}
-	
 
 	protected void showProgressDialog() {
 		if (mProgressDialog == null) {
@@ -154,12 +164,11 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 	public void onLoadFinished(Loader<Cursor> loaderId, Cursor cursor) {
 		LOG.d("CursorCount: " + cursor.getCount());
 		mAdapter.swapCursor(cursor);
-		
-		if(cursor.getCount() == 0) {
-			syncMyRooms();
+
+		if (cursor.getCount() == 0) {
+			fetchMyRooms();
 		}
 	}
-
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> loaderId) {
@@ -177,6 +186,21 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		}
 	};
 
+	private RoomOverflowCallback mRoomOverflowCallback = new RoomOverflowCallback() {
+
+		@Override
+		public void onRoomRemoved(int id) {
+			LOG.d("onRoomRemoved: " + id);
+			removeMyRoom(id);
+		}
+
+		@Override
+		public void onLocalizedManually(int id) {
+			LOG.d("onLocalizedManually: " + id);
+			localizeMeManually(id);
+		}
+	};
+
 	private OnItemLongClickListener mItemLongClickListener = new OnItemLongClickListener() {
 
 		@Override
@@ -185,7 +209,7 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 			int id = cursor.getInt(cursor.getColumnIndex(Rooms.COLUMN_ID));
 
 			//
-			RestService.localizeManually(mContext, id, mApp.getToken(), mSetLocationCallback);
+			localizeMeManually(id);
 			//
 			return true;
 		}
@@ -225,7 +249,7 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 
 	};
 
-	private RestUtils.Callback mSetLocationCallback = new RestUtils.Callback() {
+	private RestUtils.Callback mLocalizeMeManuallyCallback = new RestUtils.Callback() {
 
 		@Override
 		public void onSuccess(Bundle data) {
@@ -248,7 +272,33 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		}
 	};
 
-	private RestUtils.Callback mLocalizeCallback = new RestUtils.Callback() {
+	private RestUtils.Callback mLocalizeMeCallback = new RestUtils.Callback() {
+
+		@Override
+		public void onSuccess(Bundle data) {
+
+		}
+
+		@Override
+		public void onStarted() {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onException() {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onError(int code, String message) {
+			// TODO Auto-generated method stub
+
+		}
+	};
+
+	private RestUtils.Callback mMyRoomsCallback = new RestUtils.Callback() {
 
 		@Override
 		public void onSuccess(Bundle data) {
@@ -274,7 +324,7 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		}
 	};
 	
-	private RestUtils.Callback mMyRoomsCallback = new RestUtils.Callback() {
+	private RestUtils.Callback mRemoveMyRoomCallback = new RestUtils.Callback() {
 
 		@Override
 		public void onSuccess(Bundle data) {

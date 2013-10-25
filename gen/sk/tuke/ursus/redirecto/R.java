@@ -978,11 +978,12 @@ containing a value of this type.
         public static final int ic_action_new=0x7f020059;
         public static final int ic_launcher=0x7f02005a;
         public static final int item_selector=0x7f02005b;
-        public static final int text_field1=0x7f02005c;
+        public static final int overfloww=0x7f02005c;
+        public static final int text_field1=0x7f02005d;
     }
     public static final class id {
-        public static final int action_about=0x7f060051;
-        public static final int action_add_room=0x7f06004e;
+        public static final int action_about=0x7f060052;
+        public static final int action_add_room=0x7f06004f;
         public static final int action_bar=0x7f06001a;
         public static final int action_bar_activity_content=0x7f060015;
         public static final int action_bar_container=0x7f060019;
@@ -991,16 +992,18 @@ containing a value of this type.
         public static final int action_bar_subtitle=0x7f060021;
         public static final int action_bar_title=0x7f060020;
         public static final int action_context_bar=0x7f06001b;
-        public static final int action_localize=0x7f06004f;
-        public static final int action_logout=0x7f060050;
+        public static final int action_delete_room=0x7f060054;
+        public static final int action_localize=0x7f060050;
+        public static final int action_localize_manually=0x7f060055;
+        public static final int action_logout=0x7f060051;
         public static final int action_menu_divider=0x7f060016;
         public static final int action_menu_presenter=0x7f060017;
         public static final int action_mode_bar=0x7f06002f;
         public static final int action_mode_bar_stub=0x7f06002e;
         public static final int action_mode_close_button=0x7f060022;
-        public static final int action_settings=0x7f060052;
+        public static final int action_settings=0x7f060053;
         public static final int activity_chooser_view_content=0x7f060023;
-        public static final int addButton=0x7f06004d;
+        public static final int addButton=0x7f06004e;
         public static final int always=0x7f06000b;
         public static final int beginning=0x7f060011;
         public static final int checkbox=0x7f06002b;
@@ -1015,7 +1018,7 @@ containing a value of this type.
         public static final int expand_activities_button=0x7f060024;
         public static final int expanded_menu=0x7f06002a;
         public static final int filterEditText=0x7f060047;
-        public static final int floorTextView=0x7f06004c;
+        public static final int floorTextView=0x7f06004d;
         public static final int gridView=0x7f060049;
         public static final int home=0x7f060014;
         public static final int homeAsUp=0x7f060005;
@@ -1029,10 +1032,11 @@ containing a value of this type.
         public static final int loginButton=0x7f060045;
         public static final int logo=0x7f060042;
         public static final int middle=0x7f060012;
-        public static final int nameTextView=0x7f06004b;
+        public static final int nameTextView=0x7f06004c;
         public static final int never=0x7f060009;
         public static final int none=0x7f060010;
         public static final int normal=0x7f060000;
+        public static final int overflowButton=0x7f06004b;
         public static final int passwordEditText=0x7f060044;
         public static final int progress_circular=0x7f060034;
         public static final int progress_horizontal=0x7f060035;
@@ -1127,6 +1131,7 @@ containing a value of this type.
     }
     public static final class menu {
         public static final int fragment_rooms_list=0x7f0d0000;
+        public static final int item_overflow=0x7f0d0001;
     }
     public static final class string {
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
