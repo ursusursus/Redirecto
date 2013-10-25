@@ -18,6 +18,7 @@ public class RedirectoContract {
 
 		public static final String COLUMN_ID = "_id";
 		public static final String COLUMN_NAME = "name";
+		public static final String COLUMN_FLOOR = "floor";
 		public static final String COLUMN_CURRENT = "current";
 	}
 

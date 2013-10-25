@@ -4,10 +4,12 @@ import sk.tuke.ursus.redirecto.net.RestUtils.AbstractRestService;
 import sk.tuke.ursus.redirecto.net.RestUtils.Callback;
 import sk.tuke.ursus.redirecto.net.RestUtils.Methods;
 import sk.tuke.ursus.redirecto.net.RestUtils.RequestBuilder;
+import sk.tuke.ursus.redirecto.net.processor.GetAllRoomsProcessor;
+import sk.tuke.ursus.redirecto.net.processor.LocalizeManuallyProcessor;
 import sk.tuke.ursus.redirecto.net.processor.LocalizeProcessor;
 import sk.tuke.ursus.redirecto.net.processor.LoginProcessor;
 import sk.tuke.ursus.redirecto.net.processor.LogoutProcessor;
-import sk.tuke.ursus.redirecto.net.processor.LocalizeManuallyProcessor;
+import sk.tuke.ursus.redirecto.net.processor.GetMyRoomsProcessor;
 import android.content.Context;
 
 /**
@@ -22,11 +24,42 @@ public class RestService extends AbstractRestService {
 	private static final String LOGOUT_URL = BASE_URL + "/";
 	private static final String LOCALIZE_URL = BASE_URL + "/";
 	private static final String LOCALIZE_MANUALLY_URL = BASE_URL + "/";
+	private static final String GET_ALL_ROOMS_URL = BASE_URL + "/";
+	private static final String GET_MY_ROOMS_URL = BASE_URL + "/";
 
 	public static final String RESULTS_TOKEN_KEY = "token";
+	public static final String RESULTS_ROOMS_KEY = "rooms";
 
 	public RestService() {
 		super(RestService.class.toString());
+	}
+	
+	public static void getMyRooms(Context context, String token, Callback callback) {
+		String params = new RestUtils.ParamBuilder()
+				.addParam("token", token)
+				.build();
+
+		new RequestBuilder()
+				.setMethod(Methods.POST)
+				.setUrl(GET_MY_ROOMS_URL)
+				.setParams(params)
+				.setCallback(callback)
+				.setProcessor(new GetMyRoomsProcessor())
+				.execute(context, RestService.class);
+	}
+
+	public static void getAllRooms(Context context, String token, Callback callback) {
+		String params = new RestUtils.ParamBuilder()
+				.addParam("token", token)
+				.build();
+
+		new RequestBuilder()
+				.setMethod(Methods.POST)
+				.setUrl(GET_ALL_ROOMS_URL)
+				.setParams(params)
+				.setCallback(callback)
+				.setProcessor(new GetAllRoomsProcessor())
+				.execute(context, RestService.class);
 	}
 
 	public static void localize(Context context, String token, Callback callback) {

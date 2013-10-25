@@ -20,20 +20,8 @@ public class RedirectoProvider extends ContentProvider {
 	@Override
 	public boolean onCreate() {
 		mDbHelper = new RedirectoDatabase(getContext());
-		//
-		// insertMockData();
-		//
+
 		return true;
-	}
-
-	private void insertMockData() {
-		SQLiteDatabase db = mDbHelper.getWritableDatabase();
-		for (int i = 0; i < 10; i++) {
-			ContentValues values = new ContentValues();
-			values.put(RedirectoContract.Rooms.COLUMN_NAME, "A52" + i);
-			db.insert(RedirectoContract.Rooms.TABLE, null, values);
-		}
-
 	}
 
 	private static UriMatcher buildUriMatcher() {

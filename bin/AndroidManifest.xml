@@ -32,6 +32,10 @@
             android:label="@string/app_name" >
         </activity>
         <activity
+            android:name="sk.tuke.ursus.redirecto.ui.NewRoomActivity"
+            android:label="Pridať miestnosť" >
+        </activity>
+        <activity
             android:name="sk.tuke.ursus.redirecto.ui.AboutActivity"
             android:label="O aplikácií" >
         </activity>
