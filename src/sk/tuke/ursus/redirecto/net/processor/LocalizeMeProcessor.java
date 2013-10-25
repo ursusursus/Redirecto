@@ -16,6 +16,8 @@ public class LocalizeMeProcessor extends Processor {
 
 	@Override
 	public int onProcessResponse(Context context, String contentType, InputStream stream, Bundle results) throws Exception {
+		Thread.sleep(1000);
+		
 		// Faking it
 		ContentResolver resolver = context.getContentResolver();
 		

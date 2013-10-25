@@ -14,22 +14,49 @@
         android:background="@drawable/text_field1"
         android:fontFamily="sans-serif-condensed"
         android:hint="Napíšte meno miestnosti..."
-        android:padding="16dp"
+        android:lines="1"
+        android:padding="12dp"
         android:textStyle="italic" />
 
-    <ListView
-        android:id="@+id/listView"
+    <FrameLayout
+        android:id="@+id/contentContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/text_field1"
-        android:clipToPadding="false"
-        android:fadingEdge="none"
-        android:paddingBottom="4dp"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:paddingTop="4dp" />
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/text_field1"
+            android:clipToPadding="false"
+            android:fadingEdge="none"
+            android:paddingBottom="4dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="4dp" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/errorTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="sans-serif-condensed"
+            android:text="Ľutujem, nepodarilo sa načítať miestnosti"
+            android:textSize="16sp"
+            android:textStyle="italic"
+            android:visibility="gone" />
+    </FrameLayout>
 
 </LinearLayout>

@@ -16,6 +16,8 @@ public class GetMyRoomsProcessor extends Processor {
 
 	@Override
 	public int onProcessResponse(Context context, String contentType, InputStream stream, Bundle results) throws Exception {
+		Thread.sleep(1000);
+		
 		// DUMMY
 		ArrayList<Room> rooms = new ArrayList<Room>();
 		rooms.add(new Room(0, "A520", "5. poschodie"));

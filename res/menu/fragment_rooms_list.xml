@@ -3,29 +3,37 @@
     xmlns:app="http://schemas.android.com/apk/res-auto" >
 
     <item
+        android:id="@+id/action_localize"
+        android:orderInCategory="95"
+        android:icon="@drawable/ic_action_location_found"
+        android:title="Lokalizuj"
+        app:showAsAction="ifRoom"/>
+    
+    <item
         android:id="@+id/action_add_room"
         android:orderInCategory="96"
         android:title="Pridať miestnosť"
-        app:showAsAction="ifRoom"/>
-    <item
-        android:id="@+id/action_localize"
-        android:orderInCategory="97"
-        android:title="Lokalizuj"
-        app:showAsAction="ifRoom"/>
-    <item
-        android:id="@+id/action_logout"
-        android:orderInCategory="98"
-        android:title="Odhlásiť sa"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_sync_rooms"
+        android:orderInCategory="97"
+        android:title="Synchronizovať miestnosti"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="98"
+        android:title="@string/menu_settings"
+        app:showAsAction="never"/>
+    
     <item
         android:id="@+id/action_about"
         android:orderInCategory="99"
         android:title="O aplikácií"
         app:showAsAction="never"/>
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_logout"
         android:orderInCategory="100"
-        android:title="@string/menu_settings"
+        android:title="Odhlásiť sa"
         app:showAsAction="never"/>
 
 </menu>

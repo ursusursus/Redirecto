@@ -35,6 +35,8 @@ public class NewRoomFragment extends Fragment {
 	private RoomsArrayAdapter mAdapter;
 	private ListView mListView;
 	private EditText mFilterEditText;
+	private View mProgressBar;
+	private View mErrorTextView;
 
 	public NewRoomFragment() {
 	}
@@ -63,6 +65,14 @@ public class NewRoomFragment extends Fragment {
 	protected void addMyNewRoom(int id) {
 		RestService.addMyRoom(mApp, id, mApp.getToken(), mAddMyRoomCallback);
 	}
+	
+	protected void hideProgressBar() {
+		mProgressBar.setVisibility(View.GONE);
+	}
+
+	protected void showProgressBar() {
+		mProgressBar.setVisibility(View.VISIBLE);
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -73,6 +83,9 @@ public class NewRoomFragment extends Fragment {
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
+		mProgressBar = view.findViewById(R.id.progressBar);
+		mErrorTextView = view.findViewById(R.id.errorTextView);
+		
 		mAdapter = new RoomsArrayAdapter(mContext, mRooms, mRoomAddedListener);
 
 		mListView = (ListView) view.findViewById(R.id.listView);
@@ -119,6 +132,8 @@ public class NewRoomFragment extends Fragment {
 
 		@Override
 		public void onSuccess(Bundle data) {
+			hideProgressBar();
+			
 			ArrayList<Room> newRooms = data.getParcelableArrayList(RestService.RESULTS_ROOMS_KEY);
 			if (newRooms != null) {
 
@@ -133,20 +148,17 @@ public class NewRoomFragment extends Fragment {
 
 		@Override
 		public void onStarted() {
-			// TODO Auto-generated method stub
-
+			showProgressBar();
 		}
 
 		@Override
 		public void onException() {
-			// TODO Auto-generated method stub
-
+			hideProgressBar();
 		}
 
 		@Override
 		public void onError(int code, String message) {
-			// TODO Auto-generated method stub
-
+			hideProgressBar();
 		}
 	};
 

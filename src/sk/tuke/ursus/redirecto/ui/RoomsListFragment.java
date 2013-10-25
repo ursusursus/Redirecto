@@ -41,6 +41,10 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 
 	private ProgressDialogFragment mProgressDialog;
 
+	private View mProgressBar;
+
+	private View mErrorTextView;
+
 	public static RoomsListFragment newInstance() {
 		return new RoomsListFragment();
 	}
@@ -63,70 +67,12 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 	}
 
 	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.fragment_rooms_list, menu);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.action_add_room: {
-				Intent intent = new Intent(mContext, NewRoomActivity.class);
-				startActivity(intent);
-				return true;
-			}
-			case R.id.action_localize: {
-				localizeMe();
-				return true;
-			}
-
-			case R.id.action_logout: {
-				logout();
-				return true;
-			}
-
-			case R.id.action_about: {
-				Intent intent = new Intent(mContext, AboutActivity.class);
-				startActivity(intent);
-				return true;
-			}
-
-			case R.id.action_settings: {
-				Intent intent = new Intent(mContext, MyPreferencesActivity.class);
-				startActivity(intent);
-				return true;
-			}
-
-			default:
-				return false;
-		}
-	}
-
-	protected void fetchMyRooms() {
-		RestService.getMyRooms(mContext, mApp.getToken(), mMyRoomsCallback);
-	}
-
-	
-	protected void localizeMe() {
-		RestService.localizeMe(mContext, mApp.getToken(), mLocalizeMeCallback);
-	}
-
-	protected void localizeMeManually(int id) {
-		RestService.localizeMeManually(mContext, id, mApp.getToken(), mLocalizeMeManuallyCallback);
-	}
-
-	protected void removeMyRoom(int id) {
-		RestService.removeMyRoom(mContext, id, mApp.getToken(), mRemoveMyRoomCallback);
-	}
-
-	private void logout() {
-		MyApplication app = (MyApplication) getActivity().getApplication();
-		RestService.logout(mContext, app.getToken(), mLogoutCallback);
-	}
-
-	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+
+		mProgressBar = view.findViewById(R.id.progressBar);
+		mErrorTextView = view.findViewById(R.id.errorTextView);
+
 		mAdapter = new RoomsCursorAdapter(mContext, mRoomOverflowCallback);
 
 		mGridView = (GridView) view.findViewById(R.id.gridView);
@@ -140,6 +86,79 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		getLoaderManager().initLoader(LOADER_ID, null, this);
+	}
+
+	protected void fetchMyRooms() {
+		RestService.getMyRooms(mContext, mApp.getToken(), mMyRoomsCallback);
+	}
+
+	protected void localizeMe() {
+		RestService.localizeMe(mContext, mApp.getToken(), mLocalizeMeCallback);
+	}
+
+	protected void localizeMeManually(int id) {
+		RestService.localizeMeManually(mContext, id, mApp.getToken(), mLocalizeMeManuallyCallback);
+	}
+
+	protected void removeMyRoom(int id) {
+		RestService.removeMyRoom(mContext, id, mApp.getToken(), mRemoveMyRoomCallback);
+	}
+
+	private void logout() {
+		RestService.logout(mContext, mApp.getToken(), mLogoutCallback);
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.fragment_rooms_list, menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.action_localize: {
+				localizeMe();
+				return true;
+			}
+			case R.id.action_add_room: {
+				Intent intent = new Intent(mContext, NewRoomActivity.class);
+				startActivity(intent);
+				return true;
+			}
+
+			case R.id.action_sync_rooms: {
+				fetchMyRooms();
+				return true;
+			}
+
+			case R.id.action_settings: {
+				Intent intent = new Intent(mContext, MyPreferencesActivity.class);
+				startActivity(intent);
+				return true;
+			}
+
+			case R.id.action_about: {
+				Intent intent = new Intent(mContext, AboutActivity.class);
+				startActivity(intent);
+				return true;
+			}
+
+			case R.id.action_logout: {
+				logout();
+				return true;
+			}
+
+			default:
+				return false;
+		}
+	}
+
+	protected void hideProgressBar() {
+		mProgressBar.setVisibility(View.GONE);
+	}
+
+	protected void showProgressBar() {
+		mProgressBar.setVisibility(View.VISIBLE);
 	}
 
 	protected void showProgressDialog() {
@@ -253,22 +272,22 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 
 		@Override
 		public void onSuccess(Bundle data) {
-
+			hideProgressBar();
 		}
 
 		@Override
 		public void onStarted() {
-
+			showProgressBar();
 		}
 
 		@Override
 		public void onException() {
-
+			hideProgressBar();
 		}
 
 		@Override
 		public void onError(int code, String message) {
-
+			hideProgressBar();
 		}
 	};
 
@@ -276,25 +295,22 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 
 		@Override
 		public void onSuccess(Bundle data) {
-
+			hideProgressBar();
 		}
 
 		@Override
 		public void onStarted() {
-			// TODO Auto-generated method stub
-
+			showProgressBar();
 		}
 
 		@Override
 		public void onException() {
-			// TODO Auto-generated method stub
-
+			hideProgressBar();
 		}
 
 		@Override
 		public void onError(int code, String message) {
-			// TODO Auto-generated method stub
-
+			hideProgressBar();
 		}
 	};
 
@@ -302,51 +318,45 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 
 		@Override
 		public void onSuccess(Bundle data) {
-
+			hideProgressBar();
 		}
 
 		@Override
 		public void onStarted() {
-			// TODO Auto-generated method stub
-
+			showProgressBar();
 		}
 
 		@Override
 		public void onException() {
-			// TODO Auto-generated method stub
-
+			hideProgressBar();
 		}
 
 		@Override
 		public void onError(int code, String message) {
-			// TODO Auto-generated method stub
-
+			hideProgressBar();
 		}
 	};
-	
+
 	private RestUtils.Callback mRemoveMyRoomCallback = new RestUtils.Callback() {
 
 		@Override
 		public void onSuccess(Bundle data) {
-
+			hideProgressBar();
 		}
 
 		@Override
 		public void onStarted() {
-			// TODO Auto-generated method stub
-
+			showProgressBar();
 		}
 
 		@Override
 		public void onException() {
-			// TODO Auto-generated method stub
-
+			hideProgressBar();
 		}
 
 		@Override
 		public void onError(int code, String message) {
-			// TODO Auto-generated method stub
-
+			hideProgressBar();
 		}
 	};
 }
