@@ -13,9 +13,12 @@ import sk.tuke.ursus.redirecto.util.LOG;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ListView;
 
 public class NewRoomFragment extends Fragment {
@@ -31,6 +34,7 @@ public class NewRoomFragment extends Fragment {
 	private ArrayList<Room> mRooms;
 	private RoomsArrayAdapter mAdapter;
 	private ListView mListView;
+	private EditText mFilterEditText;
 
 	public NewRoomFragment() {
 	}
@@ -69,6 +73,9 @@ public class NewRoomFragment extends Fragment {
 
 		mListView = (ListView) view.findViewById(R.id.listView);
 		mListView.setAdapter(mAdapter);
+		
+		mFilterEditText = (EditText) view.findViewById(R.id.filterEditText);
+		mFilterEditText.addTextChangedListener(mTextChangedListener);
 	}
 
 	@Override
@@ -76,6 +83,24 @@ public class NewRoomFragment extends Fragment {
 		super.onSaveInstanceState(outState);
 		outState.putParcelableArrayList(EXTRA_ROOMS_KEY, mRooms);
 	}
+	
+	private TextWatcher mTextChangedListener = new TextWatcher() {
+		
+		@Override
+		public void onTextChanged(CharSequence cs, int start, int before, int count) {
+			mAdapter.filter(cs.toString());
+		}
+		
+		@Override
+		public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			
+		}
+		
+		@Override
+		public void afterTextChanged(Editable s) {
+			
+		}
+	};
 
 	private OnRoomAddedListener mRoomAddedListener = new OnRoomAddedListener() {
 

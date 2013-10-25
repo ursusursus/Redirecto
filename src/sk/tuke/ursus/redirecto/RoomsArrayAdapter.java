@@ -19,12 +19,14 @@ public class RoomsArrayAdapter extends ArrayAdapter<Room> {
 
 	private LayoutInflater mInflater;
 	private ArrayList<Room> mItems;
+	private ArrayList<Room> mItemsCopy;
 	private OnRoomAddedListener mListener;
 
 	public RoomsArrayAdapter(Context context, ArrayList<Room> items, OnRoomAddedListener listener) {
 		super(context, -1, items);
 		mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mItems = items;
+		mItemsCopy = items;
 		mListener = listener;
 
 	}
@@ -57,6 +59,24 @@ public class RoomsArrayAdapter extends ArrayAdapter<Room> {
 		});
 
 		return convertView;
+	}
+
+	@Override
+	public int getCount() {
+		return mItems.size();
+	}
+
+	public void filter(String keyword) {
+		ArrayList<Room> filteredItems = new ArrayList<Room>();
+		for (Room room : mItemsCopy) {
+			if (room.name.toLowerCase().startsWith(keyword.toLowerCase())) {
+				filteredItems.add(room);
+			}
+		}
+
+		mItems = filteredItems;
+		notifyDataSetChanged();
+
 	}
 
 	static class ViewHolder {
