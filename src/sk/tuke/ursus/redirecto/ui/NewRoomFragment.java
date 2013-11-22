@@ -166,25 +166,21 @@ public class NewRoomFragment extends Fragment {
 
 		@Override
 		public void onSuccess(Bundle data) {
-			
+			LOG.d("AddMyRoomCallback # onSuccess");
 		}
 
 		@Override
 		public void onStarted() {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
 		public void onException() {
-			// TODO Auto-generated method stub
-
+			LOG.d("AddMyRoomCallback # onException");
 		}
 
 		@Override
 		public void onError(int code, String message) {
-			// TODO Auto-generated method stub
-
+			LOG.d("AddMyRoomCallback # onError: " + message);
 		}
 	};
 

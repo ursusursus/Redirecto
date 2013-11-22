@@ -5,9 +5,15 @@ import java.util.ArrayList;
 
 import sk.tuke.ursus.redirecto.model.Room;
 import sk.tuke.ursus.redirecto.net.RestService;
+import sk.tuke.ursus.redirecto.net.RestUtils;
 import sk.tuke.ursus.redirecto.net.RestUtils.Processor;
 import sk.tuke.ursus.redirecto.net.RestUtils.Status;
+import sk.tuke.ursus.redirecto.net.RestUtils.JsonRpcResponse.Error;
+import sk.tuke.ursus.redirecto.net.response.GetRoomsResponse;
+import sk.tuke.ursus.redirecto.net.response.LoginResponse;
+import sk.tuke.ursus.redirecto.net.response.LoginResponse.LoginResult;
 import sk.tuke.ursus.redirecto.provider.RedirectoContract.Rooms;
+import sk.tuke.ursus.redirecto.util.LOG;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Bundle;
@@ -16,30 +22,18 @@ public class GetAllRoomsProcessor extends Processor {
 
 	@Override
 	public int onProcessResponse(Context context, String contentType, InputStream stream, Bundle results) throws Exception {
-		Thread.sleep(1000);
-		
-		// DUMMY
-		ArrayList<Room> rooms = new ArrayList<Room>();
-		rooms.add(new Room(0, "A520", "5. poschodie"));
-		rooms.add(new Room(1, "A521", "5. poschodie"));
-		rooms.add(new Room(2, "A522", "4. poschodie"));
-		rooms.add(new Room(3, "B523", "5. poschodie"));
-		rooms.add(new Room(4, "A524", "4. poschodie"));
-		rooms.add(new Room(5, "B525", "5. poschodie"));
-		rooms.add(new Room(6, "A526", "5. poschodie"));
-		rooms.add(new Room(7, "A527", "3. poschodie"));
-		rooms.add(new Room(8, "B528", "5. poschodie"));
-		rooms.add(new Room(9, "A529", "5. poschodie"));
-		rooms.add(new Room(10, "A429", "5. poschodie"));
-		rooms.add(new Room(11, "A329", "5. poschodie"));
-		rooms.add(new Room(12, "A229", "5. poschodie"));
-		rooms.add(new Room(13, "A500", "5. poschodie"));
-		rooms.add(new Room(14, "A501", "5. poschodie"));
-		rooms.add(new Room(15, "A502", "5. poschodie"));
-		rooms.add(new Room(16, "A503", "5. poschodie"));
-		// END DUMMY
-		
-		results.putParcelableArrayList(RestService.RESULTS_ROOMS_KEY, rooms);
+		GetRoomsResponse response = RestUtils.fromJson(stream, GetRoomsResponse.class);
+		if (response.hasError()) {
+			// Post error
+			Error error = response.error;
+			results.putInt(RestUtils.ERROR_CODE, error.code);
+			results.putString(RestUtils.ERROR_MESSAGE, error.message);
+			LOG.d("ERROR: " + error.message);
+			return Status.ERROR;
+		}
+
+		// Post success
+		results.putParcelableArrayList(RestService.RESULTS_ROOMS_KEY, response.rooms);
 		return Status.OK;
 	}
 

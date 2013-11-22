@@ -16,14 +16,22 @@
     <style name="SolidActionBar.MyStyle" parent="@style/Widget.AppCompat.Light.ActionBar.Solid">
         <item name="background">@color/base_green</item>
         <item name="titleTextStyle">@style/ActionBarTitleTextStyle.MyStyle</item>
+        <item name="subtitleTextStyle">@style/ActionBarSubTitleTextStyle.MyStyle</item>
         <item name="android:background">@color/base_green</item>
         <item name="android:titleTextStyle">@style/ActionBarTitleTextStyle.MyStyle</item>
+        <item name="android:subtitleTextStyle">@style/ActionBarSubTitleTextStyle.MyStyle</item>
     </style>
 
     <style name="ActionBarTitleTextStyle.MyStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textColor">#FFFFFF</item>
         <item name="android:fontFamily">sans-serif-condensed</item>
         <item name="android:textStyle">italic|bold</item>
+    </style>
+    
+    <style name="ActionBarSubTitleTextStyle.MyStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle">
+        <item name="android:textColor">#BBFFFFFF</item>
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textStyle">italic</item>
     </style>
 
     <style name="BigButton">

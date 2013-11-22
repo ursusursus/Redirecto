@@ -24,6 +24,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.ResultReceiver;
 
+import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * 
  * @author ursus
@@ -201,7 +204,7 @@ public class RestUtils {
 		return responseBuilder.toString();
 	}
 
-	/* public static <T> T fromJson(InputStream inputStream, Class<T> clazz) {
+	public static <T> T fromJson(InputStream inputStream, Class<T> clazz) {
 		InputStreamReader reader = new InputStreamReader(inputStream);
 		T parsedObject = new Gson().fromJson(reader, clazz);
 		try {
@@ -210,7 +213,7 @@ public class RestUtils {
 		}
 
 		return parsedObject;
-	} */
+	}
 
 	public static boolean isTokenValid(String token) {
 		if (token != null) {
@@ -224,7 +227,7 @@ public class RestUtils {
 		}
 	}
 
-	/* public static class JsonRpcResponse {
+	public static class JsonRpcResponse {
 
 		@SerializedName("jsonrpc")
 		public String jsonRpc;
@@ -240,7 +243,7 @@ public class RestUtils {
 			public String message;
 		}
 
-	} */
+	}
 
 	public static class RequestBuilder {
 		private int mMethod;

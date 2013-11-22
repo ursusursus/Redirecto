@@ -9,38 +9,49 @@ import android.preference.PreferenceManager;
 public class MyApplication extends Application {
 
 	private String mToken;
+	private String mUsername;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		mToken = prefs.getString(Utils.PREFS_TOKEN_KEY, null);
-		// LOG.i("Token: " + mToken);
+		mUsername = prefs.getString(Utils.PREFS_USERNAME_KEY, null);
+		
+		LOG.i("Token: " + mToken);
 	}
 
 	public String getToken() {
 		return mToken;
 	}
+	
+	public String getUsername() {
+		return mUsername;
+	}
 
-	public void setToken(String token) {
+	public void setTokenAndUsername(String token, String username) {
 		// Write to preferences
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.edit()
 				.putString(Utils.PREFS_TOKEN_KEY, token)
+				.putString(Utils.PREFS_USERNAME_KEY, username)
 				.commit();
 
 		mToken = token;
+		mUsername = username;
 	}
 
-	public void removeToken() {
+	public void removeTokenAndUsername() {
 		// Remove token from preferences
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.edit()
 				.remove(Utils.PREFS_TOKEN_KEY)
+				.remove(Utils.PREFS_USERNAME_KEY)
 				.commit();
 
 		// Remove from memory
 		mToken = null;
+		mUsername = null;
 	}
 
 }

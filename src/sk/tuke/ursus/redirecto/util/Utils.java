@@ -5,6 +5,7 @@ import android.os.Build;
 public class Utils {
 	
 	public static final String PREFS_TOKEN_KEY = "token";
+	public static final String PREFS_USERNAME_KEY = "username";
 	
 	public static boolean hasHoneycomb() {
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;

@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
+import sk.tuke.ursus.redirecto.model.Room;
 import sk.tuke.ursus.redirecto.provider.RedirectoContract.Rooms;
 
 public class RedirectoProvider extends ContentProvider {
@@ -35,7 +36,20 @@ public class RedirectoProvider extends ContentProvider {
 
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
-		return -1;
+		int count;
+		final SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+		final int match = sUriMatcher.match(uri);
+		switch (match) {
+			case ROOMS:
+				count = db.delete(Rooms.TABLE, selection, selectionArgs);
+				break;
+
+			default:
+				throw new UnsupportedOperationException("Unknown uri: " + uri);
+
+		}
+		return count;
 	}
 
 	@Override
@@ -92,7 +106,7 @@ public class RedirectoProvider extends ContentProvider {
 		final int match = sUriMatcher.match(uri);
 		switch (match) {
 			case ROOMS:
-				cursor = db.query(Rooms.TABLE, projection, selection, selectionArgs, null, null, sortOrder);
+				cursor = db.query(Rooms.TABLE, projection, selection, selectionArgs, null, null, Rooms.COLUMN_NAME + " ASC");
 				cursor.setNotificationUri(getContext().getContentResolver(), uri);
 				break;
 

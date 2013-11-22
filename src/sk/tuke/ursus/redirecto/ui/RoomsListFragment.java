@@ -6,7 +6,6 @@ import sk.tuke.ursus.redirecto.RoomsCursorAdapter;
 import sk.tuke.ursus.redirecto.RoomsCursorAdapter.RoomOverflowCallback;
 import sk.tuke.ursus.redirecto.net.RestService;
 import sk.tuke.ursus.redirecto.net.RestUtils;
-import sk.tuke.ursus.redirecto.net.processor.LocalizeMeManuallyProcessor;
 import sk.tuke.ursus.redirecto.provider.RedirectoContract.Rooms;
 import sk.tuke.ursus.redirecto.ui.dialog.ProgressDialogFragment;
 import sk.tuke.ursus.redirecto.util.LOG;
@@ -18,6 +17,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -40,9 +41,7 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 	private RoomsCursorAdapter mAdapter;
 
 	private ProgressDialogFragment mProgressDialog;
-
 	private View mProgressBar;
-
 	private View mErrorTextView;
 
 	public static RoomsListFragment newInstance() {
@@ -59,6 +58,13 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 
 		mContext = getActivity();
 		mApp = (MyApplication) getActivity().getApplication();
+
+		String username = mApp.getUsername();
+		if (username != null) {
+			ActionBarActivity activity = ((ActionBarActivity) getActivity());
+			ActionBar actionBar = activity.getSupportActionBar();
+			actionBar.setSubtitle(username);
+		}
 	}
 
 	@Override
@@ -242,8 +248,8 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 			LOG.d("Logout # onSuccess");
 			dismissProgressDialog();
 
-			// Remove bundle
-			mApp.removeToken();
+			// Remove data
+			mApp.removeTokenAndUsername();
 
 			// Finish and start login activity
 			Intent intent = new Intent(mContext, LoginActivity.class);
@@ -341,6 +347,7 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 
 		@Override
 		public void onSuccess(Bundle data) {
+			LOG.d("RemoveMyRoom # onSuccess");
 			hideProgressBar();
 		}
 
@@ -351,11 +358,13 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 
 		@Override
 		public void onException() {
+			LOG.d("RemoveMyRoom # onException");
 			hideProgressBar();
 		}
 
 		@Override
 		public void onError(int code, String message) {
+			LOG.d("RemoveMyRoom # onError: " + message);
 			hideProgressBar();
 		}
 	};

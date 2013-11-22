@@ -1,5 +1,7 @@
 package sk.tuke.ursus.redirecto.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import sk.tuke.ursus.redirecto.provider.RedirectoContract.Rooms;
 import android.content.ContentValues;
 import android.os.Parcel;
@@ -10,19 +12,18 @@ public class Room implements Parcelable {
 	public int id;
 	public String name;
 	public String floor;
-
-	public Room(int id, String name, String floor) {
-		this.id = id;
-		this.name = name;
-		this.floor = floor;
-	}
+	@SerializedName("created_at")
+	public String createdAt;
+	@SerializedName("changed_at")
+	public String changedAt;
 
 	public ContentValues toContentValues() {
 		ContentValues values = new ContentValues();
 		values.put(Rooms.COLUMN_ID, id);
 		values.put(Rooms.COLUMN_NAME, name);
 		values.put(Rooms.COLUMN_FLOOR, floor);
-		
+		values.put(Rooms.COLUMN_CREATED_AT, createdAt);
+		values.put(Rooms.COLUMN_CHANGED_AT, changedAt);
 		return values;
 	}
 
@@ -43,6 +44,8 @@ public class Room implements Parcelable {
 		id = source.readInt();
 		name = source.readString();
 		floor = source.readString();
+		createdAt = source.readString();
+		changedAt = source.readString();
 	}
 
 	@Override
@@ -50,6 +53,8 @@ public class Room implements Parcelable {
 		dest.writeInt(id);
 		dest.writeString(name);
 		dest.writeString(floor);
+		dest.writeString(createdAt);
+		dest.writeString(changedAt);
 	}
 
 	@Override
