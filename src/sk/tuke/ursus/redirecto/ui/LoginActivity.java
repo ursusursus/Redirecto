@@ -6,6 +6,7 @@ import sk.tuke.ursus.redirecto.net.RestService;
 import sk.tuke.ursus.redirecto.net.RestUtils;
 import sk.tuke.ursus.redirecto.ui.dialog.ProgressDialogFragment;
 import sk.tuke.ursus.redirecto.util.LOG;
+import sk.tuke.ursus.redirecto.util.ToastUtils;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -59,7 +60,7 @@ public class LoginActivity extends ActionBarActivity {
 		String password = mPasswordEditText.getText().toString();
 
 		if ((username == null || username.length() <= 0 || password == null || password.length() <= 0)) {
-			Toast.makeText(this, "Zadajte meno alebo heslo", Toast.LENGTH_SHORT).show();
+			ToastUtils.showInfo(this, "Zadajte meno alebo heslo")	;
 
 		} else {
 			RestService.login(this, username, password, mLoginCallback);
@@ -133,12 +134,14 @@ public class LoginActivity extends ActionBarActivity {
 		public void onError(int code, String message) {
 			LOG.d("Login # Status.ERROR");
 			dismissProgressDialog();
+			ToastUtils.showError(LoginActivity.this, "Nepodarilo sa prihlási: " + message);
 		}
 
 		@Override
 		public void onException() {
 			LOG.d("Login # Status.EXCEPTION");
 			dismissProgressDialog();
+			ToastUtils.showError(LoginActivity.this, "Nepodarilo sa prihlási");
 		}
 
 	};

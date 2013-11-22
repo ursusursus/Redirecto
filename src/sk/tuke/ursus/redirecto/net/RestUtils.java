@@ -39,13 +39,13 @@ public class RestUtils {
 	public static final String ERROR_MESSAGE = "error_message";
 
 	public static abstract class AbstractRestService extends IntentService {
-		private static final String ACTION = "com.whatever.AbstractRestService";
+		public static final String ACTION = "com.whatever.AbstractRestService";
 
-		private static final String EXTRA_PARAMS = "params";
-		private static final String EXTRA_CALLBACK = "receiver";
-		private static final String EXTRA_METHOD = "method";
-		private static final String EXTRA_URL = "url";
-		private static final String EXTRA_PROCESSOR = "processor";
+		public static final String EXTRA_PARAMS = "params";
+		public static final String EXTRA_CALLBACK = "receiver";
+		public static final String EXTRA_METHOD = "method";
+		public static final String EXTRA_URL = "url";
+		public static final String EXTRA_PROCESSOR = "processor";
 
 		public AbstractRestService(String name) {
 			super(name);

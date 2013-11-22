@@ -23,7 +23,6 @@ public class LoginProcessor extends Processor {
 			Error error = loginResponse.error;
 			results.putInt(RestUtils.ERROR_CODE, error.code);
 			results.putString(RestUtils.ERROR_MESSAGE, error.message);
-			LOG.d("ERROR: " + error.message);
 			return Status.ERROR;
 		}
 		

@@ -17,14 +17,14 @@ public class MyApplication extends Application {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		mToken = prefs.getString(Utils.PREFS_TOKEN_KEY, null);
 		mUsername = prefs.getString(Utils.PREFS_USERNAME_KEY, null);
-		
+
 		LOG.i("Token: " + mToken);
 	}
 
 	public String getToken() {
 		return mToken;
 	}
-	
+
 	public String getUsername() {
 		return mUsername;
 	}

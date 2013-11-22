@@ -50,15 +50,31 @@ public class RoomsArrayAdapter extends ArrayAdapter<Room> {
 		final Room room = mItems.get(position);
 		holder.name.setText(room.name);
 		holder.floor.setText(room.floor);
-		holder.add.setOnClickListener(new OnClickListener() {
+		if (room.isAdded()) {
+			holder.add.setEnabled(false);
+			holder.add.setImageResource(R.drawable.ic_action_success);
+			holder.add.setOnClickListener(null);
+		} else {
+			holder.add.setImageResource(R.drawable.ic_action_new);
+			holder.add.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				mListener.onRoomAdded(position, room.id);
-			}
-		});
+				@Override
+				public void onClick(View v) {
+					mListener.onRoomAdded(position, room.id);
+				}
+			});
+		}
 
 		return convertView;
+	}
+
+	public Room roomById(int id) {
+		for (Room room : mItems) {
+			if (room.id == id) {
+				return room;
+			}
+		}
+		return null;
 	}
 
 	@Override

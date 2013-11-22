@@ -22,18 +22,44 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="-6dp"
-        android:visibility="gone"
-        android:indeterminate="true" />
+        android:indeterminate="true"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/errorTextView"
-        android:textStyle="italic"
-        android:fontFamily="sans-serif-condensed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:fontFamily="sans-serif-condensed"
         android:text="Ľutujem, nepodarilo sa načítať miestnosti"
         android:textSize="16sp"
+        android:textStyle="italic"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/errorTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:fontFamily="sans-serif-condensed"
+        android:text="Ľutujem, nepodarilo sa načítať miestnosti"
+        android:textSize="16sp"
+        android:textStyle="italic"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/boardingButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:drawableLeft="@drawable/ic_action_new"
+        android:fontFamily="sans-serif-condensed"
+        android:paddingBottom="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="28dp"
+        android:paddingTop="16dp"
+        android:text="Pridať miestnosti"
+        android:textStyle="italic"
         android:visibility="gone" />
 
 </FrameLayout>

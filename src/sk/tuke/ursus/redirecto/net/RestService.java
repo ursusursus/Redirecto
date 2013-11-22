@@ -32,13 +32,16 @@ public class RestService extends AbstractRestService {
 	private static final String LOCALIZE_URL = BASE_URL + "/localize_me";
 	private static final String LOCALIZE_MANUALLY_URL = BASE_URL + "/localize_me_manually";
 	private static final String GET_ALL_ROOMS_URL = BASE_URL + "/get_all_rooms";
-	private static final String GET_MY_ROOMS_URL = BASE_URL + "/get_my_rooms";
+	public static final String GET_MY_ROOMS_URL = BASE_URL + "/get_my_rooms";
 	private static final String ADD_MY_ROOM_URL = BASE_URL + "/add_my_room";
 	private static final String REMOVE_MY_ROOM_URL = BASE_URL + "/remove_my_room";
 
 	public static final String RESULTS_TOKEN_KEY = "token";
 	public static final String RESULTS_EMAIL_KEY = "email";
 	public static final String RESULTS_ROOMS_KEY = "rooms";
+	public static final String RESULTS_INSERTED_ID_KEY = "inserted_id";
+	public static final String RESULTS_NO_ROOMS_KEY = "no_rooms";
+
 
 	public RestService() {
 		super(RestService.class.toString());

@@ -17,7 +17,6 @@ public class LogoutProcessor extends Processor {
 
 	@Override
 	public int onProcessResponse(Context context, String contentType, InputStream stream, Bundle results) throws Exception {
-		//
 		GeneralResponse response = RestUtils.fromJson(stream, GeneralResponse.class);
 		
 		if (response.hasError()) {
@@ -31,7 +30,6 @@ public class LogoutProcessor extends Processor {
 		// Clean up database
 		ContentResolver resolver = context.getContentResolver();
 		resolver.delete(Rooms.CONTENT_URI, null, null);
-		resolver.notifyChange(Rooms.CONTENT_URI, null);
 		
 		return Status.OK;
 	}

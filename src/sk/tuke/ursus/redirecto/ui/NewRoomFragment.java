@@ -10,16 +10,21 @@ import sk.tuke.ursus.redirecto.model.Room;
 import sk.tuke.ursus.redirecto.net.RestService;
 import sk.tuke.ursus.redirecto.net.RestUtils;
 import sk.tuke.ursus.redirecto.util.LOG;
+import sk.tuke.ursus.redirecto.util.ToastUtils;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class NewRoomFragment extends Fragment {
 
@@ -65,7 +70,7 @@ public class NewRoomFragment extends Fragment {
 	protected void addMyNewRoom(int id) {
 		RestService.addMyRoom(mApp, id, mApp.getToken(), mAddMyRoomCallback);
 	}
-	
+
 	protected void hideProgressBar() {
 		mProgressBar.setVisibility(View.GONE);
 	}
@@ -85,7 +90,7 @@ public class NewRoomFragment extends Fragment {
 
 		mProgressBar = view.findViewById(R.id.progressBar);
 		mErrorTextView = view.findViewById(R.id.errorTextView);
-		
+
 		mAdapter = new RoomsArrayAdapter(mContext, mRooms, mRoomAddedListener);
 
 		mListView = (ListView) view.findViewById(R.id.listView);
@@ -93,6 +98,19 @@ public class NewRoomFragment extends Fragment {
 
 		mFilterEditText = (EditText) view.findViewById(R.id.filterEditText);
 		mFilterEditText.addTextChangedListener(mTextChangedListener);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if(item.getItemId() == R.id.action_refresh) {
+			fetchAllRooms();
+		}
+		return super.onOptionsItemSelected(item);
+	}
+	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.fragment_new_room, menu);
 	}
 
 	@Override
@@ -123,7 +141,6 @@ public class NewRoomFragment extends Fragment {
 
 		@Override
 		public void onRoomAdded(int position, int id) {
-			LOG.d("Position: " + position + " - Id: " + id);
 			addMyNewRoom(id);
 		}
 	};
@@ -133,7 +150,7 @@ public class NewRoomFragment extends Fragment {
 		@Override
 		public void onSuccess(Bundle data) {
 			hideProgressBar();
-			
+
 			ArrayList<Room> newRooms = data.getParcelableArrayList(RestService.RESULTS_ROOMS_KEY);
 			if (newRooms != null) {
 
@@ -154,11 +171,13 @@ public class NewRoomFragment extends Fragment {
 		@Override
 		public void onException() {
 			hideProgressBar();
+			ToastUtils.showError(mContext, "Nepodarilo sa naËÌtaù miestnosti");
 		}
 
 		@Override
 		public void onError(int code, String message) {
 			hideProgressBar();
+			ToastUtils.showError(mContext, "Nepodarilo sa naËÌtaù miestnosti");
 		}
 	};
 
@@ -166,7 +185,12 @@ public class NewRoomFragment extends Fragment {
 
 		@Override
 		public void onSuccess(Bundle data) {
-			LOG.d("AddMyRoomCallback # onSuccess");
+			int newId = data.getInt(RestService.RESULTS_INSERTED_ID_KEY);
+			Room newRoom = mAdapter.roomById(newId);
+			if (newRoom != null) {
+				newRoom.setAdded(true);
+				mAdapter.notifyDataSetChanged();
+			}
 		}
 
 		@Override
@@ -176,11 +200,13 @@ public class NewRoomFragment extends Fragment {
 		@Override
 		public void onException() {
 			LOG.d("AddMyRoomCallback # onException");
+			ToastUtils.showError(mContext, "Nepodarilo sa pridaù miestnosù");
 		}
 
 		@Override
 		public void onError(int code, String message) {
 			LOG.d("AddMyRoomCallback # onError: " + message);
+			ToastUtils.showError(mContext, "Nepodarilo sa pridaù miestnosù - " + message);
 		}
 	};
 

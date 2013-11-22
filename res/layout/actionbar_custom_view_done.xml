@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:background="@drawable/action_item_selector"
-        android:drawableLeft="@drawable/ic_action_accept"
+        android:drawableLeft="@drawable/ic_action_done"
         android:drawablePadding="8dp"
         android:gravity="center_vertical"
         android:paddingLeft="12dp"

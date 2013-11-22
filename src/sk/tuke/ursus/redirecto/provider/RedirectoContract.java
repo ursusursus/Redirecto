@@ -4,8 +4,8 @@ import android.net.Uri;
 
 public class RedirectoContract {
 
-	protected static final String CONTENT_AUTHORITY = "sk.tuke.ursus.redirecto";
-	protected static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+	public static final String CONTENT_AUTHORITY = "sk.tuke.ursus.redirecto";
+	private static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
 	public static class Rooms {
 		public static final String PATH = "rooms";

@@ -24,8 +24,7 @@
         android:layout_alignBottom="@+id/floorTextView"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:padding="16dp"
-        android:src="@drawable/ic_action_new" />
+        android:padding="16dp" />
 
     <View
         android:layout_width="0.5dp"

@@ -9,6 +9,10 @@ import sk.tuke.ursus.redirecto.net.RestUtils;
 import sk.tuke.ursus.redirecto.provider.RedirectoContract.Rooms;
 import sk.tuke.ursus.redirecto.ui.dialog.ProgressDialogFragment;
 import sk.tuke.ursus.redirecto.util.LOG;
+import sk.tuke.ursus.redirecto.util.ToastUtils;
+import sk.tuke.ursus.redirecto.util.Utils;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -24,10 +28,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.Button;
 import android.widget.GridView;
 
 public class RoomsListFragment extends Fragment implements LoaderCallbacks<Cursor> {
@@ -44,6 +52,8 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 	private View mProgressBar;
 	private View mErrorTextView;
 
+	private Button mBoardingButton;
+
 	public static RoomsListFragment newInstance() {
 		return new RoomsListFragment();
 	}
@@ -58,13 +68,6 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 
 		mContext = getActivity();
 		mApp = (MyApplication) getActivity().getApplication();
-
-		String username = mApp.getUsername();
-		if (username != null) {
-			ActionBarActivity activity = ((ActionBarActivity) getActivity());
-			ActionBar actionBar = activity.getSupportActionBar();
-			actionBar.setSubtitle(username);
-		}
 	}
 
 	@Override
@@ -78,6 +81,7 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 
 		mProgressBar = view.findViewById(R.id.progressBar);
 		mErrorTextView = view.findViewById(R.id.errorTextView);
+		mBoardingButton = (Button) getView().findViewById(R.id.boardingButton);
 
 		mAdapter = new RoomsCursorAdapter(mContext, mRoomOverflowCallback);
 
@@ -91,10 +95,18 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+
+		String username = mApp.getUsername();
+		if (username != null) {
+			ActionBarActivity activity = ((ActionBarActivity) getActivity());
+			ActionBar actionBar = activity.getSupportActionBar();
+			actionBar.setSubtitle(username);
+		}
+
 		getLoaderManager().initLoader(LOADER_ID, null, this);
 	}
 
-	protected void fetchMyRooms() {
+	protected void syncMyRooms() {
 		RestService.getMyRooms(mContext, mApp.getToken(), mMyRoomsCallback);
 	}
 
@@ -127,13 +139,12 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 				return true;
 			}
 			case R.id.action_add_room: {
-				Intent intent = new Intent(mContext, NewRoomActivity.class);
-				startActivity(intent);
+				goToNewRoomActivity();
 				return true;
 			}
 
 			case R.id.action_sync_rooms: {
-				fetchMyRooms();
+				syncMyRooms();
 				return true;
 			}
 
@@ -157,6 +168,11 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 			default:
 				return false;
 		}
+	}
+
+	private void goToNewRoomActivity() {
+		Intent intent = new Intent(mContext, NewRoomActivity.class);
+		startActivity(intent);
 	}
 
 	protected void hideProgressBar() {
@@ -191,7 +207,10 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		mAdapter.swapCursor(cursor);
 
 		if (cursor.getCount() == 0) {
-			fetchMyRooms();
+			// Utils.setupAutoSync(mContext, mApp.getToken());
+			syncMyRooms();
+		} else {
+			mBoardingButton.setVisibility(View.GONE);
 		}
 	}
 
@@ -264,12 +283,14 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 
 		@Override
 		public void onError(int code, String message) {
-
+			dismissProgressDialog();
+			ToastUtils.showError(mContext, "Nepodarilo sa odhlási", message);
 		}
 
 		@Override
 		public void onException() {
-
+			dismissProgressDialog();
+			ToastUtils.showError(mContext, "Nepodarilo sa odhlási", "Skontrolujte pripojenie na internet");
 		}
 
 	};
@@ -322,9 +343,45 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 
 	private RestUtils.Callback mMyRoomsCallback = new RestUtils.Callback() {
 
+		@SuppressLint("NewApi")
 		@Override
 		public void onSuccess(Bundle data) {
+			LOG.d("MyRoomsCallback # onSuccess");
 			hideProgressBar();
+
+			//
+			boolean emptyFlag = data.getBoolean(RestService.RESULTS_NO_ROOMS_KEY, false);
+			if (emptyFlag) {
+				mBoardingButton.setVisibility(View.VISIBLE);
+				mBoardingButton.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						goToNewRoomActivity();
+					}
+				});
+				/* if (Utils.hasHoneycomb()) {
+					final DecelerateInterpolator interpolator = new DecelerateInterpolator();
+					mBoardingButton.animate()
+							.scaleX(0.9F)
+							.scaleY(0.9F)
+							.setDuration(200)
+							.setInterpolator(interpolator)
+							.setListener(new AnimatorListenerAdapter() {
+
+								public void onAnimationEnd(android.animation.Animator animation) {
+									mBoardingButton.animate()
+											.scaleX(1F)
+											.scaleY(1F)
+											.setInterpolator(interpolator)
+											.setDuration(100)
+											.setListener(null);
+								};
+							});
+				} */
+			} else {
+				mBoardingButton.setVisibility(View.GONE);
+			}
 		}
 
 		@Override
@@ -335,11 +392,13 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		@Override
 		public void onException() {
 			hideProgressBar();
+			ToastUtils.showError(mContext, "Nepodarilo sa synchronizova so serverom", "Skontrolujte pripojenie na internet");
 		}
 
 		@Override
 		public void onError(int code, String message) {
 			hideProgressBar();
+			ToastUtils.showError(mContext, "Nepodarilo sa synchronizova so serverom", message);
 		}
 	};
 
@@ -358,14 +417,14 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 
 		@Override
 		public void onException() {
-			LOG.d("RemoveMyRoom # onException");
 			hideProgressBar();
+			ToastUtils.showError(mContext, "Nepodarilo sa odstráni miestnos", "Skontrolujte pripojenie na internet");
 		}
 
 		@Override
 		public void onError(int code, String message) {
-			LOG.d("RemoveMyRoom # onError: " + message);
 			hideProgressBar();
+			ToastUtils.showError(mContext, "Nepodarilo sa odstráni miestnos", message);
 		}
 	};
 }

@@ -17,7 +17,6 @@ public class RemoveMyRoomProcessor extends Processor {
 
 	@Override
 	public int onProcessResponse(Context context, String contentType, InputStream stream, Bundle results) throws Exception {
-		LOG.d("RemoveMyRoomProcessor # onProcessResponse");
 		RemoveRoomResponse response = RestUtils.fromJson(stream, RemoveRoomResponse.class);
 		
 		if (response.hasError()) {
@@ -25,7 +24,6 @@ public class RemoveMyRoomProcessor extends Processor {
 			Error error = response.error;
 			results.putInt(RestUtils.ERROR_CODE, error.code);
 			results.putString(RestUtils.ERROR_MESSAGE, error.message);
-			LOG.d("ERROR: " + error.message);
 			return Status.ERROR;
 		}
 
@@ -34,7 +32,7 @@ public class RemoveMyRoomProcessor extends Processor {
 		
 		// Delete it locally too
 		ContentResolver resolver = context.getContentResolver();
-		int count = resolver.delete(Rooms.CONTENT_URI, Rooms.COLUMN_ID + "=" + roomId, null);
+		resolver.delete(Rooms.CONTENT_URI, Rooms.COLUMN_ID + "=" + roomId, null);
 		resolver.notifyChange(Rooms.CONTENT_URI, null);
 		
 		return Status.OK;

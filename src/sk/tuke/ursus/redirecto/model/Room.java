@@ -16,6 +16,15 @@ public class Room implements Parcelable {
 	public String createdAt;
 	@SerializedName("changed_at")
 	public String changedAt;
+	private boolean isAdded = false;
+
+	public void setAdded(boolean isAdded) {
+		this.isAdded = isAdded;
+	}
+
+	public boolean isAdded() {
+		return isAdded;
+	}
 
 	public ContentValues toContentValues() {
 		ContentValues values = new ContentValues();
@@ -27,6 +36,9 @@ public class Room implements Parcelable {
 		return values;
 	}
 
+	/**
+	 * Parcelable boiler plate
+	 */
 	public static final Parcelable.Creator<Room> CREATOR = new Parcelable.Creator<Room>() {
 
 		@Override
@@ -61,6 +73,5 @@ public class Room implements Parcelable {
 	public int describeContents() {
 		return 0;
 	}
-
 
 }
