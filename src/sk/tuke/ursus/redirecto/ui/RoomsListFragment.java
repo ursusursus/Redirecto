@@ -10,13 +10,13 @@ import sk.tuke.ursus.redirecto.provider.RedirectoContract.Rooms;
 import sk.tuke.ursus.redirecto.ui.dialog.ProgressDialogFragment;
 import sk.tuke.ursus.redirecto.util.LOG;
 import sk.tuke.ursus.redirecto.util.ToastUtils;
-import sk.tuke.ursus.redirecto.util.Utils;
-import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
@@ -30,8 +30,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -222,11 +220,17 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 	private OnItemClickListener mItemClickListener = new OnItemClickListener() {
 
 		@Override
-		public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+		public void onItemClick(AdapterView<?> arg0, View view, int position, long arg3) {
 			Cursor cursor = (Cursor) mAdapter.getItem(position);
 			int id = cursor.getInt(cursor.getColumnIndex(Rooms.COLUMN_ID));
 
-			LOG.d("Position: " + position + " - Id: " + id);
+			Bundle bundle = ActivityOptionsCompat.makeScaleUpAnimation(
+					view, 0, 0,
+					view.getWidth(), view.getHeight()
+					).toBundle();
+
+			Intent intent = new Intent(mContext, DetailActivity.class);
+			ActivityCompat.startActivity(getActivity(), intent, bundle);
 		}
 	};
 

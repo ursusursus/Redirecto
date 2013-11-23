@@ -6,6 +6,7 @@
     
     <color name="base_green">#00be8f</color>
     <color name="accent_green">#00be8f</color>
+    <color name="separator_color">#E6E6E6</color>
     
     <color name="gray">#D8D8D8</color>
     <color name="toast_gray">#EE585858</color>
