@@ -24,7 +24,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 public class NewRoomFragment extends Fragment {
 
@@ -38,10 +41,11 @@ public class NewRoomFragment extends Fragment {
 	private MyApplication mApp;
 	private ArrayList<Room> mRooms;
 	private RoomsArrayAdapter mAdapter;
-	private ListView mListView;
-	private EditText mFilterEditText;
-	private View mProgressBar;
-	private View mErrorTextView;
+	
+	@InjectView(R.id.listView) ListView mListView;
+	@InjectView(R.id.filterEditText) EditText mFilterEditText;
+	@InjectView(R.id.progressBar) ProgressBar mProgressBar;
+	@InjectView(R.id.errorTextView) TextView mErrorTextView;
 
 	public NewRoomFragment() {
 	}
@@ -87,18 +91,13 @@ public class NewRoomFragment extends Fragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-
-		mProgressBar = view.findViewById(R.id.progressBar);
-		mErrorTextView = view.findViewById(R.id.errorTextView);
-
+		ButterKnife.inject(this, view);
+		
 		mAdapter = new RoomsArrayAdapter(mContext, mRooms, mRoomAddedListener);
-
-		mListView = (ListView) view.findViewById(R.id.listView);
 		mListView.setAdapter(mAdapter);
-
-		mFilterEditText = (EditText) view.findViewById(R.id.filterEditText);
 		mFilterEditText.addTextChangedListener(mTextChangedListener);
 	}
+	
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {

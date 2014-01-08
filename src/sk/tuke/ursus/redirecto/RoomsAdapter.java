@@ -45,7 +45,6 @@ public class RoomsAdapter extends CursorAdapter {
 	}
 
 	private class ViewHolder {
-
 		public TextView name;
 		public View view;
 

@@ -2,6 +2,9 @@ package sk.tuke.ursus.redirecto;
 
 import java.util.ArrayList;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 import sk.tuke.ursus.redirecto.model.Room;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,6 +16,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class RoomsArrayAdapter extends ArrayAdapter<Room> {
+
 	public interface OnRoomAddedListener {
 		public void onRoomAdded(int position, int id);
 	}
@@ -28,23 +32,18 @@ public class RoomsArrayAdapter extends ArrayAdapter<Room> {
 		mItems = items;
 		mItemsCopy = items;
 		mListener = listener;
-
 	}
 
 	@Override
-	public View getView(final int position, View convertView, ViewGroup parent) {
-		ViewHolder holder;
-		if (convertView == null) {
-			convertView = mInflater.inflate(R.layout.item_room_list, parent, false);
+	public View getView(final int position, View view, ViewGroup parent) {
+		ArrayViewHolder holder;
+		if (view == null) {
+			view = mInflater.inflate(R.layout.item_room_list, parent, false);
+			holder = new ArrayViewHolder(view);
+			view.setTag(holder);
 
-			holder = new ViewHolder();
-			holder.name = (TextView) convertView.findViewById(R.id.nameTextView);
-			holder.floor = (TextView) convertView.findViewById(R.id.floorTextView);
-			holder.add = (ImageButton) convertView.findViewById(R.id.addButton);
-
-			convertView.setTag(holder);
 		} else {
-			holder = (ViewHolder) convertView.getTag();
+			holder = (ArrayViewHolder) view.getTag();
 		}
 
 		final Room room = mItems.get(position);
@@ -54,7 +53,9 @@ public class RoomsArrayAdapter extends ArrayAdapter<Room> {
 			holder.add.setEnabled(false);
 			holder.add.setImageResource(R.drawable.ic_action_success);
 			holder.add.setOnClickListener(null);
+
 		} else {
+			holder.add.setEnabled(true);
 			holder.add.setImageResource(R.drawable.ic_action_new);
 			holder.add.setOnClickListener(new OnClickListener() {
 
@@ -65,7 +66,7 @@ public class RoomsArrayAdapter extends ArrayAdapter<Room> {
 			});
 		}
 
-		return convertView;
+		return view;
 	}
 
 	public Room roomById(int id) {
@@ -95,10 +96,15 @@ public class RoomsArrayAdapter extends ArrayAdapter<Room> {
 
 	}
 
-	static class ViewHolder {
-		public TextView name;
-		public TextView floor;
-		public ImageButton add;
+	static class ArrayViewHolder {
+
+		@InjectView(R.id.nameTextView) TextView name;
+		@InjectView(R.id.floorTextView) TextView floor;
+		@InjectView(R.id.addButton) ImageButton add;
+
+		public ArrayViewHolder(View view) {
+			ButterKnife.inject(this, view);
+		}
 	}
 
 }

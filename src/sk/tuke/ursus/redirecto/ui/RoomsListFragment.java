@@ -35,6 +35,13 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
+import butterknife.OnItemClick;
+import butterknife.OnItemLongClick;
 
 public class RoomsListFragment extends Fragment implements LoaderCallbacks<Cursor> {
 
@@ -42,15 +49,13 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 
 	private Context mContext;
 	private MyApplication mApp;
-
-	private GridView mGridView;
 	private RoomsCursorAdapter mAdapter;
-
 	private ProgressDialogFragment mProgressDialog;
-	private View mProgressBar;
-	private View mErrorTextView;
 
-	private Button mBoardingButton;
+	@InjectView(R.id.gridView) GridView mGridView;
+	@InjectView(R.id.progressBar) ProgressBar mProgressBar;
+	@InjectView(R.id.errorTextView) TextView mErrorTextView;
+	@InjectView(R.id.boardingButton) Button mBoardingButton;
 
 	public static RoomsListFragment newInstance() {
 		return new RoomsListFragment();
@@ -64,37 +69,25 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 
-		//
-		
 		mContext = getActivity();
 		mApp = (MyApplication) getActivity().getApplication();
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_rooms_list, container, false);
-	}
-
-	@Override
-	public void onViewCreated(View view, Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-
-		mProgressBar = view.findViewById(R.id.progressBar);
-		mErrorTextView = view.findViewById(R.id.errorTextView);
-		mBoardingButton = (Button) getView().findViewById(R.id.boardingButton);
-
-		mAdapter = new RoomsCursorAdapter(mContext, mRoomOverflowCallback);
-
-		mGridView = (GridView) view.findViewById(R.id.gridView);
-		mGridView.setOnItemClickListener(mItemClickListener);
-		mGridView.setOnItemLongClickListener(mItemLongClickListener);
-		mGridView.setAdapter(mAdapter);
-
+		View v = inflater.inflate(R.layout.fragment_rooms_list, container, false);
+		ButterKnife.inject(this, v);
+		return v;
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		
+		mAdapter = new RoomsCursorAdapter(mContext, mRoomOverflowCallback);
+		mGridView.setOnItemClickListener(mItemClickListener);
+		mGridView.setOnItemLongClickListener(mItemLongClickListener);
+		mGridView.setAdapter(mAdapter);
 
 		String username = mApp.getUsername();
 		if (username != null) {
@@ -104,6 +97,56 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		}
 
 		getLoaderManager().initLoader(LOADER_ID, null, this);
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		ButterKnife.reset(this);
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.fragment_rooms_list, menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.action_localize: {
+			localizeMe();
+			return true;
+		}
+		case R.id.action_add_room: {
+			goToNewRoomActivity();
+			return true;
+		}
+
+		case R.id.action_sync_rooms: {
+			syncMyRooms();
+			return true;
+		}
+
+		case R.id.action_settings: {
+			Intent intent = new Intent(mContext, MyPreferencesActivity.class);
+			startActivity(intent);
+			return true;
+		}
+
+		case R.id.action_about: {
+			Intent intent = new Intent(mContext, AboutActivity.class);
+			startActivity(intent);
+			return true;
+		}
+
+		case R.id.action_logout: {
+			logout();
+			return true;
+		}
+
+		default:
+			return false;
+		}
 	}
 
 	protected void syncMyRooms() {
@@ -126,51 +169,8 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		RestService.logout(mContext, mApp.getToken(), mLogoutCallback);
 	}
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.fragment_rooms_list, menu);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.action_localize: {
-				localizeMe();
-				return true;
-			}
-			case R.id.action_add_room: {
-				goToNewRoomActivity();
-				return true;
-			}
-
-			case R.id.action_sync_rooms: {
-				syncMyRooms();
-				return true;
-			}
-
-			case R.id.action_settings: {
-				Intent intent = new Intent(mContext, MyPreferencesActivity.class);
-				startActivity(intent);
-				return true;
-			}
-
-			case R.id.action_about: {
-				Intent intent = new Intent(mContext, AboutActivity.class);
-				startActivity(intent);
-				return true;
-			}
-
-			case R.id.action_logout: {
-				logout();
-				return true;
-			}
-
-			default:
-				return false;
-		}
-	}
-
-	private void goToNewRoomActivity() {
+	@OnClick(R.id.boardingButton)
+	protected void goToNewRoomActivity() {
 		Intent intent = new Intent(mContext, NewRoomActivity.class);
 		startActivity(intent);
 	}
@@ -236,21 +236,6 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		}
 	};
 
-	private RoomOverflowCallback mRoomOverflowCallback = new RoomOverflowCallback() {
-
-		@Override
-		public void onRoomRemoved(int id) {
-			LOG.d("onRoomRemoved: " + id);
-			removeMyRoom(id);
-		}
-
-		@Override
-		public void onLocalizedManually(int id) {
-			LOG.d("onLocalizedManually: " + id);
-			localizeMeManually(id);
-		}
-	};
-
 	private OnItemLongClickListener mItemLongClickListener = new OnItemLongClickListener() {
 
 		@Override
@@ -264,6 +249,21 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 			return true;
 		}
 
+	};
+
+	private RoomOverflowCallback mRoomOverflowCallback = new RoomOverflowCallback() {
+
+		@Override
+		public void onRoomRemoved(int id) {
+			LOG.d("onRoomRemoved: " + id);
+			removeMyRoom(id);
+		}
+
+		@Override
+		public void onLocalizedManually(int id) {
+			LOG.d("onLocalizedManually: " + id);
+			localizeMeManually(id);
+		}
 	};
 
 	private RestUtils.Callback mLogoutCallback = new RestUtils.Callback() {
@@ -359,13 +359,6 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 			boolean emptyFlag = data.getBoolean(RestService.RESULTS_NO_ROOMS_KEY, false);
 			if (emptyFlag) {
 				mBoardingButton.setVisibility(View.VISIBLE);
-				mBoardingButton.setOnClickListener(new OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						goToNewRoomActivity();
-					}
-				});
 				/* if (Utils.hasHoneycomb()) {
 					final DecelerateInterpolator interpolator = new DecelerateInterpolator();
 					mBoardingButton.animate()
@@ -398,7 +391,8 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		@Override
 		public void onException() {
 			hideProgressBar();
-			ToastUtils.showError(mContext, "Nepodarilo sa synchronizova so serverom", "Skontrolujte pripojenie na internet");
+			ToastUtils.showError(mContext, "Nepodarilo sa synchronizova so serverom",
+					"Skontrolujte pripojenie na internet");
 		}
 
 		@Override
