@@ -64,6 +64,8 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 
+		//
+		
 		mContext = getActivity();
 		mApp = (MyApplication) getActivity().getApplication();
 	}
