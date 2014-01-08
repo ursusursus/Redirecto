@@ -10,7 +10,6 @@ import sk.tuke.ursus.redirecto.net.RestUtils.Processor;
 import sk.tuke.ursus.redirecto.net.RestUtils.Status;
 import sk.tuke.ursus.redirecto.net.response.AddRoomResponse;
 import sk.tuke.ursus.redirecto.provider.RedirectoContract.Rooms;
-import sk.tuke.ursus.redirecto.util.LOG;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Bundle;

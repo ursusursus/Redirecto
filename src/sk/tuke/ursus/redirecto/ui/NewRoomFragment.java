@@ -9,8 +9,6 @@ import sk.tuke.ursus.redirecto.RoomsArrayAdapter.OnRoomAddedListener;
 import sk.tuke.ursus.redirecto.model.Room;
 import sk.tuke.ursus.redirecto.net.RestService;
 import sk.tuke.ursus.redirecto.net.RestUtils;
-import sk.tuke.ursus.redirecto.util.LOG;
-import sk.tuke.ursus.redirecto.util.ToastUtils;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -28,6 +26,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+
+import com.awaboom.ursus.agave.LOG;
+import com.awaboom.ursus.agave.ToastUtils;
 
 public class NewRoomFragment extends Fragment {
 

@@ -5,8 +5,6 @@ import sk.tuke.ursus.redirecto.R;
 import sk.tuke.ursus.redirecto.net.RestService;
 import sk.tuke.ursus.redirecto.net.RestUtils;
 import sk.tuke.ursus.redirecto.ui.dialog.ProgressDialogFragment;
-import sk.tuke.ursus.redirecto.util.LOG;
-import sk.tuke.ursus.redirecto.util.ToastUtils;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +16,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.awaboom.ursus.agave.LOG;
+import com.awaboom.ursus.agave.ToastUtils;
 
 public class LoginActivity extends ActionBarActivity {
 

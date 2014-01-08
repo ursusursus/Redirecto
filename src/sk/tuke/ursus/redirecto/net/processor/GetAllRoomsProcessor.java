@@ -1,20 +1,13 @@
 package sk.tuke.ursus.redirecto.net.processor;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 
-import sk.tuke.ursus.redirecto.model.Room;
 import sk.tuke.ursus.redirecto.net.RestService;
 import sk.tuke.ursus.redirecto.net.RestUtils;
+import sk.tuke.ursus.redirecto.net.RestUtils.JsonRpcResponse.Error;
 import sk.tuke.ursus.redirecto.net.RestUtils.Processor;
 import sk.tuke.ursus.redirecto.net.RestUtils.Status;
-import sk.tuke.ursus.redirecto.net.RestUtils.JsonRpcResponse.Error;
 import sk.tuke.ursus.redirecto.net.response.GetRoomsResponse;
-import sk.tuke.ursus.redirecto.net.response.LoginResponse;
-import sk.tuke.ursus.redirecto.net.response.LoginResponse.LoginResult;
-import sk.tuke.ursus.redirecto.provider.RedirectoContract.Rooms;
-import sk.tuke.ursus.redirecto.util.LOG;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Bundle;
 

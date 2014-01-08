@@ -9,7 +9,6 @@ import sk.tuke.ursus.redirecto.net.RestUtils.Processor;
 import sk.tuke.ursus.redirecto.net.RestUtils.Status;
 import sk.tuke.ursus.redirecto.net.response.LoginResponse;
 import sk.tuke.ursus.redirecto.net.response.LoginResponse.LoginResult;
-import sk.tuke.ursus.redirecto.util.LOG;
 import android.content.Context;
 import android.os.Bundle;
 

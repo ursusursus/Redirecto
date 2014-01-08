@@ -1,10 +1,11 @@
 package sk.tuke.ursus.redirecto;
 
-import sk.tuke.ursus.redirecto.util.LOG;
 import sk.tuke.ursus.redirecto.util.Utils;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+
+import com.awaboom.ursus.agave.LOG;
 
 public class MyApplication extends Application {
 

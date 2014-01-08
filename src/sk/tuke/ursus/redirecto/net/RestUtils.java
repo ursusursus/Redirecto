@@ -15,7 +15,6 @@ import java.util.Map.Entry;
 
 import org.json.JSONObject;
 
-import sk.tuke.ursus.redirecto.util.LOG;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
@@ -24,6 +23,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.ResultReceiver;
 
+import com.awaboom.ursus.agave.LOG;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 

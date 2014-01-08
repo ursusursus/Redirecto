@@ -13,6 +13,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 
+import com.awaboom.ursus.agave.LOG;
+
 public class Utils {
 
 	private static final int ALARM_ID = 1234;
