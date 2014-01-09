@@ -44,6 +44,7 @@ public class SnifferService extends Service {
 	}
 
 	public void processSniffedResults(JSONArray results) {
+		//
 		stopSelf();
 	}
 
