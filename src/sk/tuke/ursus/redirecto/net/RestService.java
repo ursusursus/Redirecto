@@ -1,5 +1,6 @@
 package sk.tuke.ursus.redirecto.net;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,7 +31,7 @@ public class RestService extends AbstractRestService {
 	private static final String LOGIN_URL = BASE_URL + "/login";
 	private static final String LOGOUT_URL = BASE_URL + "/logout";
 	private static final String LOCALIZE_URL = BASE_URL + "/localize_me";
-	private static final String LOCALIZE_MANUALLY_URL = BASE_URL + "/localize_me_manually";
+	private static final String FORCE_LOCALIZE_URL = BASE_URL + "/localize_me_manually";
 	private static final String GET_ALL_ROOMS_URL = BASE_URL + "/get_all_rooms";
 	public static final String GET_MY_ROOMS_URL = BASE_URL + "/get_my_rooms";
 	private static final String ADD_MY_ROOM_URL = BASE_URL + "/add_my_room";
@@ -41,7 +42,6 @@ public class RestService extends AbstractRestService {
 	public static final String RESULTS_ROOMS_KEY = "rooms";
 	public static final String RESULTS_INSERTED_ID_KEY = "inserted_id";
 	public static final String RESULTS_NO_ROOMS_KEY = "no_rooms";
-
 
 	public RestService() {
 		super(RestService.class.toString());
@@ -117,14 +117,11 @@ public class RestService extends AbstractRestService {
 		}
 	}
 
-	public static void localizeMe(Context context, String token, Callback callback) {
-		// Tu budu dBm vsetkych wificiek
-		// takze bude parameter json
-		// teda asi lepsie ak bude vsade,
-		// ako v robote
+	public static void localize(Context context, String token, JSONArray scanResults, Callback callback) {
 		try {
 			String params = new JSONObject()
 					.put("token", token)
+					.put("scan_results", scanResults)
 					.toString();
 
 			new RequestBuilder()
@@ -138,7 +135,7 @@ public class RestService extends AbstractRestService {
 		}
 	}
 
-	public static void localizeMeManually(Context context, int id, String token, Callback callback) {
+	public static void forceLocalize(Context context, int id, String token, Callback callback) {
 		try {
 			String params = new JSONObject()
 					.put("token", token)
@@ -147,7 +144,7 @@ public class RestService extends AbstractRestService {
 
 			new RequestBuilder()
 					.setMethod(Methods.POST)
-					.setUrl(LOCALIZE_MANUALLY_URL)
+					.setUrl(FORCE_LOCALIZE_URL)
 					.setParams(params)
 					.setCallback(callback)
 					.setProcessor(new LocalizeMeManuallyProcessor())

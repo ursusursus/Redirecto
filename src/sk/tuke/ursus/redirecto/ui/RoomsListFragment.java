@@ -3,6 +3,7 @@ package sk.tuke.ursus.redirecto.ui;
 import sk.tuke.ursus.redirecto.MyApplication;
 import sk.tuke.ursus.redirecto.R;
 import sk.tuke.ursus.redirecto.RoomsCursorAdapter;
+import sk.tuke.ursus.redirecto.SnifferService;
 import sk.tuke.ursus.redirecto.RoomsCursorAdapter.RoomOverflowCallback;
 import sk.tuke.ursus.redirecto.net.RestService;
 import sk.tuke.ursus.redirecto.net.RestUtils;
@@ -147,16 +148,21 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		}
 	}
 
+
+	protected void localizeMe() {
+		// RestService.localizeMe(mContext, mApp.getToken(), mLocalizeMeCallback);	
+		Intent intent = new Intent(mContext, SnifferService.class);
+		intent.setAction(SnifferService.ACTION_SNIFF);
+		
+		mContext.startService(intent);
+	}
+	
 	protected void syncMyRooms() {
 		RestService.getMyRooms(mContext, mApp.getToken(), mMyRoomsCallback);
 	}
 
-	protected void localizeMe() {
-		RestService.localizeMe(mContext, mApp.getToken(), mLocalizeMeCallback);
-	}
-
 	protected void localizeMeManually(int id) {
-		RestService.localizeMeManually(mContext, id, mApp.getToken(), mLocalizeMeManuallyCallback);
+		RestService.forceLocalize(mContext, id, mApp.getToken(), mLocalizeMeManuallyCallback);
 	}
 
 	protected void removeMyRoom(int id) {
