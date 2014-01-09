@@ -111,7 +111,7 @@ public class RestUtils {
 			if (params != null) {
 				conn.setDoOutput(true);
 				conn.setConnectTimeout(TIMEOUT_MS);
-				conn.setRequestProperty("Content-Length", Integer.toString(params.length()));
+				conn.setRequestProperty("Content-Length", Integer.toString(params.getBytes().length));
 
 				// Post the request
 				OutputStream out = conn.getOutputStream();

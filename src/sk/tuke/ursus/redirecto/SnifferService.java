@@ -6,6 +6,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import sk.tuke.ursus.redirecto.net.RestService;
+import sk.tuke.ursus.redirecto.net.RestUtils.Callback;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -13,6 +15,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
+import android.os.Bundle;
 import android.os.IBinder;
 
 import com.awaboom.ursus.agave.LOG;
@@ -29,7 +32,6 @@ public class SnifferService extends Service {
 		String action = intent.getAction();
 
 		if (ACTION_SNIFF.equals(action)) {
-			LOG.d("ACTION_SNIFF");
 			// Hook up receiver
 			mReceiver = new ScanReceiver();
 			IntentFilter filter = new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
@@ -44,14 +46,37 @@ public class SnifferService extends Service {
 	}
 
 	public void processSniffedResults(JSONArray results) {
-		//
-		stopSelf();
+		MyApplication myApp = (MyApplication) getApplication();
+		RestService.localize(this, myApp.getToken(), results, new Callback() {
+			
+			@Override
+			public void onSuccess(Bundle data) {
+				LOG.d("Localize # onSuccess");
+				stopSelf();
+			}
+			
+			@Override
+			public void onStarted() {
+				LOG.d("Localize # onStarted");
+			}
+			
+			@Override
+			public void onException() {
+				LOG.d("Localize # onException");
+				stopSelf();
+			}
+			
+			@Override
+			public void onError(int code, String message) {
+				LOG.d("Localize # onError");
+				stopSelf();
+			}
+		});
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		LOG.d("onDestroy");
 		unregisterReceiver(mReceiver);
 	}
 
@@ -62,7 +87,7 @@ public class SnifferService extends Service {
 
 	private class ScanReceiver extends BroadcastReceiver {
 
-		private static final int MAX_COUNTER = 3;
+		private static final int MAX_COUNTER = 1;
 		private int mCounter = 0;
 		private JSONArray mCollectedJsonArray = new JSONArray();
 
@@ -74,7 +99,7 @@ public class SnifferService extends Service {
 			mCollectedJsonArray.put(jsonArray);
 
 			// Do multiple measurements
-			if (++mCounter < MAX_COUNTER) {
+			if (mCounter++ < MAX_COUNTER) {
 				mWifiManager.startScan();
 				return;
 			}
