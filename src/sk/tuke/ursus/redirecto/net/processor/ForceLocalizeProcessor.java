@@ -7,7 +7,7 @@ import sk.tuke.ursus.redirecto.net.RestUtils.Status;
 import android.content.Context;
 import android.os.Bundle;
 
-public class LocalizeManuallyProcessor extends Processor {
+public class ForceLocalizeProcessor extends Processor {
 
 	@Override
 	public int onProcessResponse(Context context, String contentType, InputStream stream, Bundle results) throws Exception {

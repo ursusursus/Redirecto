@@ -13,7 +13,7 @@ import android.os.Bundle;
 
 import com.awaboom.ursus.agave.LOG;
 
-public class LocalizeMeProcessor extends Processor {
+public class LocalizeProcessor extends Processor {
 
 	@Override
 	public int onProcessResponse(Context context, String contentType, InputStream stream, Bundle results) throws Exception {

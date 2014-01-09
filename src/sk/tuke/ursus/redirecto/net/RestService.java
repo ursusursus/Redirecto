@@ -9,11 +9,10 @@ import sk.tuke.ursus.redirecto.net.RestUtils.Callback;
 import sk.tuke.ursus.redirecto.net.RestUtils.Methods;
 import sk.tuke.ursus.redirecto.net.RestUtils.RequestBuilder;
 import sk.tuke.ursus.redirecto.net.processor.AddMyRoomProcessor;
-import sk.tuke.ursus.redirecto.net.processor.GeneralProcessor;
+import sk.tuke.ursus.redirecto.net.processor.ForceLocalizeProcessor;
 import sk.tuke.ursus.redirecto.net.processor.GetAllRoomsProcessor;
 import sk.tuke.ursus.redirecto.net.processor.GetMyRoomsProcessor;
-import sk.tuke.ursus.redirecto.net.processor.LocalizeMeManuallyProcessor;
-import sk.tuke.ursus.redirecto.net.processor.LocalizeMeProcessor;
+import sk.tuke.ursus.redirecto.net.processor.LocalizeProcessor;
 import sk.tuke.ursus.redirecto.net.processor.LoginProcessor;
 import sk.tuke.ursus.redirecto.net.processor.LogoutProcessor;
 import sk.tuke.ursus.redirecto.net.processor.RemoveMyRoomProcessor;
@@ -129,7 +128,7 @@ public class RestService extends AbstractRestService {
 					.setUrl(LOCALIZE_URL)
 					.setParams(params)
 					.setCallback(callback)
-					.setProcessor(new LocalizeMeProcessor())
+					.setProcessor(new LocalizeProcessor())
 					.execute(context, RestService.class);
 		} catch (JSONException e) {
 		}
@@ -147,7 +146,7 @@ public class RestService extends AbstractRestService {
 					.setUrl(FORCE_LOCALIZE_URL)
 					.setParams(params)
 					.setCallback(callback)
-					.setProcessor(new LocalizeMeManuallyProcessor())
+					.setProcessor(new ForceLocalizeProcessor())
 					.execute(context, RestService.class);
 		} catch (JSONException e) {
 		}
