@@ -9,7 +9,22 @@ public class RoomsListFragment$$ViewInjector {
     View view;
     view = finder.findById(source, 2131296337);
     if (view == null) {
-      throw new IllegalStateException("Required view with id '2131296337' for field 'mBoardingButton' and method 'goToNewRoomActivity' was not found. If this view is optional add '@Optional' annotation.");
+      throw new IllegalStateException("Required view with id '2131296337' for field 'mGridView' was not found. If this view is optional add '@Optional' annotation.");
+    }
+    target.mGridView = (android.widget.GridView) view;
+    view = finder.findById(source, 2131296335);
+    if (view == null) {
+      throw new IllegalStateException("Required view with id '2131296335' for field 'mProgressBar' was not found. If this view is optional add '@Optional' annotation.");
+    }
+    target.mProgressBar = (android.widget.ProgressBar) view;
+    view = finder.findById(source, 2131296336);
+    if (view == null) {
+      throw new IllegalStateException("Required view with id '2131296336' for field 'mErrorTextView' was not found. If this view is optional add '@Optional' annotation.");
+    }
+    target.mErrorTextView = (android.widget.TextView) view;
+    view = finder.findById(source, 2131296338);
+    if (view == null) {
+      throw new IllegalStateException("Required view with id '2131296338' for field 'mBoardingButton' and method 'goToNewRoomActivity' was not found. If this view is optional add '@Optional' annotation.");
     }
     target.mBoardingButton = (android.widget.Button) view;
     view.setOnClickListener(
@@ -20,27 +35,12 @@ public class RoomsListFragment$$ViewInjector {
           target.goToNewRoomActivity();
         }
       });
-    view = finder.findById(source, 2131296334);
-    if (view == null) {
-      throw new IllegalStateException("Required view with id '2131296334' for field 'mProgressBar' was not found. If this view is optional add '@Optional' annotation.");
-    }
-    target.mProgressBar = (android.widget.ProgressBar) view;
-    view = finder.findById(source, 2131296336);
-    if (view == null) {
-      throw new IllegalStateException("Required view with id '2131296336' for field 'mGridView' was not found. If this view is optional add '@Optional' annotation.");
-    }
-    target.mGridView = (android.widget.GridView) view;
-    view = finder.findById(source, 2131296335);
-    if (view == null) {
-      throw new IllegalStateException("Required view with id '2131296335' for field 'mErrorTextView' was not found. If this view is optional add '@Optional' annotation.");
-    }
-    target.mErrorTextView = (android.widget.TextView) view;
   }
 
   public static void reset(sk.tuke.ursus.redirecto.ui.RoomsListFragment target) {
-    target.mBoardingButton = null;
-    target.mProgressBar = null;
     target.mGridView = null;
+    target.mProgressBar = null;
     target.mErrorTextView = null;
+    target.mBoardingButton = null;
   }
 }

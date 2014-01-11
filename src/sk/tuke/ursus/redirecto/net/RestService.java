@@ -1,5 +1,7 @@
 package sk.tuke.ursus.redirecto.net;
 
+import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,6 +19,7 @@ import sk.tuke.ursus.redirecto.net.processor.LoginProcessor;
 import sk.tuke.ursus.redirecto.net.processor.LogoutProcessor;
 import sk.tuke.ursus.redirecto.net.processor.RemoveMyRoomProcessor;
 import android.content.Context;
+import android.net.wifi.ScanResult;
 
 /**
  * 
@@ -29,8 +32,8 @@ public class RestService extends AbstractRestService {
 
 	private static final String LOGIN_URL = BASE_URL + "/login";
 	private static final String LOGOUT_URL = BASE_URL + "/logout";
-	private static final String LOCALIZE_URL = BASE_URL + "/localize_me";
-	private static final String FORCE_LOCALIZE_URL = BASE_URL + "/localize_me_manually";
+	private static final String LOCALIZE_URL = BASE_URL + "/localize";
+	private static final String FORCE_LOCALIZE_URL = BASE_URL + "/force_localize";
 	private static final String GET_ALL_ROOMS_URL = BASE_URL + "/get_all_rooms";
 	public static final String GET_MY_ROOMS_URL = BASE_URL + "/get_my_rooms";
 	private static final String ADD_MY_ROOM_URL = BASE_URL + "/add_my_room";
@@ -185,6 +188,11 @@ public class RestService extends AbstractRestService {
 					.execute(context, RestService.class);
 		} catch (JSONException e) {
 		}
+	}
+
+	public static void postRecordedFingerprints(Context context, String token, String room,
+			List<List<ScanResult>> results, Callback callback) {
+		
 	}
 
 }

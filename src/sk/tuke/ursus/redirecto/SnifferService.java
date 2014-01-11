@@ -1,5 +1,6 @@
 package sk.tuke.ursus.redirecto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -22,50 +23,112 @@ import com.awaboom.ursus.agave.LOG;
 
 public class SnifferService extends Service {
 
+	public static final String ACTION_START_RECORD_FINGERPRINTS = "sk.tuke.ursus.redirecto.ACTION_START_RECORD_FINGERPRINTS";
+	public static final String ACTION_STOP_RECORD_FINGERPRINTS = "sk.tuke.ursus.redirecto.ACTION_STOP_RECORD_FINGERPRINTS";
 	public static final String ACTION_SNIFF = "sk.tuke.ursus.redirecto.ACTION_SNIFF";
+
+	public static final String EXTRA_RECORDED_ROOM = "sk.tuke.ursus.redirecto.EXTRA_RECORDED_ROOM";
 
 	private ScanReceiver mReceiver;
 	private WifiManager mWifiManager;
+	private String mAction;
+
+	private List<List<ScanResult>> mRecordedResults;
+	private String mRecoredRoom;
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		String action = intent.getAction();
+		mAction = intent.getAction();
 
-		if (ACTION_SNIFF.equals(action)) {
-			// Hook up receiver
-			mReceiver = new ScanReceiver();
-			IntentFilter filter = new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
-			registerReceiver(mReceiver, filter);
+		if (ACTION_SNIFF.equals(mAction)) {
+			startScanningWifis();
 
-			// Start sniffing RSSI values
-			mWifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
-			mWifiManager.startScan();
+		} else if (ACTION_START_RECORD_FINGERPRINTS.equals(mAction)) {
+			if (intent.hasExtra(EXTRA_RECORDED_ROOM)) {
+				mRecoredRoom = intent.getStringExtra(EXTRA_RECORDED_ROOM);
+				mRecordedResults = new ArrayList<List<ScanResult>>();
+				startScanningWifis();
+			}
 
+		} else if (ACTION_STOP_RECORD_FINGERPRINTS.equals(mAction)) {
+			if (mRecoredRoom != null && mRecordedResults != null) {
+				processRecordedResults();
+			}
 		}
+
 		return START_STICKY;
 	}
 
-	public void processSniffedResults(JSONArray results) {
+	private void startScanningWifis() {
+		// Hook up receiver
+		mReceiver = new ScanReceiver();
+		IntentFilter filter = new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
+		registerReceiver(mReceiver, filter);
+
+		// Start sniffing RSSI values
+		mWifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
+		// Pre 4.3+ vie pasivne skenovat wifiny
+		// aj ked je wifi vypnute userom
+		// mWifiManager.isScanAlwaysAvailable();
+		if (!mWifiManager.isWifiEnabled()) {
+			mWifiManager.setWifiEnabled(true);
+		}
+		mWifiManager.startScan();
+
+	}
+
+	private void processRecordedResults() {
 		MyApplication myApp = (MyApplication) getApplication();
-		RestService.localize(this, myApp.getToken(), results, new Callback() {
-			
+		RestService.postRecordedFingerprints(this, myApp.getToken(), mRecoredRoom, mRecordedResults, new Callback() {
+
 			@Override
 			public void onSuccess(Bundle data) {
 				LOG.d("Localize # onSuccess");
 				stopSelf();
 			}
-			
+
 			@Override
 			public void onStarted() {
 				LOG.d("Localize # onStarted");
 			}
-			
+
 			@Override
 			public void onException() {
 				LOG.d("Localize # onException");
 				stopSelf();
 			}
-			
+
+			@Override
+			public void onError(int code, String message) {
+				LOG.d("Localize # onError");
+				stopSelf();
+			}
+		});
+		stopSelf();
+	}
+
+	public void processSniffedResults(JSONArray results) {
+		LOG.d("JSON: " + results.toString());
+		MyApplication myApp = (MyApplication) getApplication();
+		RestService.localize(this, myApp.getToken(), results, new Callback() {
+
+			@Override
+			public void onSuccess(Bundle data) {
+				LOG.d("Localize # onSuccess");
+				stopSelf();
+			}
+
+			@Override
+			public void onStarted() {
+				LOG.d("Localize # onStarted");
+			}
+
+			@Override
+			public void onException() {
+				LOG.d("Localize # onException");
+				stopSelf();
+			}
+
 			@Override
 			public void onError(int code, String message) {
 				LOG.d("Localize # onError");
@@ -93,21 +156,34 @@ public class SnifferService extends Service {
 
 		@Override
 		public void onReceive(Context arg0, Intent arg1) {
-			// Get RSSI results
-			List<ScanResult> results = mWifiManager.getScanResults();
-			JSONArray jsonArray = scanResultsToJsonArray(results);
-			mCollectedJsonArray.put(jsonArray);
+			if (ACTION_SNIFF.equals(mAction)) {
+				// Get RSSI results
+				List<ScanResult> results = mWifiManager.getScanResults();
+				JSONArray jsonArray = scanResultsToJsonArray(results);
+				mCollectedJsonArray.put(jsonArray);
 
-			// Do multiple measurements
-			if (mCounter++ < MAX_COUNTER) {
-				mWifiManager.startScan();
-				return;
+				// Do multiple measurements
+				/*if (mCounter++ < MAX_COUNTER) {
+					mWifiManager.startScan();
+					return;
+				} */
+
+				// Process results
+				processSniffedResults(mCollectedJsonArray);
+
+			} else if (ACTION_START_RECORD_FINGERPRINTS.equals(mAction)) {
+				List<ScanResult> results = mWifiManager.getScanResults();
+				// Collect
+				mRecordedResults.add(results);
 			}
-			
-			// Process results
-			processSniffedResults(mCollectedJsonArray);
 		}
 
+		/**
+		 * Toto asi zrusit a premiestnit do RestService
+		 * 
+		 * @param scanResults
+		 * @return
+		 */
 		private JSONArray scanResultsToJsonArray(List<ScanResult> scanResults) {
 			JSONArray jsonArray = new JSONArray();
 			for (ScanResult scanResult : scanResults) {
