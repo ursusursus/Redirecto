@@ -21,6 +21,8 @@ import sk.tuke.ursus.redirecto.net.processor.RemoveMyRoomProcessor;
 import android.content.Context;
 import android.net.wifi.ScanResult;
 
+import com.awaboom.ursus.agave.LOG;
+
 /**
  * 
  * @author ursus
@@ -119,11 +121,12 @@ public class RestService extends AbstractRestService {
 		}
 	}
 
-	public static void localize(Context context, String token, JSONArray scanResults, Callback callback) {
+	public static void localize(Context context, String token, int currentRoomId, JSONArray fingerprint, Callback callback) {
 		try {
 			String params = new JSONObject()
 					.put("token", token)
-					.put("scan_results", scanResults)
+					.put("last_room_id", currentRoomId)
+					.put("fingerprint", fingerprint)
 					.toString();
 
 			new RequestBuilder()
@@ -192,7 +195,7 @@ public class RestService extends AbstractRestService {
 
 	public static void postRecordedFingerprints(Context context, String token, String room,
 			List<List<ScanResult>> results, Callback callback) {
-		
+		LOG.d("Not implemented yet");
 	}
 
 }

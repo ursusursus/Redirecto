@@ -82,7 +82,7 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
+
 		mAdapter = new RoomsCursorAdapter(mContext, mRoomOverflowCallback);
 		mGridView.setOnItemClickListener(mItemClickListener);
 		mGridView.setOnItemLongClickListener(mItemLongClickListener);
@@ -148,20 +148,21 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		}
 	}
 
-
 	protected void localizeMe() {
-		// RestService.localizeMe(mContext, mApp.getToken(), mLocalizeMeCallback);	
+		ToastUtils.show(mContext, "Zaèínam meranie...");
+
+		// RestService.localizeMe(mContext, mApp.getToken(), mLocalizeMeCallback);
 		Intent intent = new Intent(mContext, SnifferService.class);
 		intent.setAction(SnifferService.ACTION_SNIFF);
-		
+
 		mContext.startService(intent);
 	}
-	
+
 	protected void syncMyRooms() {
 		RestService.getMyRooms(mContext, mApp.getToken(), mMyRoomsCallback);
 	}
 
-	protected void localizeMeManually(int id) {
+	protected void forceLocalize(int id) {
 		RestService.forceLocalize(mContext, id, mApp.getToken(), mLocalizeMeManuallyCallback);
 	}
 
@@ -180,10 +181,12 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 	}
 
 	protected void hideProgressBar() {
+		((ActionBarActivity) getActivity()).setSupportProgressBarIndeterminateVisibility(false);
 		mProgressBar.setVisibility(View.GONE);
 	}
 
 	protected void showProgressBar() {
+		((ActionBarActivity) getActivity()).setSupportProgressBarIndeterminateVisibility(true);
 		mProgressBar.setVisibility(View.VISIBLE);
 	}
 
@@ -248,7 +251,7 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 			int id = cursor.getInt(cursor.getColumnIndex(Rooms.COLUMN_ID));
 
 			//
-			localizeMeManually(id);
+			forceLocalize(id);
 			//
 			return true;
 		}
@@ -266,7 +269,7 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		@Override
 		public void onLocalizedManually(int id) {
 			LOG.d("onLocalizedManually: " + id);
-			localizeMeManually(id);
+			forceLocalize(id);
 		}
 	};
 

@@ -9,11 +9,15 @@ import org.json.JSONObject;
 
 import sk.tuke.ursus.redirecto.net.RestService;
 import sk.tuke.ursus.redirecto.net.RestUtils.Callback;
+import sk.tuke.ursus.redirecto.net.processor.LocalizeProcessor;
+import sk.tuke.ursus.redirecto.provider.RedirectoContract.Rooms;
 import android.app.Service;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -107,10 +111,26 @@ public class SnifferService extends Service {
 		stopSelf();
 	}
 
-	public void processSniffedResults(JSONArray results) {
-		LOG.d("JSON: " + results.toString());
+	public void processSniffedResults(JSONArray fingerprint) {
+		LOG.d("JSON: " + fingerprint.toString());
+
+		// Select current room id
+		ContentResolver resolver = getContentResolver();
+		Cursor cursor = resolver.query(
+				Rooms.CONTENT_URI,
+				new String[] { Rooms.COLUMN_ID },
+				Rooms.COLUMN_CURRENT + "=1", null, null);
+		
+		int currentRoomId = -1;
+		if (cursor.moveToFirst()) {
+			currentRoomId = cursor.getInt(cursor.getColumnIndex(Rooms.COLUMN_ID));
+		}
+		cursor.close();
+		LOG.d("CurrentRoomId: " + currentRoomId);
+
+		// Make REST call
 		MyApplication myApp = (MyApplication) getApplication();
-		RestService.localize(this, myApp.getToken(), results, new Callback() {
+		RestService.localize(this, myApp.getToken(), currentRoomId, fingerprint, new Callback() {
 
 			@Override
 			public void onSuccess(Bundle data) {
@@ -131,7 +151,7 @@ public class SnifferService extends Service {
 
 			@Override
 			public void onError(int code, String message) {
-				LOG.d("Localize # onError");
+				LOG.d("Localize # onError: " + message);
 				stopSelf();
 			}
 		});
@@ -160,7 +180,7 @@ public class SnifferService extends Service {
 				// Get RSSI results
 				List<ScanResult> results = mWifiManager.getScanResults();
 				JSONArray jsonArray = scanResultsToJsonArray(results);
-				mCollectedJsonArray.put(jsonArray);
+				// mCollectedJsonArray.put(jsonArray);
 
 				// Do multiple measurements
 				/*if (mCounter++ < MAX_COUNTER) {
@@ -169,7 +189,8 @@ public class SnifferService extends Service {
 				} */
 
 				// Process results
-				processSniffedResults(mCollectedJsonArray);
+				// processSniffedResults(mCollectedJsonArray);
+				processSniffedResults(jsonArray);
 
 			} else if (ACTION_START_RECORD_FINGERPRINTS.equals(mAction)) {
 				List<ScanResult> results = mWifiManager.getScanResults();
