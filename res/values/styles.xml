@@ -20,6 +20,7 @@
         <item name="android:background">@color/base_green</item>
         <item name="android:titleTextStyle">@style/ActionBarTitleTextStyle.MyStyle</item>
         <item name="android:subtitleTextStyle">@style/ActionBarSubTitleTextStyle.MyStyle</item>
+        <item name="android:indeterminateProgressStyle">@style/ActionBarProgressBar.MyStyle</item>
     </style>
 
     <style name="ActionBarTitleTextStyle.MyStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
@@ -32,6 +33,13 @@
         <item name="android:textColor">#BBFFFFFF</item>
         <item name="android:fontFamily">sans-serif-condensed</item>
         <item name="android:textStyle">italic</item>
+    </style>
+    
+    <style name="ActionBarProgressBar.MyStyle" parent="@android:style/Widget.Holo.ProgressBar.Small">
+        <item name="android:minWidth">28dp</item>
+        <item name="android:maxWidth">28dp</item>
+        <item name="android:minHeight">28dp</item>
+        <item name="android:maxHeight">28dp</item>
     </style>
 
     <style name="BigButton">

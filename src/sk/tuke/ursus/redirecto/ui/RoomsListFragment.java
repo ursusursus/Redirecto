@@ -181,13 +181,19 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 	}
 
 	protected void hideProgressBar() {
-		((ActionBarActivity) getActivity()).setSupportProgressBarIndeterminateVisibility(false);
-		mProgressBar.setVisibility(View.GONE);
+		ActionBarActivity activity = (ActionBarActivity) getActivity();
+		if(getActivity() != null) {
+			activity.setSupportProgressBarIndeterminateVisibility(false);
+		}
+		// mProgressBar.setVisibility(View.GONE);
 	}
 
 	protected void showProgressBar() {
-		((ActionBarActivity) getActivity()).setSupportProgressBarIndeterminateVisibility(true);
-		mProgressBar.setVisibility(View.VISIBLE);
+		ActionBarActivity activity = (ActionBarActivity) getActivity();
+		if(getActivity() != null) {
+			activity.setSupportProgressBarIndeterminateVisibility(true);
+		}
+		// mProgressBar.setVisibility(View.VISIBLE);
 	}
 
 	protected void showProgressDialog() {
