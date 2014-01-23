@@ -11,7 +11,6 @@ import sk.tuke.ursus.redirecto.net.RestUtils.Callback;
 import sk.tuke.ursus.redirecto.net.RestUtils.Methods;
 import sk.tuke.ursus.redirecto.net.RestUtils.RequestBuilder;
 import sk.tuke.ursus.redirecto.net.processor.AddMyRoomProcessor;
-import sk.tuke.ursus.redirecto.net.processor.ForceLocalizeProcessor;
 import sk.tuke.ursus.redirecto.net.processor.GetAllRoomsProcessor;
 import sk.tuke.ursus.redirecto.net.processor.GetMyRoomsProcessor;
 import sk.tuke.ursus.redirecto.net.processor.LocalizeProcessor;
@@ -140,11 +139,11 @@ public class RestService extends AbstractRestService {
 		}
 	}
 
-	public static void forceLocalize(Context context, int id, String token, Callback callback) {
+	public static void forceLocalize(Context context, int roomId, String token, Callback callback) {
 		try {
 			String params = new JSONObject()
 					.put("token", token)
-					.put("room_id", id)
+					.put("room_id", roomId)
 					.toString();
 
 			new RequestBuilder()
@@ -152,7 +151,7 @@ public class RestService extends AbstractRestService {
 					.setUrl(FORCE_LOCALIZE_URL)
 					.setParams(params)
 					.setCallback(callback)
-					.setProcessor(new ForceLocalizeProcessor())
+					.setProcessor(new LocalizeProcessor())
 					.execute(context, RestService.class);
 		} catch (JSONException e) {
 		}

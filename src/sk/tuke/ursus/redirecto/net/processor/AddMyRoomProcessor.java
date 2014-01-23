@@ -8,7 +8,7 @@ import sk.tuke.ursus.redirecto.net.RestUtils;
 import sk.tuke.ursus.redirecto.net.RestUtils.JsonRpcResponse.Error;
 import sk.tuke.ursus.redirecto.net.RestUtils.Processor;
 import sk.tuke.ursus.redirecto.net.RestUtils.Status;
-import sk.tuke.ursus.redirecto.net.response.AddRoomResponse;
+import sk.tuke.ursus.redirecto.net.response.AddMyRoomResponse;
 import sk.tuke.ursus.redirecto.provider.RedirectoContract.Rooms;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -18,7 +18,7 @@ public class AddMyRoomProcessor extends Processor {
 
 	@Override
 	public int onProcessResponse(Context context, String contentType, InputStream stream, Bundle results) throws Exception {
-		AddRoomResponse response = RestUtils.fromJson(stream, AddRoomResponse.class);
+		AddMyRoomResponse response = RestUtils.fromJson(stream, AddMyRoomResponse.class);
 		
 		if (response.hasError()) {
 			// Post error

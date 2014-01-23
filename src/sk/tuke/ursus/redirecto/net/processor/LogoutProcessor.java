@@ -6,7 +6,7 @@ import sk.tuke.ursus.redirecto.net.RestUtils;
 import sk.tuke.ursus.redirecto.net.RestUtils.JsonRpcResponse.Error;
 import sk.tuke.ursus.redirecto.net.RestUtils.Processor;
 import sk.tuke.ursus.redirecto.net.RestUtils.Status;
-import sk.tuke.ursus.redirecto.net.response.GeneralResponse;
+import sk.tuke.ursus.redirecto.net.response.SimpleResponse;
 import sk.tuke.ursus.redirecto.net.response.LoginResponse;
 import sk.tuke.ursus.redirecto.provider.RedirectoContract.Rooms;
 import android.content.ContentResolver;
@@ -17,7 +17,7 @@ public class LogoutProcessor extends Processor {
 
 	@Override
 	public int onProcessResponse(Context context, String contentType, InputStream stream, Bundle results) throws Exception {
-		GeneralResponse response = RestUtils.fromJson(stream, GeneralResponse.class);
+		SimpleResponse response = RestUtils.fromJson(stream, SimpleResponse.class);
 		
 		if (response.hasError()) {
 			// Post error

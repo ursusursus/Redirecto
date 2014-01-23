@@ -19,8 +19,6 @@ import com.awaboom.ursus.agave.LOG;
 
 public class LocalizeProcessor extends Processor {
 
-	public static final String RESULT_LOCALIZED_ROOM_ID = "localized_room_id";
-
 	@Override
 	public int onProcessResponse(Context context, String contentType, InputStream stream, Bundle results)
 			throws Exception {
@@ -45,30 +43,6 @@ public class LocalizeProcessor extends Processor {
 		} else {
 			return Status.OK;
 		}
-
-		/* ContentValues values = new ContentValues();
-		values.put(Rooms.COLUMN_CURRENT, 1);
-		int count = resolver.update(Rooms.CONTENT_URI,
-				values,
-				Rooms.COLUMN_ID + "=" + response.result.localizedRoomId,
-				null);
-
-		if (count > 0) {
-			// Znulovat ostatne riadky
-			values.put(Rooms.COLUMN_CURRENT, 0);
-			resolver.update(Rooms.CONTENT_URI,
-					values,
-					Rooms.COLUMN_ID + "!=" + response.result.localizedRoomId,
-					null);
-
-			// Oznamit UI o zmene
-			resolver.notifyChange(Rooms.CONTENT_URI, null);
-			return Status.OK;
-
-		} else {
-			results.putString(RestUtils.ERROR_MESSAGE, "Lokalizovan· miestnosù nie je v zozname vaöich miestnostÌ");
-			return Status.ERROR;
-		} */
 
 	}
 

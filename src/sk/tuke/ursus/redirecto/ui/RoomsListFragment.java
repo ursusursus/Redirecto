@@ -113,7 +113,7 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_localize: {
-			localizeMe();
+			localizeNow();
 			return true;
 		}
 		case R.id.action_add_room: {
@@ -148,7 +148,7 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		}
 	}
 
-	protected void localizeMe() {
+	protected void localizeNow() {
 		ToastUtils.show(mContext, "Zaèínam meranie...");
 
 		// RestService.localizeMe(mContext, mApp.getToken(), mLocalizeMeCallback);
@@ -262,13 +262,11 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 
 		@Override
 		public void onRoomRemoved(int id) {
-			LOG.d("onRoomRemoved: " + id);
 			removeMyRoom(id);
 		}
 
 		@Override
 		public void onLocalizedManually(int id) {
-			LOG.d("onLocalizedManually: " + id);
 			forceLocalize(id);
 		}
 	};

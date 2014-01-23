@@ -6,7 +6,7 @@ import sk.tuke.ursus.redirecto.net.RestUtils;
 import sk.tuke.ursus.redirecto.net.RestUtils.JsonRpcResponse.Error;
 import sk.tuke.ursus.redirecto.net.RestUtils.Processor;
 import sk.tuke.ursus.redirecto.net.RestUtils.Status;
-import sk.tuke.ursus.redirecto.net.response.RemoveRoomResponse;
+import sk.tuke.ursus.redirecto.net.response.RemoveMyRoomResponse;
 import sk.tuke.ursus.redirecto.provider.RedirectoContract.Rooms;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -16,7 +16,7 @@ public class RemoveMyRoomProcessor extends Processor {
 
 	@Override
 	public int onProcessResponse(Context context, String contentType, InputStream stream, Bundle results) throws Exception {
-		RemoveRoomResponse response = RestUtils.fromJson(stream, RemoveRoomResponse.class);
+		RemoveMyRoomResponse response = RestUtils.fromJson(stream, RemoveMyRoomResponse.class);
 		
 		if (response.hasError()) {
 			// Post error
