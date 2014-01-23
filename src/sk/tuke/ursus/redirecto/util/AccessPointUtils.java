@@ -9,6 +9,8 @@ public class AccessPointUtils {
 	};
 
 	public static void filter() {
-
+		// Neviem ci ma toto zmysel, kedze
+		// si to filtruje server teraz
+		// Mozno v RecordActivity to nejako vyuzijem
 	}
 }

@@ -11,6 +11,8 @@ import sk.tuke.ursus.redirecto.net.RestService;
 import sk.tuke.ursus.redirecto.net.RestUtils.Callback;
 import sk.tuke.ursus.redirecto.net.processor.LocalizeProcessor;
 import sk.tuke.ursus.redirecto.provider.RedirectoContract.Rooms;
+import sk.tuke.ursus.redirecto.util.QueryUtils;
+import android.app.DownloadManager.Query;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
@@ -114,23 +116,13 @@ public class SnifferService extends Service {
 	public void processSniffedResults(JSONArray fingerprint) {
 		LOG.d("JSON: " + fingerprint.toString());
 
-		// Select current room id
+		// Get current room id
 		ContentResolver resolver = getContentResolver();
-		Cursor cursor = resolver.query(
-				Rooms.CONTENT_URI,
-				new String[] { Rooms.COLUMN_ID },
-				Rooms.COLUMN_CURRENT + "=1", null, null);
-		
-		int currentRoomId = -1;
-		if (cursor.moveToFirst()) {
-			currentRoomId = cursor.getInt(cursor.getColumnIndex(Rooms.COLUMN_ID));
-		}
-		cursor.close();
-		LOG.d("CurrentRoomId: " + currentRoomId);
+		int roomId = QueryUtils.getCurrentRoomId(resolver);
 
 		// Make REST call
 		MyApplication myApp = (MyApplication) getApplication();
-		RestService.localize(this, myApp.getToken(), currentRoomId, fingerprint, new Callback() {
+		RestService.localize(this, myApp.getToken(), roomId, fingerprint, new Callback() {
 
 			@Override
 			public void onSuccess(Bundle data) {
