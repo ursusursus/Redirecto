@@ -3,22 +3,26 @@ package sk.tuke.ursus.redirecto.util;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import sk.tuke.ursus.redirecto.R;
 import sk.tuke.ursus.redirecto.net.RestService;
 import sk.tuke.ursus.redirecto.net.RestUtils.AbstractRestService;
 import sk.tuke.ursus.redirecto.net.RestUtils.Methods;
 import sk.tuke.ursus.redirecto.net.processor.GetMyRoomsProcessor;
+import sk.tuke.ursus.redirecto.ui.RecordActivity;
 import android.app.AlarmManager;
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.support.v4.app.NotificationCompat;
 
 import com.awaboom.ursus.agave.LOG;
 
 public class Utils {
 
 	private static final int ALARM_ID = 1234;
-	private static final long AUTOSYNC_INTERVAL = 24 * 60 * 60 * 1000; //24 hodin
+	private static final long AUTOSYNC_INTERVAL = 24 * 60 * 60 * 1000; // 24 hodin
 
 	public static final String PREFS_TOKEN_KEY = "token";
 	public static final String PREFS_USERNAME_KEY = "username";
@@ -60,6 +64,24 @@ public class Utils {
 		} catch (JSONException e) {
 		}
 
+	}
+
+	public static Notification makeNotification(Context context) {
+		Intent intent = new Intent(context, RecordActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+		PendingIntent pendingIntent = PendingIntent.getActivity(context, 1234, intent,
+				PendingIntent.FLAG_UPDATE_CURRENT);
+
+		Notification notification = new NotificationCompat.Builder(context)
+				.setSmallIcon(R.drawable.ic_launcher)
+				.setTicker("")
+				.setContentIntent(pendingIntent)
+				.setContentTitle("Zaznamenávam odtlaèky")
+				.setContentText("REDIRECTO")
+				.build();
+
+		return notification;
 	}
 
 }

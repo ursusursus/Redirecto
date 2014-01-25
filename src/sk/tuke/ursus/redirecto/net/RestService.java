@@ -18,6 +18,7 @@ import sk.tuke.ursus.redirecto.net.processor.LocalizeProcessor;
 import sk.tuke.ursus.redirecto.net.processor.LoginProcessor;
 import sk.tuke.ursus.redirecto.net.processor.LogoutProcessor;
 import sk.tuke.ursus.redirecto.net.processor.RemoveMyRoomProcessor;
+import sk.tuke.ursus.redirecto.net.processor.SimpleProcessor;
 import android.content.Context;
 import android.net.wifi.ScanResult;
 
@@ -40,6 +41,7 @@ public class RestService extends AbstractRestService {
 	public static final String GET_MY_ROOMS_URL = BASE_URL + "/get_my_rooms";
 	private static final String ADD_MY_ROOM_URL = BASE_URL + "/add_my_room";
 	private static final String REMOVE_MY_ROOM_URL = BASE_URL + "/remove_my_room";
+	private static final String NEW_FINGERPRINTS_URL = BASE_URL + "/new_fingerprints";
 	private static final String GET_ROOMS_AND_APS_URL = BASE_URL + "/get_rooms_and_aps";
 
 	public static final String RESULTS_TOKEN_KEY = "token";
@@ -196,10 +198,6 @@ public class RestService extends AbstractRestService {
 		}
 	}
 
-	public static void newFingerprints(Context context, String token, int roomId,
-			List<List<ScanResult>> results, Callback callback) {
-		LOG.d("Not implemented yet");
-	}
 
 	public static void getRoomsAndAPs(Context context, String token, Callback callback) {
 		try {
@@ -213,6 +211,26 @@ public class RestService extends AbstractRestService {
 					.setParams(params)
 					.setCallback(callback)
 					.setProcessor(new GetRoomsAndAPsProcessor())
+					.execute(context, RestService.class);
+		} catch (JSONException e) {
+		}
+	}
+
+	public static void newFingerprints(Context context, String token, int roomId,
+			JSONArray fingerprints, Callback callback) {
+		try {
+			String params = new JSONObject()
+					.put("token", token)
+					.put("room_id", roomId)
+					.put("fingerprints", fingerprints)
+					.toString();
+
+			new RequestBuilder()
+					.setMethod(Methods.POST)
+					.setUrl(NEW_FINGERPRINTS_URL)
+					.setParams(params)
+					.setCallback(callback)
+					.setProcessor(new SimpleProcessor())
 					.execute(context, RestService.class);
 		} catch (JSONException e) {
 		}

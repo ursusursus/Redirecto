@@ -34,6 +34,7 @@ public class LocalizeProcessor extends Processor {
 
 		// Update new localized room in database
 		int newCurrentRoom = response.result.localizedRoomId;
+		LOG.d("NEW_CURRENT_ROOM=" + newCurrentRoom);
 		ContentResolver resolver = context.getContentResolver();
 		
 		boolean success = QueryUtils.setNewCurrentRoomId(resolver, newCurrentRoom);
@@ -41,6 +42,7 @@ public class LocalizeProcessor extends Processor {
 			results.putString(RestUtils.ERROR_MESSAGE, "Lokalizovan· miestnosù nie je v zozname vaöich miestnostÌ");
 			return Status.ERROR;
 		} else {
+			results.putString("what", "Lokalizovan˝ v [" + newCurrentRoom + "]");
 			return Status.OK;
 		}
 

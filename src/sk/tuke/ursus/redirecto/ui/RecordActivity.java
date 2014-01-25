@@ -30,6 +30,8 @@ import com.awaboom.ursus.agave.ToastUtils;
 public class RecordActivity extends ActionBarActivity implements OnClickListener, OnRoomPickedListener {
 
 	private static final String EXTRA_VALUES_LIST = "values";
+	private static final String EXTRA_IS_RECORDING = "has_room_selected";
+	private static final String EXTRA_PICKED_ROOM = "picked_room";
 
 	private boolean mRecording;
 	private Button mToggleButton;
@@ -50,6 +52,8 @@ public class RecordActivity extends ActionBarActivity implements OnClickListener
 			RestService.getRoomsAndAPs(this, myApp.getToken(), mRoomsAndAPsCallback);
 		} else {
 			mValuesList = savedInstanceState.getStringArrayList(EXTRA_VALUES_LIST);
+			mRecording = savedInstanceState.getBoolean(EXTRA_IS_RECORDING);
+			mPickedRoom = savedInstanceState.getParcelable(EXTRA_PICKED_ROOM);
 		}
 
 		mAdapter = new ArrayAdapter<String>(
@@ -62,8 +66,16 @@ public class RecordActivity extends ActionBarActivity implements OnClickListener
 		listView.setAdapter(mAdapter);
 
 		mToggleButton = (Button) findViewById(R.id.toggleButton);
-		mToggleButton.setEnabled(false);
 		mToggleButton.setOnClickListener(this);
+		mToggleButton.setText(mRecording ? "Stop [" + mValuesList.size() + "]" : "ätart");
+
+		if (mPickedRoom != null) {
+			ActionBar actionBar = getSupportActionBar();
+			actionBar.setSubtitle("v miestnosti " + mPickedRoom.name + "[" + mPickedRoom.id + "]");
+			mToggleButton.setEnabled(true);
+		} else {
+			mToggleButton.setEnabled(false);
+		}
 
 	}
 
@@ -71,7 +83,7 @@ public class RecordActivity extends ActionBarActivity implements OnClickListener
 	public void onClick(View v) {
 		if (!mRecording) {
 
-			ToastUtils.show(this, "Sp˙ötam meranie v [" + mPickedRoom.id + "] " + mPickedRoom.name + "...");
+			ToastUtils.show(this, "Sp˙öùam meranie v " + mPickedRoom.name + " [ID=" + mPickedRoom.id + "]...");
 
 			Intent intent = new Intent(this, SnifferService.class);
 			intent.setAction(SnifferService.ACTION_START_RECORD_FINGERPRINTS);
@@ -81,10 +93,11 @@ public class RecordActivity extends ActionBarActivity implements OnClickListener
 
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 			mToggleButton.setText("Stop");
+			mValuesList.clear();
 			mRecording = true;
 
 		} else {
-			ToastUtils.show(this, "UkonËujem meranie v [" + mPickedRoom.id + "] " + mPickedRoom.name + "...");
+			ToastUtils.show(this, "UkonËujem meranie v " + mPickedRoom.name + " [ID=" + mPickedRoom.id + "]...");
 
 			Intent intent = new Intent(this, SnifferService.class);
 			intent.setAction(SnifferService.ACTION_STOP_RECORD_FINGERPRINTS);
@@ -100,7 +113,7 @@ public class RecordActivity extends ActionBarActivity implements OnClickListener
 	@Override
 	public void onRoomPicked(Room room) {
 		ActionBar actionBar = getSupportActionBar();
-		actionBar.setSubtitle("v miestnosti " + room.name);
+		actionBar.setSubtitle("v miestnosti " + room.name + "[" + room.id + "]");
 
 		mToggleButton.setEnabled(true);
 		mPickedRoom = room;
@@ -110,15 +123,19 @@ public class RecordActivity extends ActionBarActivity implements OnClickListener
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putStringArrayList(EXTRA_VALUES_LIST, mValuesList);
+		outState.putBoolean(EXTRA_IS_RECORDING, mRecording);
+		outState.putParcelable(EXTRA_PICKED_ROOM, mPickedRoom);
 	}
 
 	private ResultReceiver mReceiver = new ResultReceiver(new Handler()) {
 		protected void onReceiveResult(int resultCode, Bundle resultData) {
 			String values = resultData.getString(SnifferService.EXTRA_VALUES);
 			LOG.d(values);
-
+			
 			mValuesList.add(values);
 			mAdapter.notifyDataSetChanged();
+
+			mToggleButton.setText(mRecording ? "Stop [" + mValuesList.size() + "]" : "ätart");
 		};
 	};
 

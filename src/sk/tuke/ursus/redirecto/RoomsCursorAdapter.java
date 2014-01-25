@@ -20,6 +20,7 @@ public class RoomsCursorAdapter extends CursorAdapter {
 
 	public interface RoomOverflowCallback {
 		public void onRoomRemoved(int id);
+
 		public void onLocalizedManually(int id);
 	}
 
@@ -36,7 +37,8 @@ public class RoomsCursorAdapter extends CursorAdapter {
 	public void bindView(View view, Context context, Cursor cursor) {
 		final CursorViewHolder holder = (CursorViewHolder) view.getTag();
 
-		holder.name.setText(cursor.getString(cursor.getColumnIndex(Rooms.COLUMN_NAME)));
+		holder.name.setText(cursor.getString(cursor.getColumnIndex(Rooms.COLUMN_NAME)) + "["
+				+ cursor.getString(cursor.getColumnIndex(Rooms.COLUMN_ID)) + "]");
 		holder.floor.setText(cursor.getString(cursor.getColumnIndex(Rooms.COLUMN_FLOOR)));
 
 		boolean isCurrentRoom = (cursor.getInt(cursor.getColumnIndex(Rooms.COLUMN_CURRENT)) == 1);
@@ -86,7 +88,7 @@ public class RoomsCursorAdapter extends CursorAdapter {
 	}
 
 	static class CursorViewHolder {
-		
+
 		@InjectView(R.id.nameTextView) TextView name;
 		@InjectView(R.id.floorTextView) TextView floor;
 		@InjectView(R.id.overflowButton) ImageButton overflow;

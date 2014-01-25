@@ -12,6 +12,7 @@ import sk.tuke.ursus.redirecto.net.RestUtils.Callback;
 import sk.tuke.ursus.redirecto.net.processor.LocalizeProcessor;
 import sk.tuke.ursus.redirecto.provider.RedirectoContract.Rooms;
 import sk.tuke.ursus.redirecto.util.QueryUtils;
+import sk.tuke.ursus.redirecto.util.Utils;
 import android.app.DownloadManager.Query;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -51,6 +52,7 @@ public class SnifferService extends Service {
 		mAction = intent.getAction();
 
 		if (ACTION_SNIFF.equals(mAction)) {
+			mResultReceiver = (ResultReceiver) intent.getParcelableExtra(EXTRA_RECEIVER);
 			startScanningWifis();
 
 		} else if (ACTION_START_RECORD_FINGERPRINTS.equals(mAction)) {
@@ -60,11 +62,12 @@ public class SnifferService extends Service {
 				mRecordedResults = new ArrayList<List<ScanResult>>();
 				
 				startScanningWifis();
+				startForeground(123, Utils.makeNotification(this));
 			}
 
 		} else if (ACTION_STOP_RECORD_FINGERPRINTS.equals(mAction)) {
 			if (mRecoredRoomId != -1 && mRecordedResults != null) {
-				processRecordedResults();
+				processRecordedResults(mRecoredRoomId, mRecordedResults);
 			}
 		}
 
@@ -89,37 +92,43 @@ public class SnifferService extends Service {
 
 	}
 
-	private void processRecordedResults() {
+	protected void processRecordedResults(int roomId, List<List<ScanResult>> resultsList) {
+		JSONArray fingerprints = new JSONArray();
+		for (List<ScanResult> results : resultsList) {
+			JSONArray fingerprint = scanResultsToJsonArray(results);
+			fingerprints.put(fingerprint);
+		}
+		
 		MyApplication myApp = (MyApplication) getApplication();
-		RestService.newFingerprints(this, myApp.getToken(), mRecoredRoomId, mRecordedResults, new Callback() {
+		RestService.newFingerprints(this, myApp.getToken(), roomId, fingerprints, new Callback() {
 
 			@Override
 			public void onSuccess(Bundle data) {
-				LOG.d("Localize # onSuccess");
+				LOG.d("Record # onSuccess");
 				stopSelf();
 			}
 
 			@Override
 			public void onStarted() {
-				LOG.d("Localize # onStarted");
+				LOG.d("Record # onStarted");
 			}
 
 			@Override
 			public void onException() {
-				LOG.d("Localize # onException");
+				LOG.d("Record # onException");
 				stopSelf();
 			}
 
 			@Override
 			public void onError(int code, String message) {
-				LOG.d("Localize # onError");
+				LOG.d("Record # onError");
 				stopSelf();
 			}
 		});
-		stopSelf();
 	}
 
-	public void processSniffedResults(JSONArray fingerprint) {
+	protected void processSniffedResults(List<ScanResult> results) {
+		JSONArray fingerprint = scanResultsToJsonArray(results);
 		LOG.d("JSON: " + fingerprint.toString());
 
 		// Get current room id
@@ -133,6 +142,11 @@ public class SnifferService extends Service {
 			@Override
 			public void onSuccess(Bundle data) {
 				LOG.d("Localize # onSuccess");
+				//
+				Bundle bundle = new Bundle();
+				bundle.putString("what", data.getString("what"));
+				mResultReceiver.send(0, bundle);
+				//
 				stopSelf();
 			}
 
@@ -150,16 +164,39 @@ public class SnifferService extends Service {
 			@Override
 			public void onError(int code, String message) {
 				LOG.d("Localize # onError: " + message);
+				//
+				Bundle bundle = new Bundle();
+				bundle.putString("what", message);
+				mResultReceiver.send(0, bundle);
+				//
 				stopSelf();
 			}
 		});
+	}
+	
+	protected JSONArray scanResultsToJsonArray(List<ScanResult> scanResults) {
+		JSONArray jsonArray = new JSONArray();
+		for (ScanResult scanResult : scanResults) {
+			try {
+				JSONObject json = new JSONObject();
+				json.put("ssid", scanResult.SSID);
+				json.put("rssi", scanResult.level);
+
+				jsonArray.put(json);
+			} catch (JSONException e) {
+			}
+		}
+		return jsonArray;
+
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 		LOG.d("onDestroy");
+		
 		unregisterReceiver(mReceiver);
+		stopForeground(true);
 	}
 
 	@Override
@@ -176,7 +213,7 @@ public class SnifferService extends Service {
 			if (ACTION_SNIFF.equals(mAction)) {
 				// Get RSSI results
 				List<ScanResult> results = mWifiManager.getScanResults();
-				JSONArray jsonArray = scanResultsToJsonArray(results);
+				// JSONArray jsonArray = scanResultsToJsonArray(results);
 				// mCollectedJsonArray.put(jsonArray);
 
 				// Do multiple measurements
@@ -187,7 +224,7 @@ public class SnifferService extends Service {
 
 				// Process results
 				// processSniffedResults(mCollectedJsonArray);
-				processSniffedResults(jsonArray);
+				processSniffedResults(results);
 
 			} else if (ACTION_START_RECORD_FINGERPRINTS.equals(mAction)) {
 				List<ScanResult> results = mWifiManager.getScanResults();
@@ -211,28 +248,6 @@ public class SnifferService extends Service {
 				// Restart
 				mWifiManager.startScan();
 			}
-		}
-
-		/**
-		 * Toto asi zrusit a premiestnit do RestService
-		 * 
-		 * @param scanResults
-		 * @return
-		 */
-		private JSONArray scanResultsToJsonArray(List<ScanResult> scanResults) {
-			JSONArray jsonArray = new JSONArray();
-			for (ScanResult scanResult : scanResults) {
-				try {
-					JSONObject json = new JSONObject();
-					json.put("ssid", scanResult.SSID.toLowerCase());
-					json.put("rssi", scanResult.level);
-
-					jsonArray.put(json);
-				} catch (JSONException e) {
-				}
-			}
-			return jsonArray;
-
 		}
 
 	}

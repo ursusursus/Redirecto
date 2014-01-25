@@ -39,6 +39,7 @@
         </activity>
         <activity 
             android:name="sk.tuke.ursus.redirecto.ui.RecordActivity"
+            android:configChanges="orientation|screenSize"
             android:label="Záznam" >
         </activity>
         <activity

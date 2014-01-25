@@ -3,8 +3,8 @@ package sk.tuke.ursus.redirecto.ui;
 import sk.tuke.ursus.redirecto.MyApplication;
 import sk.tuke.ursus.redirecto.R;
 import sk.tuke.ursus.redirecto.RoomsCursorAdapter;
-import sk.tuke.ursus.redirecto.SnifferService;
 import sk.tuke.ursus.redirecto.RoomsCursorAdapter.RoomOverflowCallback;
+import sk.tuke.ursus.redirecto.SnifferService;
 import sk.tuke.ursus.redirecto.net.RestService;
 import sk.tuke.ursus.redirecto.net.RestUtils;
 import sk.tuke.ursus.redirecto.provider.RedirectoContract.Rooms;
@@ -14,6 +14,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
@@ -155,11 +157,18 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 	}
 
 	protected void localizeNow() {
-		ToastUtils.show(mContext, "Zaèínam meranie...");
+		ToastUtils.show(mContext, "Spúšam meranie...");
 
 		// RestService.localizeMe(mContext, mApp.getToken(), mLocalizeMeCallback);
 		Intent intent = new Intent(mContext, SnifferService.class);
 		intent.setAction(SnifferService.ACTION_SNIFF);
+		intent.putExtra(SnifferService.EXTRA_RECEIVER, new ResultReceiver(new Handler()) {
+			@Override
+			protected void onReceiveResult(int resultCode, Bundle resultData) {
+				super.onReceiveResult(resultCode, resultData);
+				ToastUtils.showInfo(mContext, resultData.getString("what"));
+			}
+		});
 
 		mContext.startService(intent);
 	}
@@ -222,7 +231,6 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loaderId, Cursor cursor) {
-		LOG.d("CursorCount: " + cursor.getCount());
 		mAdapter.swapCursor(cursor);
 
 		if (cursor.getCount() == 0) {
