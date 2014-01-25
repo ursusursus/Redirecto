@@ -126,6 +126,12 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 			return true;
 		}
 
+		case R.id.action_record: {
+			Intent intent = new Intent(mContext, RecordActivity.class);
+			startActivity(intent);
+			return true;
+		}
+
 		case R.id.action_settings: {
 			Intent intent = new Intent(mContext, MyPreferencesActivity.class);
 			startActivity(intent);
@@ -182,7 +188,7 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 
 	protected void hideProgressBar() {
 		ActionBarActivity activity = (ActionBarActivity) getActivity();
-		if(getActivity() != null) {
+		if (getActivity() != null) {
 			activity.setSupportProgressBarIndeterminateVisibility(false);
 		}
 		// mProgressBar.setVisibility(View.GONE);
@@ -190,7 +196,7 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 
 	protected void showProgressBar() {
 		ActionBarActivity activity = (ActionBarActivity) getActivity();
-		if(getActivity() != null) {
+		if (getActivity() != null) {
 			activity.setSupportProgressBarIndeterminateVisibility(true);
 		}
 		// mProgressBar.setVisibility(View.VISIBLE);

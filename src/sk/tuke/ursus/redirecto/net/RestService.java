@@ -11,6 +11,7 @@ import sk.tuke.ursus.redirecto.net.RestUtils.Callback;
 import sk.tuke.ursus.redirecto.net.RestUtils.Methods;
 import sk.tuke.ursus.redirecto.net.RestUtils.RequestBuilder;
 import sk.tuke.ursus.redirecto.net.processor.AddMyRoomProcessor;
+import sk.tuke.ursus.redirecto.net.processor.GetRoomsAndAPsProcessor;
 import sk.tuke.ursus.redirecto.net.processor.GetAllRoomsProcessor;
 import sk.tuke.ursus.redirecto.net.processor.GetMyRoomsProcessor;
 import sk.tuke.ursus.redirecto.net.processor.LocalizeProcessor;
@@ -39,12 +40,14 @@ public class RestService extends AbstractRestService {
 	public static final String GET_MY_ROOMS_URL = BASE_URL + "/get_my_rooms";
 	private static final String ADD_MY_ROOM_URL = BASE_URL + "/add_my_room";
 	private static final String REMOVE_MY_ROOM_URL = BASE_URL + "/remove_my_room";
+	private static final String GET_ROOMS_AND_APS_URL = BASE_URL + "/get_rooms_and_aps";
 
 	public static final String RESULTS_TOKEN_KEY = "token";
 	public static final String RESULTS_EMAIL_KEY = "email";
 	public static final String RESULTS_ROOMS_KEY = "rooms";
 	public static final String RESULTS_INSERTED_ID_KEY = "inserted_id";
 	public static final String RESULTS_NO_ROOMS_KEY = "no_rooms";
+
 
 	public RestService() {
 		super(RestService.class.toString());
@@ -120,7 +123,8 @@ public class RestService extends AbstractRestService {
 		}
 	}
 
-	public static void localize(Context context, String token, int currentRoomId, JSONArray fingerprint, Callback callback) {
+	public static void localize(Context context, String token, int currentRoomId, JSONArray fingerprint,
+			Callback callback) {
 		try {
 			String params = new JSONObject()
 					.put("token", token)
@@ -192,9 +196,26 @@ public class RestService extends AbstractRestService {
 		}
 	}
 
-	public static void postRecordedFingerprints(Context context, String token, String room,
+	public static void newFingerprints(Context context, String token, int roomId,
 			List<List<ScanResult>> results, Callback callback) {
 		LOG.d("Not implemented yet");
+	}
+
+	public static void getRoomsAndAPs(Context context, String token, Callback callback) {
+		try {
+			String params = new JSONObject()
+					.put("token", token)
+					.toString();
+
+			new RequestBuilder()
+					.setMethod(Methods.POST)
+					.setUrl(GET_ROOMS_AND_APS_URL)
+					.setParams(params)
+					.setCallback(callback)
+					.setProcessor(new GetRoomsAndAPsProcessor())
+					.execute(context, RestService.class);
+		} catch (JSONException e) {
+		}
 	}
 
 }

@@ -35,6 +35,11 @@ public class Room implements Parcelable {
 		values.put(Rooms.COLUMN_CHANGED_AT, changedAt);
 		return values;
 	}
+	
+	@Override
+	public String toString() {
+		return name;
+	}
 
 	/**
 	 * Parcelable boiler plate

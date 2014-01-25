@@ -4,27 +4,30 @@
 
     <item
         android:id="@+id/action_localize"
-        android:orderInCategory="95"
         android:icon="@drawable/ic_action_location_found"
+        android:orderInCategory="94"
         android:title="Lokalizuj"
         app:showAsAction="ifRoom"/>
-    
     <item
         android:id="@+id/action_add_room"
-        android:orderInCategory="96"
+        android:orderInCategory="95"
         android:title="Pridať miestnosť"
         app:showAsAction="never"/>
     <item
         android:id="@+id/action_sync_rooms"
-        android:orderInCategory="97"
+        android:orderInCategory="96"
         android:title="Synchronizovať miestnosti"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_record"
+        android:orderInCategory="97"
+        android:title="Záznam odtlačkov"
         app:showAsAction="never"/>
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="98"
         android:title="@string/menu_settings"
         app:showAsAction="never"/>
-    
     <item
         android:id="@+id/action_about"
         android:orderInCategory="99"

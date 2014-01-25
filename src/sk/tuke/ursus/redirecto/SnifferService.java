@@ -24,6 +24,7 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.ResultReceiver;
 
 import com.awaboom.ursus.agave.LOG;
 
@@ -34,13 +35,16 @@ public class SnifferService extends Service {
 	public static final String ACTION_SNIFF = "sk.tuke.ursus.redirecto.ACTION_SNIFF";
 
 	public static final String EXTRA_RECORDED_ROOM = "sk.tuke.ursus.redirecto.EXTRA_RECORDED_ROOM";
+	public static final String EXTRA_RECEIVER = "sk.tuke.ursus.redirecto.EXTRA_RECEIVER";
+	public static final String EXTRA_VALUES = "sk.tuke.ursus.redirecto.EXTRA_VALUES";
 
 	private ScanReceiver mReceiver;
 	private WifiManager mWifiManager;
+	private ResultReceiver mResultReceiver;
 	private String mAction;
 
 	private List<List<ScanResult>> mRecordedResults;
-	private String mRecoredRoom;
+	private int mRecoredRoomId;
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
@@ -51,13 +55,15 @@ public class SnifferService extends Service {
 
 		} else if (ACTION_START_RECORD_FINGERPRINTS.equals(mAction)) {
 			if (intent.hasExtra(EXTRA_RECORDED_ROOM)) {
-				mRecoredRoom = intent.getStringExtra(EXTRA_RECORDED_ROOM);
+				mResultReceiver = (ResultReceiver) intent.getParcelableExtra(EXTRA_RECEIVER);
+				mRecoredRoomId = intent.getIntExtra(EXTRA_RECORDED_ROOM, -1);
 				mRecordedResults = new ArrayList<List<ScanResult>>();
+				
 				startScanningWifis();
 			}
 
 		} else if (ACTION_STOP_RECORD_FINGERPRINTS.equals(mAction)) {
-			if (mRecoredRoom != null && mRecordedResults != null) {
+			if (mRecoredRoomId != -1 && mRecordedResults != null) {
 				processRecordedResults();
 			}
 		}
@@ -85,7 +91,7 @@ public class SnifferService extends Service {
 
 	private void processRecordedResults() {
 		MyApplication myApp = (MyApplication) getApplication();
-		RestService.postRecordedFingerprints(this, myApp.getToken(), mRecoredRoom, mRecordedResults, new Callback() {
+		RestService.newFingerprints(this, myApp.getToken(), mRecoredRoomId, mRecordedResults, new Callback() {
 
 			@Override
 			public void onSuccess(Bundle data) {
@@ -152,6 +158,7 @@ public class SnifferService extends Service {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		LOG.d("onDestroy");
 		unregisterReceiver(mReceiver);
 	}
 
@@ -162,9 +169,7 @@ public class SnifferService extends Service {
 
 	private class ScanReceiver extends BroadcastReceiver {
 
-		private static final int MAX_COUNTER = 1;
-		private int mCounter = 0;
-		private JSONArray mCollectedJsonArray = new JSONArray();
+		private Bundle mBundle;
 
 		@Override
 		public void onReceive(Context arg0, Intent arg1) {
@@ -186,8 +191,25 @@ public class SnifferService extends Service {
 
 			} else if (ACTION_START_RECORD_FINGERPRINTS.equals(mAction)) {
 				List<ScanResult> results = mWifiManager.getScanResults();
+
+				// To string
+				if (mReceiver != null) {
+					StringBuilder sb = new StringBuilder();
+					for (ScanResult result : results) {
+						sb.append(result.SSID + "=" + result.level + " ");
+					}
+					if (mBundle == null) {
+						mBundle = new Bundle();
+					}
+					mBundle.putString(EXTRA_VALUES, sb.toString());
+					mResultReceiver.send(0, mBundle);
+				}
+
 				// Collect
 				mRecordedResults.add(results);
+
+				// Restart
+				mWifiManager.startScan();
 			}
 		}
 
