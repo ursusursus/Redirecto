@@ -26,6 +26,7 @@ public class Utils {
 
 	public static final String PREFS_TOKEN_KEY = "token";
 	public static final String PREFS_USERNAME_KEY = "username";
+	public static final String PREFS_DIRECTORY_NUMBER_KEY = "directory_number";
 
 	public static boolean hasHoneycomb() {
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
@@ -82,6 +83,10 @@ public class Utils {
 				.build();
 
 		return notification;
+	}
+
+	public static String dotConcat(String string1, String string2) {
+		return string1 + " · " + string2;
 	}
 
 }

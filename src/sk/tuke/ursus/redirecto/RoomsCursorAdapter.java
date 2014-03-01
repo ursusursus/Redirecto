@@ -1,20 +1,21 @@
 package sk.tuke.ursus.redirecto;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
 import sk.tuke.ursus.redirecto.provider.RedirectoContract.Rooms;
+import sk.tuke.ursus.redirecto.util.Utils;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
-import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
+import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 public class RoomsCursorAdapter extends CursorAdapter {
 
@@ -37,9 +38,12 @@ public class RoomsCursorAdapter extends CursorAdapter {
 	public void bindView(View view, Context context, Cursor cursor) {
 		final CursorViewHolder holder = (CursorViewHolder) view.getTag();
 
-		holder.name.setText(cursor.getString(cursor.getColumnIndex(Rooms.COLUMN_NAME)) + "["
-				+ cursor.getString(cursor.getColumnIndex(Rooms.COLUMN_ID)) + "]");
-		holder.floor.setText(cursor.getString(cursor.getColumnIndex(Rooms.COLUMN_FLOOR)));
+		holder.name.setText(cursor.getString(cursor.getColumnIndex(Rooms.COLUMN_NAME)));
+		
+		String floor = cursor.getString(cursor.getColumnIndex(Rooms.COLUMN_FLOOR));
+		String phoneNumber = cursor.getString(cursor.getColumnIndex(Rooms.COLUMN_PHONE_NUMBER));
+		String roomId = cursor.getString(cursor.getColumnIndex(Rooms.COLUMN_ID));
+		holder.floor.setText(Utils.dotConcat(floor, phoneNumber) + " ["	+ roomId + "]");
 
 		boolean isCurrentRoom = (cursor.getInt(cursor.getColumnIndex(Rooms.COLUMN_CURRENT)) == 1);
 		if (isCurrentRoom) {

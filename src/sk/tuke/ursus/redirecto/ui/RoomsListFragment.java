@@ -90,11 +90,11 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		mGridView.setOnItemLongClickListener(mItemLongClickListener);
 		mGridView.setAdapter(mAdapter);
 
-		String username = mApp.getUsername();
-		if (username != null) {
+		String metadata = mApp.getMetadata();
+		if (metadata != null) {
 			ActionBarActivity activity = ((ActionBarActivity) getActivity());
 			ActionBar actionBar = activity.getSupportActionBar();
-			actionBar.setSubtitle(username);
+			actionBar.setSubtitle(metadata);
 		}
 
 		getLoaderManager().initLoader(LOADER_ID, null, this);
@@ -299,7 +299,7 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 			dismissProgressDialog();
 
 			// Remove data
-			mApp.removeTokenAndUsername();
+			mApp.removeTokenAndMetadata();
 
 			// Finish and start login activity
 			Intent intent = new Intent(mContext, LoginActivity.class);
@@ -381,7 +381,7 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 			hideProgressBar();
 
 			//
-			boolean emptyFlag = data.getBoolean(RestService.RESULTS_NO_ROOMS_KEY, false);
+			boolean emptyFlag = data.getBoolean(RestService.RESULT_NO_ROOMS, false);
 			if (emptyFlag) {
 				mBoardingButton.setVisibility(View.VISIBLE);
 				/* if (Utils.hasHoneycomb()) {

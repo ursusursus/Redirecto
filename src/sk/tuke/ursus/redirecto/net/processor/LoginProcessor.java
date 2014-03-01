@@ -27,8 +27,9 @@ public class LoginProcessor extends Processor {
 		
 		// Post success
 		LoginResult result = loginResponse.result;
-		results.putString(RestService.RESULTS_TOKEN_KEY, result.token);
-		results.putString(RestService.RESULTS_EMAIL_KEY, result.email);
+		results.putString(RestService.RESULT_TOKEN, result.token);
+		results.putString(RestService.RESULT_EMAIL, result.email);
+		results.putString(RestService.RESULT_DIRECTORY_NUMBER, result.directoryNumber);
 		return Status.OK;
 	}
 	

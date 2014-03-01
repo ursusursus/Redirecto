@@ -44,11 +44,13 @@ public class RestService extends AbstractRestService {
 	private static final String NEW_FINGERPRINTS_URL = BASE_URL + "/new_fingerprints";
 	private static final String GET_ROOMS_AND_APS_URL = BASE_URL + "/get_rooms_and_aps";
 
-	public static final String RESULTS_TOKEN_KEY = "token";
-	public static final String RESULTS_EMAIL_KEY = "email";
-	public static final String RESULTS_ROOMS_KEY = "rooms";
-	public static final String RESULTS_INSERTED_ID_KEY = "inserted_id";
-	public static final String RESULTS_NO_ROOMS_KEY = "no_rooms";
+	public static final String RESULT_TOKEN = "token";
+	public static final String RESULT_EMAIL = "email";
+	public static final String RESULT_DIRECTORY_NUMBER = "directory_number";
+	public static final String RESULT_ROOMS = "rooms";
+	public static final String RESULT_INSERTED_ID = "inserted_id";
+	public static final String RESULT_NO_ROOMS = "no_rooms";
+
 
 
 	public RestService() {

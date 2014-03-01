@@ -36,7 +36,7 @@ public class LocalizeProcessor extends Processor {
 		int newCurrentRoom = response.result.localizedRoomId;
 		LOG.d("NEW_CURRENT_ROOM=" + newCurrentRoom);
 		ContentResolver resolver = context.getContentResolver();
-		
+
 		boolean success = QueryUtils.setNewCurrentRoomId(resolver, newCurrentRoom);
 		if (!success) {
 			results.putString(RestUtils.ERROR_MESSAGE, "Lokalizovan· miestnosù nie je v zozname vaöich miestnostÌ");

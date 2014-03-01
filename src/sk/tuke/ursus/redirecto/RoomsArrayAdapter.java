@@ -6,6 +6,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 import sk.tuke.ursus.redirecto.model.Room;
+import sk.tuke.ursus.redirecto.util.Utils;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,7 +49,8 @@ public class RoomsArrayAdapter extends ArrayAdapter<Room> {
 
 		final Room room = mItems.get(position);
 		holder.name.setText(room.name);
-		holder.floor.setText(room.floor);
+		holder.floor.setText(Utils.dotConcat(room.floor, room.phoneNumber));
+		
 		if (room.isAdded()) {
 			holder.add.setEnabled(false);
 			holder.add.setImageResource(R.drawable.ic_action_success);

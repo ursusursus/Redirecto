@@ -36,7 +36,7 @@ public class AddMyRoomProcessor extends Processor {
 		resolver.insert(Rooms.CONTENT_URI, newRoom.toContentValues());
 		resolver.notifyChange(Rooms.CONTENT_URI, null);
 		
-		results.putInt(RestService.RESULTS_INSERTED_ID_KEY, newRoom.id);
+		results.putInt(RestService.RESULT_INSERTED_ID, newRoom.id);
 		return Status.OK;
 	}
 

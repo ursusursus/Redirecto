@@ -12,6 +12,8 @@ public class Room implements Parcelable {
 	public int id;
 	public String name;
 	public String floor;
+	@SerializedName("phone_number")
+	public String phoneNumber;
 	@SerializedName("created_at")
 	public String createdAt;
 	@SerializedName("changed_at")
@@ -31,6 +33,7 @@ public class Room implements Parcelable {
 		values.put(Rooms.COLUMN_ID, id);
 		values.put(Rooms.COLUMN_NAME, name);
 		values.put(Rooms.COLUMN_FLOOR, floor);
+		values.put(Rooms.COLUMN_PHONE_NUMBER, phoneNumber);
 		values.put(Rooms.COLUMN_CREATED_AT, createdAt);
 		values.put(Rooms.COLUMN_CHANGED_AT, changedAt);
 		return values;
@@ -38,7 +41,7 @@ public class Room implements Parcelable {
 	
 	@Override
 	public String toString() {
-		return name;
+		return name + "(" + floor + " · " + phoneNumber + ")";
 	}
 
 	/**
@@ -61,6 +64,7 @@ public class Room implements Parcelable {
 		id = source.readInt();
 		name = source.readString();
 		floor = source.readString();
+		phoneNumber = source.readString();
 		createdAt = source.readString();
 		changedAt = source.readString();
 	}
@@ -70,6 +74,7 @@ public class Room implements Parcelable {
 		dest.writeInt(id);
 		dest.writeString(name);
 		dest.writeString(floor);
+		dest.writeString(phoneNumber);
 		dest.writeString(createdAt);
 		dest.writeString(changedAt);
 	}

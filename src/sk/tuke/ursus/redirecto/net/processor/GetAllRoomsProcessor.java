@@ -25,7 +25,7 @@ public class GetAllRoomsProcessor extends Processor {
 		}
 
 		// Post success
-		results.putParcelableArrayList(RestService.RESULTS_ROOMS_KEY, response.rooms);
+		results.putParcelableArrayList(RestService.RESULT_ROOMS, response.rooms);
 		return Status.OK;
 	}
 

@@ -21,9 +21,10 @@ public class RedirectoDatabase extends SQLiteOpenHelper {
 				+ Rooms.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
 				+ Rooms.COLUMN_CURRENT + " INTEGER DEFAULT 0,"
 				+ Rooms.COLUMN_NAME + " TEXT NOT NULL,"
+				+ Rooms.COLUMN_FLOOR + " TEXT NOT NULL,"
+				+ Rooms.COLUMN_PHONE_NUMBER + " TEXT NOT NULL,"
 				+ Rooms.COLUMN_CREATED_AT + " TEXT NOT NULL,"
-				+ Rooms.COLUMN_CHANGED_AT + " TEXT NOT NULL,"
-				+ Rooms.COLUMN_FLOOR + " TEXT NOT NULL)");
+				+ Rooms.COLUMN_CHANGED_AT + " TEXT NOT NULL)");
 	}
 
 	@Override

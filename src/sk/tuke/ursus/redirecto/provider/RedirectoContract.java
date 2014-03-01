@@ -19,6 +19,7 @@ public class RedirectoContract {
 		public static final String COLUMN_ID = "_id";
 		public static final String COLUMN_NAME = "name";
 		public static final String COLUMN_FLOOR = "floor";
+		public static final String COLUMN_PHONE_NUMBER = "phone_number";
 		public static final String COLUMN_CREATED_AT = "created_at";
 		public static final String COLUMN_CHANGED_AT = "changed_at";
 		public static final String COLUMN_CURRENT = "current";

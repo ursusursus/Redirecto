@@ -110,11 +110,12 @@ public class LoginActivity extends ActionBarActivity {
 			LOG.d("Login # Status.OK");
 			dismissProgressDialog();
 
-			String token = data.getString(RestService.RESULTS_TOKEN_KEY);
-			String email = data.getString(RestService.RESULTS_EMAIL_KEY);
+			String token = data.getString(RestService.RESULT_TOKEN);
+			String email = data.getString(RestService.RESULT_EMAIL);
+			String directoryNumber = data.getString(RestService.RESULT_DIRECTORY_NUMBER);
 
 			if (token != null) {
-				mApp.setTokenAndUsername(token, email);
+				mApp.setTokenAndMetadata(token, email, directoryNumber);
 
 				boolean relogin = getIntent().getBooleanExtra(ACTION_RELOGIN, false);
 				if (relogin) {

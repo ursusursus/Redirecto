@@ -41,7 +41,7 @@ public class GetMyRoomsProcessor extends Processor {
 		int rooms = response.rooms.size();
 		if (rooms <= 0) {
 			// Post "empty" flag
-			results.putBoolean(RestService.RESULTS_NO_ROOMS_KEY, true);
+			results.putBoolean(RestService.RESULT_NO_ROOMS, true);
 			return Status.OK;
 		}
 

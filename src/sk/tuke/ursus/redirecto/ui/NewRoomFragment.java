@@ -151,7 +151,7 @@ public class NewRoomFragment extends Fragment {
 		public void onSuccess(Bundle data) {
 			hideProgressBar();
 
-			ArrayList<Room> newRooms = data.getParcelableArrayList(RestService.RESULTS_ROOMS_KEY);
+			ArrayList<Room> newRooms = data.getParcelableArrayList(RestService.RESULT_ROOMS);
 			if (newRooms != null) {
 
 				mAdapter.clear();
@@ -185,7 +185,7 @@ public class NewRoomFragment extends Fragment {
 
 		@Override
 		public void onSuccess(Bundle data) {
-			int newId = data.getInt(RestService.RESULTS_INSERTED_ID_KEY);
+			int newId = data.getInt(RestService.RESULT_INSERTED_ID);
 			Room newRoom = mAdapter.roomById(newId);
 			if (newRoom != null) {
 				newRoom.setAdded(true);
