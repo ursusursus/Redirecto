@@ -9,25 +9,23 @@ import org.json.JSONObject;
 
 import sk.tuke.ursus.redirecto.net.RestService;
 import sk.tuke.ursus.redirecto.net.RestUtils.Callback;
-import sk.tuke.ursus.redirecto.net.processor.LocalizeProcessor;
-import sk.tuke.ursus.redirecto.provider.RedirectoContract.Rooms;
 import sk.tuke.ursus.redirecto.util.QueryUtils;
 import sk.tuke.ursus.redirecto.util.Utils;
-import android.app.DownloadManager.Query;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.ResultReceiver;
 
 import com.awaboom.ursus.agave.LOG;
+import com.awaboom.ursus.agave.ToastUtils;
 
 public class SnifferService extends Service {
 
@@ -104,27 +102,38 @@ public class SnifferService extends Service {
 
 			@Override
 			public void onSuccess(Bundle data) {
-				LOG.d("Record # onSuccess");
+				LOG.d("NewFingerprints # onSuccess");
+				showToast("newFingerprints # onSuccess");
 				stopSelf();
 			}
 
 			@Override
 			public void onStarted() {
-				LOG.d("Record # onStarted");
+				LOG.d("NewFingerprints # onStarted");
 			}
 
 			@Override
 			public void onException() {
-				LOG.d("Record # onException");
+				LOG.d("NewFingerprints # onException");
+				showToast("newFingerprints # onException");
 				stopSelf();
 			}
 
 			@Override
 			public void onError(int code, String message) {
-				LOG.d("Record # onError");
+				LOG.d("NewFingerprints # onError: " + message);
+				showToast("newFingerprints # onError=" + message);
 				stopSelf();
 			}
 		});
+	}
+
+	protected void showToast(final String string) {
+		new Handler().post(new Runnable() {
+		    public void run() {
+		        ToastUtils.show(SnifferService.this, string);
+		    }
+		 });
 	}
 
 	protected void processSniffedResults(List<ScanResult> results) {
@@ -142,6 +151,7 @@ public class SnifferService extends Service {
 			@Override
 			public void onSuccess(Bundle data) {
 				LOG.d("Localize # onSuccess");
+
 				//
 				Bundle bundle = new Bundle();
 				bundle.putString("what", data.getString("what"));
@@ -158,12 +168,14 @@ public class SnifferService extends Service {
 			@Override
 			public void onException() {
 				LOG.d("Localize # onException");
+				showToast("localize # onException");
 				stopSelf();
 			}
 
 			@Override
 			public void onError(int code, String message) {
 				LOG.d("Localize # onError: " + message);
+				
 				//
 				Bundle bundle = new Bundle();
 				bundle.putString("what", message);
@@ -179,7 +191,7 @@ public class SnifferService extends Service {
 		for (ScanResult scanResult : scanResults) {
 			try {
 				JSONObject json = new JSONObject();
-				json.put("ssid", scanResult.SSID);
+				json.put("bssid", scanResult.BSSID);
 				json.put("rssi", scanResult.level);
 
 				jsonArray.put(json);
@@ -233,7 +245,8 @@ public class SnifferService extends Service {
 				if (mReceiver != null) {
 					StringBuilder sb = new StringBuilder();
 					for (ScanResult result : results) {
-						sb.append(result.SSID + "=" + result.level + " ");
+						// sb.append(result.SSID + "=" + result.level + " ");
+						sb.append(result.BSSID + "=" + result.level + " ");
 					}
 					if (mBundle == null) {
 						mBundle = new Bundle();
