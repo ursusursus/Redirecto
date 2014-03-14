@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import sk.tuke.ursus.redirecto.R;
+import sk.tuke.ursus.redirecto.SnifferService;
 import sk.tuke.ursus.redirecto.net.RestService;
 import sk.tuke.ursus.redirecto.net.RestUtils.AbstractRestService;
 import sk.tuke.ursus.redirecto.net.RestUtils.Methods;
@@ -14,57 +15,23 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
 import com.awaboom.ursus.agave.LOG;
 
 public class Utils {
 
-	private static final int ALARM_ID = 1234;
-	private static final long AUTOSYNC_INTERVAL = 24 * 60 * 60 * 1000; // 24 hodin
-
 	public static final String PREFS_TOKEN_KEY = "token";
 	public static final String PREFS_USERNAME_KEY = "username";
 	public static final String PREFS_DIRECTORY_NUMBER_KEY = "directory_number";
+	public static final String PREFS_AUTO_LOC_KEY = "auto_loc";
+	public static final String PREFS_LOC_FREQUENCY_KEY = "loc_frequency";
 
 	public static boolean hasHoneycomb() {
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
-	}
-
-	public static void setupAutoSync(Context context, String token) {
-		try {
-			String params = new JSONObject()
-					.put("token", token)
-					.toString();
-
-			// Intent
-			Intent intent = new Intent(context, RestService.class)
-					.setAction(AbstractRestService.ACTION)
-					.putExtra(AbstractRestService.EXTRA_METHOD, Methods.POST)
-					.putExtra(AbstractRestService.EXTRA_URL, RestService.GET_MY_ROOMS_URL)
-					.putExtra(AbstractRestService.EXTRA_PARAMS, params)
-					.putExtra(AbstractRestService.EXTRA_PROCESSOR, new GetMyRoomsProcessor());
-
-			// Pending intent
-			PendingIntent pendingIntent = PendingIntent.getService(
-					context,
-					ALARM_ID,
-					intent,
-					PendingIntent.FLAG_UPDATE_CURRENT);
-
-			// Setup alarm
-			AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-			alarmManager.setInexactRepeating(
-					AlarmManager.RTC,
-					System.currentTimeMillis(),
-					AUTOSYNC_INTERVAL,
-					pendingIntent);
-
-			LOG.i("AutosyncAlarm set");
-		} catch (JSONException e) {
-		}
-
 	}
 
 	public static Notification makeNotification(Context context) {

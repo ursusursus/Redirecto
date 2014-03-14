@@ -9,13 +9,18 @@ import sk.tuke.ursus.redirecto.net.RestService;
 import sk.tuke.ursus.redirecto.net.RestUtils;
 import sk.tuke.ursus.redirecto.provider.RedirectoContract.Rooms;
 import sk.tuke.ursus.redirecto.ui.dialog.ProgressDialogFragment;
+import sk.tuke.ursus.redirecto.util.AlarmUtils;
+import sk.tuke.ursus.redirecto.util.Utils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
@@ -58,6 +63,8 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 	@InjectView(R.id.errorTextView) TextView mErrorTextView;
 	@InjectView(R.id.boardingButton) Button mBoardingButton;
 
+	private SharedPreferences mPrefs;
+
 	public static RoomsListFragment newInstance() {
 		return new RoomsListFragment();
 	}
@@ -72,6 +79,7 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 
 		mContext = getActivity();
 		mApp = (MyApplication) getActivity().getApplication();
+		mPrefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 	}
 
 	@Override
@@ -101,6 +109,18 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+		mPrefs.registerOnSharedPreferenceChangeListener(mPrefsListener);
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		mPrefs.unregisterOnSharedPreferenceChangeListener(mPrefsListener);
+	}
+
+	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
 		ButterKnife.reset(this);
@@ -114,45 +134,45 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.action_localize: {
-			localizeNow();
-			return true;
-		}
-		case R.id.action_add_room: {
-			goToNewRoomActivity();
-			return true;
-		}
+			case R.id.action_localize: {
+				localizeNow();
+				return true;
+			}
+			case R.id.action_add_room: {
+				goToNewRoomActivity();
+				return true;
+			}
 
-		case R.id.action_sync_rooms: {
-			syncMyRooms();
-			return true;
-		}
+			case R.id.action_sync_rooms: {
+				syncMyRooms();
+				return true;
+			}
 
-		case R.id.action_record: {
-			Intent intent = new Intent(mContext, RecordActivity.class);
-			startActivity(intent);
-			return true;
-		}
+			case R.id.action_record: {
+				Intent intent = new Intent(mContext, RecordActivity.class);
+				startActivity(intent);
+				return true;
+			}
 
-		case R.id.action_settings: {
-			Intent intent = new Intent(mContext, MyPreferencesActivity.class);
-			startActivity(intent);
-			return true;
-		}
+			case R.id.action_settings: {
+				Intent intent = new Intent(mContext, MyPreferencesActivity.class);
+				startActivity(intent);
+				return true;
+			}
 
-		case R.id.action_about: {
-			Intent intent = new Intent(mContext, AboutActivity.class);
-			startActivity(intent);
-			return true;
-		}
+			case R.id.action_about: {
+				Intent intent = new Intent(mContext, AboutActivity.class);
+				startActivity(intent);
+				return true;
+			}
 
-		case R.id.action_logout: {
-			logout();
-			return true;
-		}
+			case R.id.action_logout: {
+				logout();
+				return true;
+			}
 
-		default:
-			return false;
+			default:
+				return false;
 		}
 	}
 
@@ -161,7 +181,7 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 
 		// RestService.localizeMe(mContext, mApp.getToken(), mLocalizeMeCallback);
 		Intent intent = new Intent(mContext, SnifferService.class);
-		intent.setAction(SnifferService.ACTION_SNIFF);
+		intent.setAction(SnifferService.ACTION_LOC_AND_FORWARD);
 		intent.putExtra(SnifferService.EXTRA_RECEIVER, new ResultReceiver(new Handler()) {
 			@Override
 			protected void onReceiveResult(int resultCode, Bundle resultData) {
@@ -450,6 +470,34 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		public void onError(int code, String message) {
 			hideProgressBar();
 			ToastUtils.showError(mContext, "Nepodarilo sa odstráni miestnos", message);
+		}
+	};
+
+	private OnSharedPreferenceChangeListener mPrefsListener = new OnSharedPreferenceChangeListener() {
+
+		@Override
+		public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+			if (Utils.PREFS_AUTO_LOC_KEY.equals(key)) {
+				boolean autoLocalize = prefs.getBoolean(
+						Utils.PREFS_AUTO_LOC_KEY,
+						AlarmUtils.DEFAULT_AUTO_LOC);
+
+				if (autoLocalize) {
+					AlarmUtils.startAutoLocalization(mContext, mPrefs);
+				} else {
+					AlarmUtils.stopAutoLocalization(mContext);
+				}
+
+			} else if (Utils.PREFS_LOC_FREQUENCY_KEY.equals(key)) {
+				boolean autoLocalize = prefs.getBoolean(
+						Utils.PREFS_AUTO_LOC_KEY,
+						AlarmUtils.DEFAULT_AUTO_LOC);
+
+				if (autoLocalize) {
+					AlarmUtils.startAutoLocalization(mContext, mPrefs);
+				}
+
+			}
 		}
 	};
 }

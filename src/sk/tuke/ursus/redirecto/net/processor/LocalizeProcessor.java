@@ -34,7 +34,7 @@ public class LocalizeProcessor extends Processor {
 
 		// Update new localized room in database
 		int newCurrentRoom = response.result.localizedRoomId;
-		LOG.d("NEW_CURRENT_ROOM=" + newCurrentRoom);
+		LOG.i("New current room=" + newCurrentRoom);
 		ContentResolver resolver = context.getContentResolver();
 
 		boolean success = QueryUtils.setNewCurrentRoomId(resolver, newCurrentRoom);

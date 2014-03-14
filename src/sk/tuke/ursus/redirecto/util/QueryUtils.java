@@ -25,8 +25,6 @@ public class QueryUtils {
 			currentRoomId = cursor.getInt(0);
 		}
 		cursor.close();
-		LOG.d("CurrentRoomId: " + currentRoomId);
-
 		return currentRoomId;
 	}
 

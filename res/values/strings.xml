@@ -4,4 +4,19 @@
     <string name="app_name">Redirecto</string>
     <string name="menu_settings">Settings</string>
 
+    <string-array name="frequency_names">
+        <item>Každých 15 sekúnd</item>
+        <item>Každých 30 sekúnd</item>
+        <item>Každú 1 minútu</item>
+        <item>Každých 5 minút</item>
+        <item>Každých 15 minút</item>
+    </string-array>
+    <string-array name="frequency_values">
+        <item>15000</item>
+        <item>30000</item>
+        <item>60000</item>
+        <item>300000</item>
+        <item>900000</item>
+    </string-array>
+
 </resources>

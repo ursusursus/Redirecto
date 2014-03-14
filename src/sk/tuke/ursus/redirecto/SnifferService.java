@@ -31,25 +31,31 @@ public class SnifferService extends Service {
 
 	public static final String ACTION_START_RECORD_FINGERPRINTS = "sk.tuke.ursus.redirecto.ACTION_START_RECORD_FINGERPRINTS";
 	public static final String ACTION_STOP_RECORD_FINGERPRINTS = "sk.tuke.ursus.redirecto.ACTION_STOP_RECORD_FINGERPRINTS";
-	public static final String ACTION_SNIFF = "sk.tuke.ursus.redirecto.ACTION_SNIFF";
+	public static final String ACTION_LOC_AND_FORWARD = "sk.tuke.ursus.redirecto.ACTION_LOC_AND_FORWARD";
 
 	public static final String EXTRA_RECORDED_ROOM = "sk.tuke.ursus.redirecto.EXTRA_RECORDED_ROOM";
 	public static final String EXTRA_RECEIVER = "sk.tuke.ursus.redirecto.EXTRA_RECEIVER";
 	public static final String EXTRA_VALUES = "sk.tuke.ursus.redirecto.EXTRA_VALUES";
 
-	private ScanReceiver mReceiver;
+	private ScanReceiver mScanReceiver;
 	private WifiManager mWifiManager;
 	private ResultReceiver mResultReceiver;
 	private String mAction;
 
 	private List<List<ScanResult>> mRecordedResults;
 	private int mRecoredRoomId;
+	private boolean mLocalizing;
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		mAction = intent.getAction();
 
-		if (ACTION_SNIFF.equals(mAction)) {
+		if (ACTION_LOC_AND_FORWARD.equals(mAction)) {
+			LOG.d("ACTION_LOC_AND_FORWARD");
+			if(mLocalizing) {
+				LOG.i("Localizing already in progress");
+				return START_STICKY;
+			}
 			mResultReceiver = (ResultReceiver) intent.getParcelableExtra(EXTRA_RECEIVER);
 			startScanningWifis();
 
@@ -58,7 +64,7 @@ public class SnifferService extends Service {
 				mResultReceiver = (ResultReceiver) intent.getParcelableExtra(EXTRA_RECEIVER);
 				mRecoredRoomId = intent.getIntExtra(EXTRA_RECORDED_ROOM, -1);
 				mRecordedResults = new ArrayList<List<ScanResult>>();
-				
+
 				startScanningWifis();
 				startForeground(123, Utils.makeNotification(this));
 			}
@@ -74,9 +80,9 @@ public class SnifferService extends Service {
 
 	private void startScanningWifis() {
 		// Hook up receiver
-		mReceiver = new ScanReceiver();
+		mScanReceiver = new ScanReceiver();
 		IntentFilter filter = new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
-		registerReceiver(mReceiver, filter);
+		registerReceiver(mScanReceiver, filter);
 
 		// Start sniffing RSSI values
 		mWifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
@@ -87,7 +93,7 @@ public class SnifferService extends Service {
 			mWifiManager.setWifiEnabled(true);
 		}
 		mWifiManager.startScan();
-
+		mLocalizing = true;
 	}
 
 	protected void processRecordedResults(int roomId, List<List<ScanResult>> resultsList) {
@@ -96,7 +102,7 @@ public class SnifferService extends Service {
 			JSONArray fingerprint = scanResultsToJsonArray(results);
 			fingerprints.put(fingerprint);
 		}
-		
+
 		MyApplication myApp = (MyApplication) getApplication();
 		RestService.newFingerprints(this, myApp.getToken(), roomId, fingerprints, new Callback() {
 
@@ -130,19 +136,19 @@ public class SnifferService extends Service {
 
 	protected void showToast(final String string) {
 		new Handler().post(new Runnable() {
-		    public void run() {
-		        ToastUtils.show(SnifferService.this, string);
-		    }
-		 });
+			public void run() {
+				ToastUtils.show(SnifferService.this, string);
+			}
+		});
 	}
 
 	protected void processSniffedResults(List<ScanResult> results) {
 		JSONArray fingerprint = scanResultsToJsonArray(results);
-		LOG.d("JSON: " + fingerprint.toString());
 
 		// Get current room id
 		ContentResolver resolver = getContentResolver();
 		int roomId = QueryUtils.getCurrentRoomId(resolver);
+		LOG.i("Current room=" + roomId);
 
 		// Make REST call
 		MyApplication myApp = (MyApplication) getApplication();
@@ -150,19 +156,18 @@ public class SnifferService extends Service {
 
 			@Override
 			public void onSuccess(Bundle data) {
-				LOG.d("Localize # onSuccess");
-
 				//
-				Bundle bundle = new Bundle();
-				bundle.putString("what", data.getString("what"));
-				mResultReceiver.send(0, bundle);
+				if (mResultReceiver != null) {
+					Bundle bundle = new Bundle();
+					bundle.putString("what", data.getString("what"));
+					mResultReceiver.send(0, bundle);
+				}
 				//
 				stopSelf();
 			}
 
 			@Override
 			public void onStarted() {
-				LOG.d("Localize # onStarted");
 			}
 
 			@Override
@@ -175,17 +180,19 @@ public class SnifferService extends Service {
 			@Override
 			public void onError(int code, String message) {
 				LOG.d("Localize # onError: " + message);
-				
+
 				//
-				Bundle bundle = new Bundle();
-				bundle.putString("what", message);
-				mResultReceiver.send(0, bundle);
+				if (mResultReceiver != null) {
+					Bundle bundle = new Bundle();
+					bundle.putString("what", message);
+					mResultReceiver.send(0, bundle);
+				}
 				//
 				stopSelf();
 			}
 		});
 	}
-	
+
 	protected JSONArray scanResultsToJsonArray(List<ScanResult> scanResults) {
 		JSONArray jsonArray = new JSONArray();
 		for (ScanResult scanResult : scanResults) {
@@ -205,10 +212,13 @@ public class SnifferService extends Service {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		LOG.d("onDestroy");
-		
-		unregisterReceiver(mReceiver);
+
+		try {
+			unregisterReceiver(mScanReceiver);
+		} catch (IllegalArgumentException e) {
+		}
 		stopForeground(true);
+		mLocalizing = false;
 	}
 
 	@Override
@@ -222,7 +232,7 @@ public class SnifferService extends Service {
 
 		@Override
 		public void onReceive(Context arg0, Intent arg1) {
-			if (ACTION_SNIFF.equals(mAction)) {
+			if (ACTION_LOC_AND_FORWARD.equals(mAction)) {
 				// Get RSSI results
 				List<ScanResult> results = mWifiManager.getScanResults();
 				// JSONArray jsonArray = scanResultsToJsonArray(results);
@@ -242,17 +252,20 @@ public class SnifferService extends Service {
 				List<ScanResult> results = mWifiManager.getScanResults();
 
 				// To string
-				if (mReceiver != null) {
+				if (mScanReceiver != null) {
 					StringBuilder sb = new StringBuilder();
 					for (ScanResult result : results) {
 						// sb.append(result.SSID + "=" + result.level + " ");
 						sb.append(result.BSSID + "=" + result.level + " ");
 					}
-					if (mBundle == null) {
-						mBundle = new Bundle();
+
+					if (mResultReceiver != null) {
+						if (mBundle == null) {
+							mBundle = new Bundle();
+						}
+						mBundle.putString(EXTRA_VALUES, sb.toString());
+						mResultReceiver.send(0, mBundle);
 					}
-					mBundle.putString(EXTRA_VALUES, sb.toString());
-					mResultReceiver.send(0, mBundle);
 				}
 
 				// Collect
