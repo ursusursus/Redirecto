@@ -144,7 +144,8 @@ public class SnifferService extends Service {
 
 	protected void processSniffedResults(List<ScanResult> results) {
 		JSONArray fingerprint = scanResultsToJsonArray(results);
-
+		LOG.d(fingerprint.toString());
+		
 		// Get current room id
 		ContentResolver resolver = getContentResolver();
 		int roomId = QueryUtils.getCurrentRoomId(resolver);

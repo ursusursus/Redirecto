@@ -209,6 +209,11 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		RestService.logout(mContext, mApp.getToken(), mLogoutCallback);
 	}
 
+	protected void changeCoeficientSettings(int coef) {
+		coef += Utils.MIN_ACC_COEFICIENT;
+		RestService.changeCoefSetting(mContext, mApp.getToken(), coef, mChangeCoefCallback);
+	}
+
 	@OnClick(R.id.boardingButton)
 	protected void goToNewRoomActivity() {
 		Intent intent = new Intent(mContext, NewRoomActivity.class);
@@ -220,7 +225,6 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		if (getActivity() != null) {
 			activity.setSupportProgressBarIndeterminateVisibility(false);
 		}
-		// mProgressBar.setVisibility(View.GONE);
 	}
 
 	protected void showProgressBar() {
@@ -228,7 +232,6 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		if (getActivity() != null) {
 			activity.setSupportProgressBarIndeterminateVisibility(true);
 		}
-		// mProgressBar.setVisibility(View.VISIBLE);
 	}
 
 	protected void showProgressDialog() {
@@ -473,6 +476,32 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		}
 	};
 
+	private RestUtils.Callback mChangeCoefCallback = new RestUtils.Callback() {
+
+		@Override
+		public void onSuccess(Bundle data) {
+			LOG.d("ChangeCoef # onSuccess");
+			hideProgressBar();
+		}
+
+		@Override
+		public void onStarted() {
+			showProgressBar();
+		}
+
+		@Override
+		public void onException() {
+			hideProgressBar();
+			ToastUtils.showError(mContext, "Nepodarilo sa zmeni koeficient", "Skontrolujte pripojenie na internet");
+		}
+
+		@Override
+		public void onError(int code, String message) {
+			hideProgressBar();
+			ToastUtils.showError(mContext, "Nepodarilo sa zmeni koeficient", message);
+		}
+	};
+
 	private OnSharedPreferenceChangeListener mPrefsListener = new OnSharedPreferenceChangeListener() {
 
 		@Override
@@ -497,7 +526,14 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 					AlarmUtils.startAutoLocalization(mContext, mPrefs);
 				}
 
+			} else if (Utils.PREFS_ACC_COEFICIENT_KEY.equals(key)) {
+				int coef = prefs.getInt(
+						Utils.PREFS_ACC_COEFICIENT_KEY,
+						Utils.DEFAULT_ACC_COEFICIENT);
+
+				changeCoeficientSettings(coef);
 			}
 		}
 	};
+
 }

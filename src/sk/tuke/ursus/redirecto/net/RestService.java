@@ -43,6 +43,7 @@ public class RestService extends AbstractRestService {
 	private static final String REMOVE_MY_ROOM_URL = BASE_URL + "/remove_my_room";
 	private static final String NEW_FINGERPRINTS_URL = BASE_URL + "/new_fingerprints";
 	private static final String GET_ROOMS_AND_APS_URL = BASE_URL + "/get_rooms_and_aps";
+	private static final String CHANGE_COEF_SETTING_URL = BASE_URL + "/change_coef_settings";
 
 	public static final String RESULT_TOKEN = "token";
 	public static final String RESULT_EMAIL = "email";
@@ -50,6 +51,7 @@ public class RestService extends AbstractRestService {
 	public static final String RESULT_ROOMS = "rooms";
 	public static final String RESULT_INSERTED_ID = "inserted_id";
 	public static final String RESULT_NO_ROOMS = "no_rooms";
+
 
 
 
@@ -230,6 +232,24 @@ public class RestService extends AbstractRestService {
 			new RequestBuilder()
 					.setMethod(Methods.POST)
 					.setUrl(NEW_FINGERPRINTS_URL)
+					.setParams(params)
+					.setCallback(callback)
+					.setProcessor(new SimpleProcessor())
+					.execute(context, RestService.class);
+		} catch (JSONException e) {
+		}
+	}
+	
+	public static void changeCoefSetting(Context context, String token, int coefSetting, Callback callback) {
+		try {
+			String params = new JSONObject()
+					.put("token", token)
+					.put("coef_setting", coefSetting)
+					.toString();
+
+			new RequestBuilder()
+					.setMethod(Methods.POST)
+					.setUrl(CHANGE_COEF_SETTING_URL)
 					.setParams(params)
 					.setCallback(callback)
 					.setProcessor(new SimpleProcessor())

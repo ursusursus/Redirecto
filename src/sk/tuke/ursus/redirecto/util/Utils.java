@@ -29,6 +29,9 @@ public class Utils {
 	public static final String PREFS_DIRECTORY_NUMBER_KEY = "directory_number";
 	public static final String PREFS_AUTO_LOC_KEY = "auto_loc";
 	public static final String PREFS_LOC_FREQUENCY_KEY = "loc_frequency";
+	public static final String PREFS_ACC_COEFICIENT_KEY = "acc_coef";
+	public static final int MIN_ACC_COEFICIENT = 50;
+	public static final int DEFAULT_ACC_COEFICIENT = 70 - MIN_ACC_COEFICIENT;
 
 	public static boolean hasHoneycomb() {
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;

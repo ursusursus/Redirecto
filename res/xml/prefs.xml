@@ -16,6 +16,12 @@
             android:key="loc_frequency"
             android:summary="Frekvencia lokalizácie"
             android:title="Frekvencia lokalizácie" />
+
+        <sk.tuke.ursus.redirecto.util.SeekBarDialogPreference
+            android:defaultValue="20"
+            android:key="acc_coef"
+            android:summary="Bla bla bla"
+            android:title="Koeficient" />
     </PreferenceCategory>
 
 </PreferenceScreen>
