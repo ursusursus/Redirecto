@@ -20,7 +20,7 @@ public class NewRoomActivity extends FragmentActivity {
 		final LayoutInflater inflater = (LayoutInflater) actionBar.getThemedContext()
 				.getSystemService(LAYOUT_INFLATER_SERVICE);
 
-		final View customView = inflater.inflate(R.layout.actionbar_custom_view_done, null);
+		final View customView = inflater.inflate(R.layout.actionbar_done, null);
 		customView.findViewById(R.id.actionbar_done).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {

@@ -1,38 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container"
     android:layout_width="240dp"
     android:layout_height="320dp"
     android:background="@color/gray"
     android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/nameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_above="@+id/descTextView"
+        android:layout_centerHorizontal="true"
         android:fontFamily="sans-serif-light"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingTop="16dp"
         android:text="A511"
         android:textColor="#000"
-        android:textSize="24sp" />
+        android:textSize="26sp" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/descTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView1"
+        android:layout_above="@+id/currentTextView"
         android:layout_centerHorizontal="true"
         android:fontFamily="sans-serif-condensed"
         android:paddingBottom="16dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:text="5. poschodie"
-        android:textColor="#000"
+        android:text="ADMIN"
+        android:textAllCaps="true"
+        android:textColor="@color/dark_gray"
+        android:textSize="16sp"
         android:textStyle="italic" />
 
+    <TextView
+        android:id="@+id/currentTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/view1"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="sans-serif-condensed"
+        android:paddingBottom="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:text="Miestnosť nastavená ako aktuálna"
+        android:textColor="#FFF"
+        android:textStyle="italic" />
+
+    <ProgressBar
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_below="@+id/descTextView"
+        android:layout_centerHorizontal="true" />
+
     <View
+        android:id="@+id/view1"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_above="@+id/buttonBar"
@@ -47,7 +72,7 @@
         android:orientation="horizontal" >
 
         <Button
-            android:id="@+id/button_previous"
+            android:id="@+id/removeButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -67,7 +92,7 @@
             android:background="@color/separator_color" />
 
         <Button
-            android:id="@+id/button_next"
+            android:id="@+id/forceButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

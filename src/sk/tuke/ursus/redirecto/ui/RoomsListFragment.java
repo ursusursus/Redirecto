@@ -289,31 +289,25 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		public void onItemClick(AdapterView<?> arg0, View view, int position, long arg3) {
 			Cursor cursor = (Cursor) mAdapter.getItem(position);
 			int id = cursor.getInt(cursor.getColumnIndex(Rooms.COLUMN_ID));
+			String name = cursor.getString(cursor.getColumnIndex(Rooms.COLUMN_NAME));
+			String desc = cursor.getString(cursor.getColumnIndex(Rooms.COLUMN_DESC));
+			String phoneNumber = cursor.getString(cursor.getColumnIndex(Rooms.COLUMN_PHONE_NUMBER));
+			boolean isCurrent = (cursor.getInt(cursor.getColumnIndex(Rooms.COLUMN_CURRENT)) == 1);
+
+			Intent intent = new Intent(mContext, DetailActivity.class);
+			intent.putExtra(DetailActivity.EXTRA_ID, id);
+			intent.putExtra(DetailActivity.EXTRA_NAME, name);
+			intent.putExtra(DetailActivity.EXTRA_DESC, desc);
+			intent.putExtra(DetailActivity.EXTRA_PHONE_NUMBER, phoneNumber);
+			intent.putExtra(DetailActivity.EXTRA_IS_CURRENT, isCurrent);
 
 			Bundle bundle = ActivityOptionsCompat.makeScaleUpAnimation(
 					view, 0, 0,
 					view.getWidth(), view.getHeight()
 					).toBundle();
-
-			Intent intent = new Intent(mContext, DetailActivity.class);
 			ActivityCompat.startActivity(getActivity(), intent, bundle);
 		}
 	};
-
-	/* private OnItemLongClickListener mItemLongClickListener = new OnItemLongClickListener() {
-
-		@Override
-		public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-			Cursor cursor = (Cursor) mAdapter.getItem(position);
-			int id = cursor.getInt(cursor.getColumnIndex(Rooms.COLUMN_ID));
-
-			//
-			forceLocalize(id);
-			//
-			return true;
-		}
-
-	}; */
 
 	private RoomOverflowCallback mRoomOverflowCallback = new RoomOverflowCallback() {
 
