@@ -38,12 +38,11 @@ public class RoomsCursorAdapter extends CursorAdapter {
 	public void bindView(View view, Context context, Cursor cursor) {
 		final CursorViewHolder holder = (CursorViewHolder) view.getTag();
 
-		holder.name.setText(cursor.getString(cursor.getColumnIndex(Rooms.COLUMN_NAME)));
+		holder.title.setText(cursor.getString(cursor.getColumnIndex(Rooms.COLUMN_NAME)));
 		
-		String floor = cursor.getString(cursor.getColumnIndex(Rooms.COLUMN_FLOOR));
+		String desc = cursor.getString(cursor.getColumnIndex(Rooms.COLUMN_DESC));
 		String phoneNumber = cursor.getString(cursor.getColumnIndex(Rooms.COLUMN_PHONE_NUMBER));
-		String roomId = cursor.getString(cursor.getColumnIndex(Rooms.COLUMN_ID));
-		holder.floor.setText(Utils.dotConcat(floor, phoneNumber) + " ["	+ roomId + "]");
+		holder.subTitle.setText(Utils.dotConcat(desc, phoneNumber));
 
 		boolean isCurrentRoom = (cursor.getInt(cursor.getColumnIndex(Rooms.COLUMN_CURRENT)) == 1);
 		if (isCurrentRoom) {
@@ -93,8 +92,8 @@ public class RoomsCursorAdapter extends CursorAdapter {
 
 	static class CursorViewHolder {
 
-		@InjectView(R.id.nameTextView) TextView name;
-		@InjectView(R.id.floorTextView) TextView floor;
+		@InjectView(R.id.nameTextView) TextView title;
+		@InjectView(R.id.floorTextView) TextView subTitle;
 		@InjectView(R.id.overflowButton) ImageButton overflow;
 		@InjectView(R.id.view) View view;
 

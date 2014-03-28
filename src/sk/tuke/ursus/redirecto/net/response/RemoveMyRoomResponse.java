@@ -6,7 +6,6 @@ import com.google.gson.annotations.SerializedName;
 
 public class RemoveMyRoomResponse extends JsonRpcResponse {
 
-	@SerializedName("result")
-	public String deletedId;
+	@SerializedName("result") public String deletedId;
 
 }

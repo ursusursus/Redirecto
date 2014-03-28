@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="sk.tuke.ursus.redirecto"
     android:versionCode="1"
-    android:versionName="0.1" >
+    android:versionName="1.0" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -37,10 +37,10 @@
             android:name="sk.tuke.ursus.redirecto.ui.NewRoomActivity"
             android:label="Pridať miestnosť" >
         </activity>
-        <activity 
+        <activity
             android:name="sk.tuke.ursus.redirecto.ui.RecordActivity"
             android:configChanges="orientation|screenSize"
-            android:label="Záznam" >
+            android:label="Záznam odtlačkov" >
         </activity>
         <activity
             android:name="sk.tuke.ursus.redirecto.ui.AboutActivity"
@@ -52,8 +52,8 @@
         </activity>
         <activity
             android:name="sk.tuke.ursus.redirecto.ui.DetailActivity"
-            android:theme="@android:style/Theme.Holo.Dialog.NoActionBar"
-            android:label="Detail" >
+            android:label="Detail"
+            android:theme="@android:style/Theme.Holo.Dialog.NoActionBar" >
         </activity>
 
         <service android:name="sk.tuke.ursus.redirecto.net.RestService" />

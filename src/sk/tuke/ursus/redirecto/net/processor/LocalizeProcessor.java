@@ -2,17 +2,15 @@ package sk.tuke.ursus.redirecto.net.processor;
 
 import java.io.InputStream;
 
+import sk.tuke.ursus.redirecto.net.RestService;
 import sk.tuke.ursus.redirecto.net.RestUtils;
 import sk.tuke.ursus.redirecto.net.RestUtils.JsonRpcResponse.Error;
 import sk.tuke.ursus.redirecto.net.RestUtils.Processor;
 import sk.tuke.ursus.redirecto.net.RestUtils.Status;
 import sk.tuke.ursus.redirecto.net.response.LocalizeResponse;
-import sk.tuke.ursus.redirecto.provider.RedirectoContract.Rooms;
 import sk.tuke.ursus.redirecto.util.QueryUtils;
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.DatabaseUtils;
 import android.os.Bundle;
 
 import com.awaboom.ursus.agave.LOG;
@@ -33,16 +31,26 @@ public class LocalizeProcessor extends Processor {
 		}
 
 		// Update new localized room in database
-		int newCurrentRoom = response.result.localizedRoomId;
-		LOG.i("New current room=" + newCurrentRoom);
-		ContentResolver resolver = context.getContentResolver();
+		int newCurrentRoomId = response.result.localizedRoomId;
+		String newCurrentRoomName = response.result.localizedRoomName;
+		String newCurrentRoomDesc = response.result.localizedRoomDesc;
+		LOG.i("Localized in room [name=" + newCurrentRoomName
+				+ "], [desc=" + newCurrentRoomDesc
+				+ "], [id=" + newCurrentRoomId + "]");
 
-		boolean success = QueryUtils.setNewCurrentRoomId(resolver, newCurrentRoom);
+		ContentResolver resolver = context.getContentResolver();
+		boolean success = QueryUtils.setNewCurrentRoomId(resolver, newCurrentRoomId);
+
 		if (!success) {
-			results.putString(RestUtils.ERROR_MESSAGE, "Lokalizovan· miestnosù nie je v zozname vaöich miestnostÌ");
+			results.putString(
+					RestUtils.ERROR_MESSAGE,
+					"Lokalizovan· miestnosù nie je v zozname vaöich miestnostÌ");
 			return Status.ERROR;
+
 		} else {
-			results.putString("what", "Lokalizovan˝ v [" + newCurrentRoom + "]");
+			results.putString(
+					RestService.RESULT_LOCALIZED_ROOM,
+					newCurrentRoomName + " [" + newCurrentRoomDesc + "]");
 			return Status.OK;
 		}
 

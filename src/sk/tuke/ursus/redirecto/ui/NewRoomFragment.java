@@ -27,7 +27,6 @@ import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-import com.awaboom.ursus.agave.LOG;
 import com.awaboom.ursus.agave.ToastUtils;
 
 public class NewRoomFragment extends Fragment {
@@ -42,7 +41,7 @@ public class NewRoomFragment extends Fragment {
 	private MyApplication mApp;
 	private ArrayList<Room> mRooms;
 	private RoomsArrayAdapter mAdapter;
-	
+
 	@InjectView(R.id.listView) ListView mListView;
 	@InjectView(R.id.filterEditText) EditText mFilterEditText;
 	@InjectView(R.id.progressBar) ProgressBar mProgressBar;
@@ -83,6 +82,20 @@ public class NewRoomFragment extends Fragment {
 	protected void showProgressBar() {
 		mProgressBar.setVisibility(View.VISIBLE);
 	}
+	
+	protected void showError(String message, String submessage) {
+		if (mRooms.size() == 0) {
+			mErrorTextView.setVisibility(View.VISIBLE);
+			if (submessage != null) {
+				mErrorTextView.setText(message + "\n" + submessage);
+			} else {
+				mErrorTextView.setText(message);
+			}
+		} else {
+			ToastUtils.showError(mContext, message, submessage);
+		}
+
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -93,21 +106,20 @@ public class NewRoomFragment extends Fragment {
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		ButterKnife.inject(this, view);
-		
+
 		mAdapter = new RoomsArrayAdapter(mContext, mRooms, mRoomAddedListener);
 		mListView.setAdapter(mAdapter);
 		mFilterEditText.addTextChangedListener(mTextChangedListener);
 	}
-	
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if(item.getItemId() == R.id.action_refresh) {
+		if (item.getItemId() == R.id.action_refresh) {
 			fetchAllRooms();
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.fragment_new_room, menu);
@@ -154,6 +166,13 @@ public class NewRoomFragment extends Fragment {
 			ArrayList<Room> newRooms = data.getParcelableArrayList(RestService.RESULT_ROOMS);
 			if (newRooms != null) {
 
+				if (newRooms.size() == 0) {
+					mErrorTextView.setText("éiadne miestnosti na pridanie");
+					mErrorTextView.setVisibility(View.VISIBLE);
+				} else {
+					mErrorTextView.setVisibility(View.GONE);
+				}
+
 				mAdapter.clear();
 				for (Room room : newRooms) {
 					mAdapter.add(room);
@@ -171,13 +190,13 @@ public class NewRoomFragment extends Fragment {
 		@Override
 		public void onException() {
 			hideProgressBar();
-			ToastUtils.showError(mContext, "Nepodarilo sa naËÌtaù miestnosti");
+			showError("Nepodarilo sa naËÌtaù miestnosti", null);
 		}
 
 		@Override
 		public void onError(int code, String message) {
 			hideProgressBar();
-			ToastUtils.showError(mContext, "Nepodarilo sa naËÌtaù miestnosti");
+			showError("Nepodarilo sa naËÌtaù miestnosti", message);
 		}
 	};
 
@@ -199,15 +218,12 @@ public class NewRoomFragment extends Fragment {
 
 		@Override
 		public void onException() {
-			LOG.d("AddMyRoomCallback # onException");
-			ToastUtils.showError(mContext, "Nepodarilo sa pridaù miestnosù");
+			showError("Nepodarilo sa pridaù miestnosù", null);
 		}
 
 		@Override
 		public void onError(int code, String message) {
-			LOG.d("AddMyRoomCallback # onError: " + message);
-			ToastUtils.showError(mContext, "Nepodarilo sa pridaù miestnosù - " + message);
+			showError("Nepodarilo sa pridaù miestnosù", message);
 		}
 	};
-
 }

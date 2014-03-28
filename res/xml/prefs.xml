@@ -18,10 +18,10 @@
             android:title="Frekvencia lokalizácie" />
 
         <sk.tuke.ursus.redirecto.util.SeekBarDialogPreference
-            android:defaultValue="20"
-            android:key="acc_coef"
-            android:summary="Bla bla bla"
-            android:title="Koeficient" />
+            android:defaultValue="50"
+            android:key="max_acc_coef"
+            android:summary="Maximálny koeficient presnosti lokalizácie. Čím väčší, tým väčšia povolená odchýlka"
+            android:title="Max Koeficient" />
     </PreferenceCategory>
 
 </PreferenceScreen>

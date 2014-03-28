@@ -83,7 +83,7 @@ public class RecordActivity extends ActionBarActivity implements OnClickListener
 	public void onClick(View v) {
 		if (!mRecording) {
 
-			ToastUtils.show(this, "Sp˙öùam meranie v " + mPickedRoom.name + " [ID=" + mPickedRoom.id + "]...");
+			ToastUtils.show(this, "Sp˙öùam meranie v " + mPickedRoom.name + " [id=" + mPickedRoom.id + "]...");
 
 			Intent intent = new Intent(this, SnifferService.class);
 			intent.setAction(SnifferService.ACTION_START_RECORD_FINGERPRINTS);
@@ -97,7 +97,7 @@ public class RecordActivity extends ActionBarActivity implements OnClickListener
 			mRecording = true;
 
 		} else {
-			ToastUtils.show(this, "UkonËujem meranie v " + mPickedRoom.name + " [ID=" + mPickedRoom.id + "]...");
+			ToastUtils.show(this, "UkonËujem meranie v " + mPickedRoom.name + " [id=" + mPickedRoom.id + "]...");
 
 			Intent intent = new Intent(this, SnifferService.class);
 			intent.setAction(SnifferService.ACTION_STOP_RECORD_FINGERPRINTS);
@@ -113,7 +113,7 @@ public class RecordActivity extends ActionBarActivity implements OnClickListener
 	@Override
 	public void onRoomPicked(Room room) {
 		ActionBar actionBar = getSupportActionBar();
-		actionBar.setSubtitle("v miestnosti " + room.name + "[" + room.id + "]");
+		actionBar.setSubtitle("v miestnosti " + room.name + " [id=" + room.id + "]");
 
 		mToggleButton.setEnabled(true);
 		mPickedRoom = room;
@@ -128,14 +128,42 @@ public class RecordActivity extends ActionBarActivity implements OnClickListener
 	}
 
 	private ResultReceiver mReceiver = new ResultReceiver(new Handler()) {
-		protected void onReceiveResult(int resultCode, Bundle resultData) {
-			String values = resultData.getString(SnifferService.EXTRA_VALUES);
-			LOG.d(values);
-			
-			mValuesList.add(values);
-			mAdapter.notifyDataSetChanged();
 
-			mToggleButton.setText(mRecording ? "Stop [" + mValuesList.size() + "]" : "ätart");
+		@Override
+		protected void onReceiveResult(int resultCode, Bundle resultData) {
+			switch (resultCode) {
+				case SnifferService.CODE_ACTION_START:
+					break;
+
+				case SnifferService.CODE_ACTION_PROGRESS:
+					String values = resultData.getString(SnifferService.EXTRA_VALUES);
+
+					mValuesList.add(values);
+					mAdapter.notifyDataSetChanged();
+
+					mToggleButton.setText(mRecording ? "Stop [" + mValuesList.size() + "]" : "ätart");
+					break;
+
+				case SnifferService.CODE_ACTION_SUCCESS:
+					ToastUtils.showInfo(RecordActivity.this, "OdtlaËky ˙speöne odoslanÈ");
+					break;
+
+				case SnifferService.CODE_ACTION_ERROR:
+					String msg = resultData.getString(SnifferService.EXTRA_ERROR);
+					if (msg != null) {
+						ToastUtils.showError(
+								RecordActivity.this,
+								"Nepodarilo sa odoslaù odtlaËky",
+								msg);
+
+					} else {
+						ToastUtils.showError(
+								RecordActivity.this,
+								"Nepodarilo sa odoslaù odtlaËky",
+								"Skontrolujte pripojenie na internet");
+					}
+					break;
+			}
 		};
 	};
 
@@ -143,6 +171,8 @@ public class RecordActivity extends ActionBarActivity implements OnClickListener
 
 		@Override
 		public void onSuccess(Bundle data) {
+			LOG.d("GetRoomsAndAPs # onSuccess");
+
 			ArrayList<Room> rooms = data.getParcelableArrayList(GetRoomsAndAPsProcessor.EXTRA_ROOMS);
 			ArrayList<String> aps = data.getStringArrayList(GetRoomsAndAPsProcessor.EXTRA_APS);
 
@@ -157,12 +187,20 @@ public class RecordActivity extends ActionBarActivity implements OnClickListener
 
 		@Override
 		public void onException() {
-			LOG.d("onException");
+			LOG.d("GetRoomsAndAPs # onException");
+			ToastUtils.showError(
+					RecordActivity.this,
+					"Nepodarilo sa prevziaù zoznam miestnostÌ",
+					"Skontrolujte pripojenie na internet");
 		}
 
 		@Override
 		public void onError(int code, String message) {
-			LOG.d("onError: " + message);
+			LOG.d("GetRoomsAndAPs # onError: " + message);
+			ToastUtils.showError(
+					RecordActivity.this,
+					"Nepodarilo sa prevziaù zoznam miestnostÌ",
+					message);
 		}
 	};
 

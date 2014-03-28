@@ -11,7 +11,7 @@ import sk.tuke.ursus.redirecto.provider.RedirectoContract.Rooms;
 import sk.tuke.ursus.redirecto.ui.dialog.ProgressDialogFragment;
 import sk.tuke.ursus.redirecto.util.AlarmUtils;
 import sk.tuke.ursus.redirecto.util.Utils;
-import android.annotation.SuppressLint;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -37,7 +37,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ProgressBar;
@@ -95,7 +94,7 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 
 		mAdapter = new RoomsCursorAdapter(mContext, mRoomOverflowCallback);
 		mGridView.setOnItemClickListener(mItemClickListener);
-		mGridView.setOnItemLongClickListener(mItemLongClickListener);
+		// mGridView.setOnItemLongClickListener(mItemLongClickListener);
 		mGridView.setAdapter(mAdapter);
 
 		String metadata = mApp.getMetadata();
@@ -177,28 +176,19 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 	}
 
 	protected void localizeNow() {
-		ToastUtils.show(mContext, "Spúšam meranie...");
-
-		// RestService.localizeMe(mContext, mApp.getToken(), mLocalizeMeCallback);
 		Intent intent = new Intent(mContext, SnifferService.class);
 		intent.setAction(SnifferService.ACTION_LOC_AND_FORWARD);
-		intent.putExtra(SnifferService.EXTRA_RECEIVER, new ResultReceiver(new Handler()) {
-			@Override
-			protected void onReceiveResult(int resultCode, Bundle resultData) {
-				super.onReceiveResult(resultCode, resultData);
-				ToastUtils.showInfo(mContext, resultData.getString("what"));
-			}
-		});
+		intent.putExtra(SnifferService.EXTRA_RECEIVER, mLocalizeReceiver);
 
 		mContext.startService(intent);
 	}
 
 	protected void syncMyRooms() {
-		RestService.getMyRooms(mContext, mApp.getToken(), mMyRoomsCallback);
+		RestService.getMyRooms(mContext, mApp.getToken(), mGetMyRoomsCallback);
 	}
 
 	protected void forceLocalize(int id) {
-		RestService.forceLocalize(mContext, id, mApp.getToken(), mLocalizeMeManuallyCallback);
+		RestService.forceLocalize(mContext, id, mApp.getToken(), mForceLocAndForwardCallback);
 	}
 
 	protected void removeMyRoom(int id) {
@@ -206,11 +196,28 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 	}
 
 	private void logout() {
-		RestService.logout(mContext, mApp.getToken(), mLogoutCallback);
+		// When token is invalid, I cant go
+		// logout out as it requires a token
+		// so for now, skip it, just clear
+		// local tokens, metadata, data
+		// and go log in again
+		//
+		// RestService.logout(mContext, mApp.getToken(), mLogoutCallback);
+
+		// Clean up database
+		ContentResolver resolver = mContext.getContentResolver();
+		resolver.delete(Rooms.CONTENT_URI, null, null);
+
+		// Remove data
+		mApp.removeTokenAndMetadata();
+
+		// Finish and start login activity
+		Intent intent = new Intent(mContext, LoginActivity.class);
+		startActivity(intent);
+		getActivity().finish();
 	}
 
 	protected void changeCoeficientSettings(int coef) {
-		coef += Utils.MIN_ACC_COEFICIENT;
 		RestService.changeCoefSetting(mContext, mApp.getToken(), coef, mChangeCoefCallback);
 	}
 
@@ -222,14 +229,14 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 
 	protected void hideProgressBar() {
 		ActionBarActivity activity = (ActionBarActivity) getActivity();
-		if (getActivity() != null) {
+		if (activity != null) {
 			activity.setSupportProgressBarIndeterminateVisibility(false);
 		}
 	}
 
 	protected void showProgressBar() {
 		ActionBarActivity activity = (ActionBarActivity) getActivity();
-		if (getActivity() != null) {
+		if (activity != null) {
 			activity.setSupportProgressBarIndeterminateVisibility(true);
 		}
 	}
@@ -286,7 +293,7 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		}
 	};
 
-	private OnItemLongClickListener mItemLongClickListener = new OnItemLongClickListener() {
+	/* private OnItemLongClickListener mItemLongClickListener = new OnItemLongClickListener() {
 
 		@Override
 		public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
@@ -299,7 +306,7 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 			return true;
 		}
 
-	};
+	}; */
 
 	private RoomOverflowCallback mRoomOverflowCallback = new RoomOverflowCallback() {
 
@@ -311,6 +318,37 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		@Override
 		public void onLocalizedManually(int id) {
 			forceLocalize(id);
+		}
+	};
+
+	ResultReceiver mLocalizeReceiver = new ResultReceiver(new Handler()) {
+		@Override
+		protected void onReceiveResult(int resultCode, Bundle resultData) {
+			super.onReceiveResult(resultCode, resultData);
+
+			switch (resultCode) {
+				case SnifferService.CODE_ACTION_START:
+					showProgressBar();
+					break;
+
+				case SnifferService.CODE_ACTION_SUCCESS:
+					hideProgressBar();
+					if (resultData.containsKey(SnifferService.EXTRA_VALUES)) {
+						String localizedRoom = resultData.getString(SnifferService.EXTRA_VALUES);
+						ToastUtils.showInfo(mContext, "Lokalizovaný v " + localizedRoom + "\nHovory úspešne presmerované");
+					}
+					break;
+
+				case SnifferService.CODE_ACTION_ERROR:
+					hideProgressBar();
+					String errorMessage = resultData.getString(SnifferService.EXTRA_ERROR);
+					if(errorMessage != null) {
+						ToastUtils.showError(mContext, "Nepodarilo sa lokalizova a presmerova", errorMessage);						
+					} else {
+						ToastUtils.showError(mContext, "Nepodarilo sa lokalizova a presmerova", "Skontrolujte pripojenie na internet");
+					}
+					break;
+			}
 		}
 	};
 
@@ -349,7 +387,7 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 
 	};
 
-	private RestUtils.Callback mLocalizeMeManuallyCallback = new RestUtils.Callback() {
+	private RestUtils.Callback mForceLocAndForwardCallback = new RestUtils.Callback() {
 
 		@Override
 		public void onSuccess(Bundle data) {
@@ -364,40 +402,18 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		@Override
 		public void onException() {
 			hideProgressBar();
+			ToastUtils.showError(mContext, "Nepodarilo sa nastavi ako aktuálnu", "Skontrolujte pripojenie na internet");
 		}
 
 		@Override
 		public void onError(int code, String message) {
 			hideProgressBar();
+			ToastUtils.showError(mContext, "Nepodarilo sa nastavi ako aktuálnu", message);
 		}
 	};
 
-	private RestUtils.Callback mLocalizeMeCallback = new RestUtils.Callback() {
+	private RestUtils.Callback mGetMyRoomsCallback = new RestUtils.Callback() {
 
-		@Override
-		public void onSuccess(Bundle data) {
-			hideProgressBar();
-		}
-
-		@Override
-		public void onStarted() {
-			showProgressBar();
-		}
-
-		@Override
-		public void onException() {
-			hideProgressBar();
-		}
-
-		@Override
-		public void onError(int code, String message) {
-			hideProgressBar();
-		}
-	};
-
-	private RestUtils.Callback mMyRoomsCallback = new RestUtils.Callback() {
-
-		@SuppressLint("NewApi")
 		@Override
 		public void onSuccess(Bundle data) {
 			LOG.d("MyRoomsCallback # onSuccess");
@@ -439,14 +455,14 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		@Override
 		public void onException() {
 			hideProgressBar();
-			ToastUtils.showError(mContext, "Nepodarilo sa synchronizova so serverom",
+			ToastUtils.showError(mContext, "Nepodarilo sa synchronizova miestnosti",
 					"Skontrolujte pripojenie na internet");
 		}
 
 		@Override
 		public void onError(int code, String message) {
 			hideProgressBar();
-			ToastUtils.showError(mContext, "Nepodarilo sa synchronizova so serverom", message);
+			ToastUtils.showError(mContext, "Nepodarilo sa synchronizova miestnosti", message);
 		}
 	};
 
@@ -526,10 +542,10 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 					AlarmUtils.startAutoLocalization(mContext, mPrefs);
 				}
 
-			} else if (Utils.PREFS_ACC_COEFICIENT_KEY.equals(key)) {
+			} else if (Utils.PREFS_MAX_ACC_COEFICIENT_KEY.equals(key)) {
 				int coef = prefs.getInt(
-						Utils.PREFS_ACC_COEFICIENT_KEY,
-						Utils.DEFAULT_ACC_COEFICIENT);
+						Utils.PREFS_MAX_ACC_COEFICIENT_KEY,
+						Utils.DEFAULT_MAX_ACC_COEFICIENT);
 
 				changeCoeficientSettings(coef);
 			}

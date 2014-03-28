@@ -61,7 +61,7 @@ public class LoginActivity extends ActionBarActivity {
 		String password = mPasswordEditText.getText().toString();
 
 		if ((username == null || username.length() <= 0 || password == null || password.length() <= 0)) {
-			ToastUtils.showInfo(this, "Zadajte meno alebo heslo")	;
+			ToastUtils.showInfo(this, "Zadajte meno alebo heslo");
 
 		} else {
 			RestService.login(this, username, password, mLoginCallback);
@@ -136,14 +136,14 @@ public class LoginActivity extends ActionBarActivity {
 		public void onError(int code, String message) {
 			LOG.d("Login # Status.ERROR");
 			dismissProgressDialog();
-			ToastUtils.showError(LoginActivity.this, "Nepodarilo sa prihlási: " + message);
+			ToastUtils.showError(LoginActivity.this, "Nepodarilo sa prihlási", message);
 		}
 
 		@Override
 		public void onException() {
 			LOG.d("Login # Status.EXCEPTION");
 			dismissProgressDialog();
-			ToastUtils.showError(LoginActivity.this, "Nepodarilo sa prihlási");
+			ToastUtils.showError(LoginActivity.this, "Nepodarilo sa prihlási", "Skontrolujte pripojenie na internet");
 		}
 
 	};

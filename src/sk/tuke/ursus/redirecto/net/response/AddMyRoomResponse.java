@@ -6,8 +6,7 @@ import sk.tuke.ursus.redirecto.net.RestUtils.JsonRpcResponse;
 import com.google.gson.annotations.SerializedName;
 
 public class AddMyRoomResponse extends JsonRpcResponse {
-	
-	@SerializedName("result")
-	public Room insertedRoom;
+
+	@SerializedName("result") public Room insertedRoom;
 
 }

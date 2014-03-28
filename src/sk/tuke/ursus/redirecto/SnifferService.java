@@ -33,16 +33,22 @@ public class SnifferService extends Service {
 	public static final String ACTION_STOP_RECORD_FINGERPRINTS = "sk.tuke.ursus.redirecto.ACTION_STOP_RECORD_FINGERPRINTS";
 	public static final String ACTION_LOC_AND_FORWARD = "sk.tuke.ursus.redirecto.ACTION_LOC_AND_FORWARD";
 
+	public static final int CODE_ACTION_START = 0;
+	public static final int CODE_ACTION_SUCCESS = 1;
+	public static final int CODE_ACTION_ERROR = 2;
+	public static final int CODE_ACTION_PROGRESS = 3;
+
 	public static final String EXTRA_RECORDED_ROOM = "sk.tuke.ursus.redirecto.EXTRA_RECORDED_ROOM";
 	public static final String EXTRA_RECEIVER = "sk.tuke.ursus.redirecto.EXTRA_RECEIVER";
 	public static final String EXTRA_VALUES = "sk.tuke.ursus.redirecto.EXTRA_VALUES";
+	public static final String EXTRA_ERROR = "sk.tuke.ursus.redirecto.EXTRA_ERROR_MESSAGE";
 
 	private ScanReceiver mScanReceiver;
 	private WifiManager mWifiManager;
 	private ResultReceiver mResultReceiver;
 	private String mAction;
 
-	private List<List<ScanResult>> mRecordedResults;
+	private List<List<ScanResult>> mCollectedScanResults;
 	private int mRecoredRoomId;
 	private boolean mLocalizing;
 
@@ -51,27 +57,30 @@ public class SnifferService extends Service {
 		mAction = intent.getAction();
 
 		if (ACTION_LOC_AND_FORWARD.equals(mAction)) {
-			LOG.d("ACTION_LOC_AND_FORWARD");
-			if(mLocalizing) {
+			if (mLocalizing) {
 				LOG.i("Localizing already in progress");
 				return START_STICKY;
 			}
-			mResultReceiver = (ResultReceiver) intent.getParcelableExtra(EXTRA_RECEIVER);
+
+			if (intent.hasExtra(EXTRA_RECEIVER)) {
+				mResultReceiver = (ResultReceiver) intent.getParcelableExtra(EXTRA_RECEIVER);
+				mResultReceiver.send(CODE_ACTION_START, Bundle.EMPTY);
+			}
 			startScanningWifis();
 
 		} else if (ACTION_START_RECORD_FINGERPRINTS.equals(mAction)) {
 			if (intent.hasExtra(EXTRA_RECORDED_ROOM)) {
 				mResultReceiver = (ResultReceiver) intent.getParcelableExtra(EXTRA_RECEIVER);
 				mRecoredRoomId = intent.getIntExtra(EXTRA_RECORDED_ROOM, -1);
-				mRecordedResults = new ArrayList<List<ScanResult>>();
+				mCollectedScanResults = new ArrayList<List<ScanResult>>();
 
 				startScanningWifis();
 				startForeground(123, Utils.makeNotification(this));
 			}
 
 		} else if (ACTION_STOP_RECORD_FINGERPRINTS.equals(mAction)) {
-			if (mRecoredRoomId != -1 && mRecordedResults != null) {
-				processRecordedResults(mRecoredRoomId, mRecordedResults);
+			if (mRecoredRoomId != -1 && mCollectedScanResults != null) {
+				processRecordedResults(mRecoredRoomId, mCollectedScanResults);
 			}
 		}
 
@@ -86,9 +95,6 @@ public class SnifferService extends Service {
 
 		// Start sniffing RSSI values
 		mWifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
-		// Pre 4.3+ vie pasivne skenovat wifiny
-		// aj ked je wifi vypnute userom
-		// mWifiManager.isScanAlwaysAvailable();
 		if (!mWifiManager.isWifiEnabled()) {
 			mWifiManager.setWifiEnabled(true);
 		}
@@ -97,101 +103,30 @@ public class SnifferService extends Service {
 	}
 
 	protected void processRecordedResults(int roomId, List<List<ScanResult>> resultsList) {
+		// ScanResults to JSON
 		JSONArray fingerprints = new JSONArray();
 		for (List<ScanResult> results : resultsList) {
 			JSONArray fingerprint = scanResultsToJsonArray(results);
 			fingerprints.put(fingerprint);
 		}
 
+		// Make REST call
 		MyApplication myApp = (MyApplication) getApplication();
-		RestService.newFingerprints(this, myApp.getToken(), roomId, fingerprints, new Callback() {
-
-			@Override
-			public void onSuccess(Bundle data) {
-				LOG.d("NewFingerprints # onSuccess");
-				showToast("newFingerprints # onSuccess");
-				stopSelf();
-			}
-
-			@Override
-			public void onStarted() {
-				LOG.d("NewFingerprints # onStarted");
-			}
-
-			@Override
-			public void onException() {
-				LOG.d("NewFingerprints # onException");
-				showToast("newFingerprints # onException");
-				stopSelf();
-			}
-
-			@Override
-			public void onError(int code, String message) {
-				LOG.d("NewFingerprints # onError: " + message);
-				showToast("newFingerprints # onError=" + message);
-				stopSelf();
-			}
-		});
-	}
-
-	protected void showToast(final String string) {
-		new Handler().post(new Runnable() {
-			public void run() {
-				ToastUtils.show(SnifferService.this, string);
-			}
-		});
+		RestService.newFingerprints(this, myApp.getToken(), roomId, fingerprints, mNewFingerprintsCallback);
 	}
 
 	protected void processSniffedResults(List<ScanResult> results) {
+		// ScanResults to JSON
 		JSONArray fingerprint = scanResultsToJsonArray(results);
-		LOG.d(fingerprint.toString());
-		
+
 		// Get current room id
 		ContentResolver resolver = getContentResolver();
 		int roomId = QueryUtils.getCurrentRoomId(resolver);
-		LOG.i("Current room=" + roomId);
+		LOG.i("Current room [id=" + roomId + "]");
 
 		// Make REST call
 		MyApplication myApp = (MyApplication) getApplication();
-		RestService.localize(this, myApp.getToken(), roomId, fingerprint, new Callback() {
-
-			@Override
-			public void onSuccess(Bundle data) {
-				//
-				if (mResultReceiver != null) {
-					Bundle bundle = new Bundle();
-					bundle.putString("what", data.getString("what"));
-					mResultReceiver.send(0, bundle);
-				}
-				//
-				stopSelf();
-			}
-
-			@Override
-			public void onStarted() {
-			}
-
-			@Override
-			public void onException() {
-				LOG.d("Localize # onException");
-				showToast("localize # onException");
-				stopSelf();
-			}
-
-			@Override
-			public void onError(int code, String message) {
-				LOG.d("Localize # onError: " + message);
-
-				//
-				if (mResultReceiver != null) {
-					Bundle bundle = new Bundle();
-					bundle.putString("what", message);
-					mResultReceiver.send(0, bundle);
-				}
-				//
-				stopSelf();
-			}
-		});
+		RestService.localize(this, myApp.getToken(), roomId, fingerprint, mLocalizeCallback);
 	}
 
 	protected JSONArray scanResultsToJsonArray(List<ScanResult> scanResults) {
@@ -210,6 +145,23 @@ public class SnifferService extends Service {
 
 	}
 
+	protected String scanResultsToString(List<ScanResult> results) {
+		StringBuilder sb = new StringBuilder();
+		for (ScanResult result : results) {
+			sb.append(result.BSSID + "=" + result.level + " ");
+		}
+		return sb.toString();
+
+	}
+
+	protected void showToast(final String string) {
+		new Handler().post(new Runnable() {
+			public void run() {
+				ToastUtils.show(SnifferService.this, string);
+			}
+		});
+	}
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
@@ -218,6 +170,7 @@ public class SnifferService extends Service {
 			unregisterReceiver(mScanReceiver);
 		} catch (IllegalArgumentException e) {
 		}
+
 		stopForeground(true);
 		mLocalizing = false;
 	}
@@ -236,47 +189,116 @@ public class SnifferService extends Service {
 			if (ACTION_LOC_AND_FORWARD.equals(mAction)) {
 				// Get RSSI results
 				List<ScanResult> results = mWifiManager.getScanResults();
-				// JSONArray jsonArray = scanResultsToJsonArray(results);
-				// mCollectedJsonArray.put(jsonArray);
-
-				// Do multiple measurements
-				/*if (mCounter++ < MAX_COUNTER) {
-					mWifiManager.startScan();
-					return;
-				} */
-
-				// Process results
-				// processSniffedResults(mCollectedJsonArray);
 				processSniffedResults(results);
 
 			} else if (ACTION_START_RECORD_FINGERPRINTS.equals(mAction)) {
 				List<ScanResult> results = mWifiManager.getScanResults();
 
-				// To string
-				if (mScanReceiver != null) {
-					StringBuilder sb = new StringBuilder();
-					for (ScanResult result : results) {
-						// sb.append(result.SSID + "=" + result.level + " ");
-						sb.append(result.BSSID + "=" + result.level + " ");
-					}
-
-					if (mResultReceiver != null) {
-						if (mBundle == null) {
-							mBundle = new Bundle();
-						}
-						mBundle.putString(EXTRA_VALUES, sb.toString());
-						mResultReceiver.send(0, mBundle);
-					}
+				// ScanResults to string
+				// and post them back to activity
+				// to display in UI
+				String string = scanResultsToString(results);
+				if (mBundle == null) {
+					mBundle = new Bundle();
 				}
+				mBundle.putString(EXTRA_VALUES, string);
+				mResultReceiver.send(CODE_ACTION_PROGRESS, mBundle);
 
 				// Collect
-				mRecordedResults.add(results);
-
+				mCollectedScanResults.add(results);
 				// Restart
 				mWifiManager.startScan();
 			}
 		}
-
 	}
+
+	private Callback mLocalizeCallback = new Callback() {
+
+		@Override
+		public void onSuccess(Bundle data) {
+			//
+			if (mResultReceiver != null) {
+				String roomName = data.getString(RestService.RESULT_LOCALIZED_ROOM);
+
+				Bundle b = new Bundle();
+				b.putString(EXTRA_VALUES, roomName);
+				mResultReceiver.send(CODE_ACTION_SUCCESS, b);
+			}
+			//
+			stopSelf();
+		}
+
+		@Override
+		public void onStarted() {
+		}
+
+		@Override
+		public void onException() {
+			LOG.d("Localize # onException");
+			//
+			if (mResultReceiver != null) {
+				mResultReceiver.send(CODE_ACTION_ERROR, Bundle.EMPTY);
+			}
+			//
+			stopSelf();
+		}
+
+		@Override
+		public void onError(int code, String message) {
+			LOG.d("Localize # onError: " + message);
+
+			//
+			if (mResultReceiver != null) {
+				Bundle b = new Bundle();
+				b.putString(EXTRA_ERROR, message);
+				mResultReceiver.send(CODE_ACTION_ERROR, b);
+			}
+			//
+			stopSelf();
+		}
+	};
+
+	private Callback mNewFingerprintsCallback = new Callback() {
+
+		@Override
+		public void onSuccess(Bundle data) {
+			LOG.d("NewFingerprints # onSuccess");
+			//
+			if (mResultReceiver != null) {
+				mResultReceiver.send(CODE_ACTION_SUCCESS, Bundle.EMPTY);
+			}
+			//
+			stopSelf();
+		}
+
+		@Override
+		public void onStarted() {
+			LOG.d("NewFingerprints # onStarted");
+		}
+
+		@Override
+		public void onException() {
+			LOG.d("NewFingerprints # onException");
+			//
+			if (mResultReceiver != null) {
+				mResultReceiver.send(CODE_ACTION_ERROR, Bundle.EMPTY);
+			}
+			//
+			stopSelf();
+		}
+
+		@Override
+		public void onError(int code, String message) {
+			LOG.d("NewFingerprints # onError: " + message);
+			//
+			if (mResultReceiver != null) {
+				Bundle b = new Bundle();
+				b.putString(EXTRA_ERROR, message);
+				mResultReceiver.send(CODE_ACTION_ERROR, b);
+			}
+			//
+			stopSelf();
+		}
+	};
 
 }

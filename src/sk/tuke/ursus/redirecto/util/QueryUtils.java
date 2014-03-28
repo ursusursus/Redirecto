@@ -9,7 +9,7 @@ import com.awaboom.ursus.agave.LOG;
 
 public class QueryUtils {
 
-	private static final int DEFAULT_NO_ROOM_ID = -1;
+	public static final int NO_ROOM_ID = -1;
 	
 	private static final int FLAG_NOT_CURRENT = 0;
 	private static final int FLAG_CURRENT = 1;
@@ -20,7 +20,7 @@ public class QueryUtils {
 
 		Cursor cursor = resolver.query(Rooms.CONTENT_URI, columns, where, null, null);
 
-		int currentRoomId = DEFAULT_NO_ROOM_ID;
+		int currentRoomId = NO_ROOM_ID;
 		if (cursor.moveToFirst()) {
 			currentRoomId = cursor.getInt(0);
 		}

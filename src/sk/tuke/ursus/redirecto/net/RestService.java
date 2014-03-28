@@ -51,6 +51,7 @@ public class RestService extends AbstractRestService {
 	public static final String RESULT_ROOMS = "rooms";
 	public static final String RESULT_INSERTED_ID = "inserted_id";
 	public static final String RESULT_NO_ROOMS = "no_rooms";
+	public static final String RESULT_LOCALIZED_ROOM = "loc_room";
 
 
 

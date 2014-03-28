@@ -1,26 +1,13 @@
 package sk.tuke.ursus.redirecto.util;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import sk.tuke.ursus.redirecto.R;
-import sk.tuke.ursus.redirecto.SnifferService;
-import sk.tuke.ursus.redirecto.net.RestService;
-import sk.tuke.ursus.redirecto.net.RestUtils.AbstractRestService;
-import sk.tuke.ursus.redirecto.net.RestUtils.Methods;
-import sk.tuke.ursus.redirecto.net.processor.GetMyRoomsProcessor;
 import sk.tuke.ursus.redirecto.ui.RecordActivity;
-import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
-import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-
-import com.awaboom.ursus.agave.LOG;
 
 public class Utils {
 
@@ -29,9 +16,8 @@ public class Utils {
 	public static final String PREFS_DIRECTORY_NUMBER_KEY = "directory_number";
 	public static final String PREFS_AUTO_LOC_KEY = "auto_loc";
 	public static final String PREFS_LOC_FREQUENCY_KEY = "loc_frequency";
-	public static final String PREFS_ACC_COEFICIENT_KEY = "acc_coef";
-	public static final int MIN_ACC_COEFICIENT = 50;
-	public static final int DEFAULT_ACC_COEFICIENT = 70 - MIN_ACC_COEFICIENT;
+	public static final String PREFS_MAX_ACC_COEFICIENT_KEY = "max_acc_coef";
+	public static final int DEFAULT_MAX_ACC_COEFICIENT = 50;
 
 	public static boolean hasHoneycomb() {
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;

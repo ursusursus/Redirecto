@@ -32,18 +32,8 @@
         android:layout_gravity="center"
         android:fontFamily="sans-serif-condensed"
         android:text="Ľutujem, nepodarilo sa načítať miestnosti"
-        android:textSize="16sp"
-        android:textStyle="italic"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/errorTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:fontFamily="sans-serif-condensed"
-        android:text="Ľutujem, nepodarilo sa načítať miestnosti"
-        android:textSize="16sp"
+        android:textColor="@color/medium_gray"
+        android:textSize="18sp"
         android:textStyle="italic"
         android:visibility="gone" />
 

@@ -49,7 +49,7 @@ public class RoomsArrayAdapter extends ArrayAdapter<Room> {
 
 		final Room room = mItems.get(position);
 		holder.name.setText(room.name);
-		holder.floor.setText(Utils.dotConcat(room.floor, room.phoneNumber));
+		holder.floor.setText(Utils.dotConcat(room.description, room.phoneNumber));
 		
 		if (room.isAdded()) {
 			holder.add.setEnabled(false);

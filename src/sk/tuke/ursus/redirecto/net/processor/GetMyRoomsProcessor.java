@@ -12,6 +12,7 @@ import sk.tuke.ursus.redirecto.net.RestUtils.Status;
 import sk.tuke.ursus.redirecto.net.response.GetRoomsResponse;
 import sk.tuke.ursus.redirecto.provider.RedirectoContract;
 import sk.tuke.ursus.redirecto.provider.RedirectoContract.Rooms;
+import sk.tuke.ursus.redirecto.util.QueryUtils;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -20,7 +21,8 @@ import android.os.Bundle;
 public class GetMyRoomsProcessor extends Processor {
 
 	@Override
-	public int onProcessResponse(Context context, String contentType, InputStream stream, Bundle results) throws Exception {
+	public int onProcessResponse(Context context, String contentType, InputStream stream, Bundle results)
+			throws Exception {
 		GetRoomsResponse response = RestUtils.fromJson(stream, GetRoomsResponse.class);
 
 		if (response.hasError()) {
@@ -31,9 +33,14 @@ public class GetMyRoomsProcessor extends Processor {
 			return Status.ERROR;
 		}
 
+		ContentResolver resolver = context.getContentResolver();
+
+		// Save current room ID before as sync deletes it
+		int savedId = QueryUtils.getCurrentRoomId(resolver);
+
 		ArrayList<ContentProviderOperation> batch = new ArrayList<ContentProviderOperation>();
 
-		// Delete local
+		// Delete local rooms
 		batch.add(ContentProviderOperation.newDelete(Rooms.CONTENT_URI)
 				.withSelection(null, null)
 				.build());
@@ -45,16 +52,21 @@ public class GetMyRoomsProcessor extends Processor {
 			return Status.OK;
 		}
 
-		// Insert new
+		// Insert new rooms
 		for (Room room : response.rooms) {
 			batch.add(ContentProviderOperation.newInsert(Rooms.CONTENT_URI)
 					.withValues(room.toContentValues())
 					.build());
 		}
 
-		ContentResolver resolver = context.getContentResolver();
+		// Apply sync changes
 		resolver.applyBatch(RedirectoContract.CONTENT_AUTHORITY, batch);
 		resolver.notifyChange(Rooms.CONTENT_URI, null);
+
+		// Set saved ID again
+		if (savedId != QueryUtils.NO_ROOM_ID) {
+			QueryUtils.setNewCurrentRoomId(resolver, savedId);
+		}
 
 		return Status.OK;
 	}

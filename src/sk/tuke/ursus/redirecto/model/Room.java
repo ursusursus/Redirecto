@@ -11,13 +11,10 @@ public class Room implements Parcelable {
 
 	public int id;
 	public String name;
-	public String floor;
-	@SerializedName("phone_number")
-	public String phoneNumber;
-	@SerializedName("created_at")
-	public String createdAt;
-	@SerializedName("changed_at")
-	public String changedAt;
+	@SerializedName("floor") public String description;
+	@SerializedName("phone_number") public String phoneNumber;
+	@SerializedName("created_at") public String createdAt;
+	@SerializedName("changed_at") public String changedAt;
 	private boolean isAdded = false;
 
 	public void setAdded(boolean isAdded) {
@@ -32,16 +29,16 @@ public class Room implements Parcelable {
 		ContentValues values = new ContentValues();
 		values.put(Rooms.COLUMN_ID, id);
 		values.put(Rooms.COLUMN_NAME, name);
-		values.put(Rooms.COLUMN_FLOOR, floor);
+		values.put(Rooms.COLUMN_DESC, description);
 		values.put(Rooms.COLUMN_PHONE_NUMBER, phoneNumber);
 		values.put(Rooms.COLUMN_CREATED_AT, createdAt);
 		values.put(Rooms.COLUMN_CHANGED_AT, changedAt);
 		return values;
 	}
-	
+
 	@Override
 	public String toString() {
-		return name + "(" + floor + " · " + phoneNumber + ")";
+		return name + "(" + description + " · " + phoneNumber + ")";
 	}
 
 	/**
@@ -63,7 +60,7 @@ public class Room implements Parcelable {
 	public Room(Parcel source) {
 		id = source.readInt();
 		name = source.readString();
-		floor = source.readString();
+		description = source.readString();
 		phoneNumber = source.readString();
 		createdAt = source.readString();
 		changedAt = source.readString();
@@ -73,7 +70,7 @@ public class Room implements Parcelable {
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeInt(id);
 		dest.writeString(name);
-		dest.writeString(floor);
+		dest.writeString(description);
 		dest.writeString(phoneNumber);
 		dest.writeString(createdAt);
 		dest.writeString(changedAt);
