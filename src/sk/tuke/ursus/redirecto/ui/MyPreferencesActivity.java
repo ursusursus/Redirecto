@@ -17,10 +17,8 @@ public class MyPreferencesActivity extends PreferenceActivity {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.prefs);
 
-		if (Utils.hasHoneycomb()) {
-			ActionBar actionBar = getActionBar();
-			actionBar.setDisplayHomeAsUpEnabled(true);
-		}
+		ActionBar actionBar = getActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
 
 	}
 

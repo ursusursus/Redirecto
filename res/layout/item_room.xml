@@ -51,7 +51,7 @@
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
         android:textAllCaps="true"
-        android:textColor="#585858"
+        android:textColor="@color/dark_gray"
         android:textSize="11sp"
         android:textStyle="italic" />
 

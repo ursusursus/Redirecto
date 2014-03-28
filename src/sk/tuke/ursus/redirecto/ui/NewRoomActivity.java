@@ -1,19 +1,20 @@
 package sk.tuke.ursus.redirecto.ui;
 
+
 import sk.tuke.ursus.redirecto.R;
+import android.app.ActionBar;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 
-public class NewRoomActivity extends ActionBarActivity {
+public class NewRoomActivity extends FragmentActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		final ActionBar actionBar = getSupportActionBar();
+		final ActionBar actionBar = getActionBar();
 
 		// Inflate a "Done" custom action bar view to serve as the "Up" affordance.
 		final LayoutInflater inflater = (LayoutInflater) actionBar.getThemedContext()

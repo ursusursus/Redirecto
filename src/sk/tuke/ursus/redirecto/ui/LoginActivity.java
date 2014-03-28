@@ -5,11 +5,11 @@ import sk.tuke.ursus.redirecto.R;
 import sk.tuke.ursus.redirecto.net.RestService;
 import sk.tuke.ursus.redirecto.net.RestUtils;
 import sk.tuke.ursus.redirecto.ui.dialog.ProgressDialogFragment;
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -20,7 +20,7 @@ import android.widget.Toast;
 import com.awaboom.ursus.agave.LOG;
 import com.awaboom.ursus.agave.ToastUtils;
 
-public class LoginActivity extends ActionBarActivity {
+public class LoginActivity extends FragmentActivity {
 
 	public static final String ACTION_RELOGIN = "sk.tuke.ursus.redirecto.ACTION_RELOGIN";
 
@@ -36,7 +36,7 @@ public class LoginActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 
-		final ActionBar actionBar = getSupportActionBar();
+		final ActionBar actionBar = getActionBar();
 		actionBar.hide();
 
 		mApp = (MyApplication) getApplication();

@@ -24,6 +24,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -99,9 +100,7 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 
 		String metadata = mApp.getMetadata();
 		if (metadata != null) {
-			ActionBarActivity activity = ((ActionBarActivity) getActivity());
-			ActionBar actionBar = activity.getSupportActionBar();
-			actionBar.setSubtitle(metadata);
+			getActivity().getActionBar().setSubtitle(metadata);
 		}
 
 		getLoaderManager().initLoader(LOADER_ID, null, this);
@@ -228,16 +227,24 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 	}
 
 	protected void hideProgressBar() {
-		ActionBarActivity activity = (ActionBarActivity) getActivity();
+		/* ActionBarActivity activity = (ActionBarActivity) getActivity();
 		if (activity != null) {
 			activity.setSupportProgressBarIndeterminateVisibility(false);
+		} */
+		FragmentActivity activity = getActivity();
+		if (activity != null) {
+			activity.setProgressBarIndeterminateVisibility(false);
 		}
 	}
 
 	protected void showProgressBar() {
-		ActionBarActivity activity = (ActionBarActivity) getActivity();
+		/* ActionBarActivity activity = (ActionBarActivity) getActivity();
 		if (activity != null) {
 			activity.setSupportProgressBarIndeterminateVisibility(true);
+		} */
+		FragmentActivity activity = getActivity();
+		if (activity != null) {
+			activity.setProgressBarIndeterminateVisibility(true);
 		}
 	}
 
@@ -335,17 +342,19 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 					hideProgressBar();
 					if (resultData.containsKey(SnifferService.EXTRA_VALUES)) {
 						String localizedRoom = resultData.getString(SnifferService.EXTRA_VALUES);
-						ToastUtils.showInfo(mContext, "Lokalizovaný v " + localizedRoom + "\nHovory úspešne presmerované");
+						ToastUtils.showInfo(mContext, "Lokalizovaný v " + localizedRoom
+								+ "\nHovory úspešne presmerované");
 					}
 					break;
 
 				case SnifferService.CODE_ACTION_ERROR:
 					hideProgressBar();
 					String errorMessage = resultData.getString(SnifferService.EXTRA_ERROR);
-					if(errorMessage != null) {
-						ToastUtils.showError(mContext, "Nepodarilo sa lokalizova a presmerova", errorMessage);						
+					if (errorMessage != null) {
+						ToastUtils.showError(mContext, "Nepodarilo sa lokalizova a presmerova", errorMessage);
 					} else {
-						ToastUtils.showError(mContext, "Nepodarilo sa lokalizova a presmerova", "Skontrolujte pripojenie na internet");
+						ToastUtils.showError(mContext, "Nepodarilo sa lokalizova a presmerova",
+								"Skontrolujte pripojenie na internet");
 					}
 					break;
 			}
@@ -402,7 +411,8 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		@Override
 		public void onException() {
 			hideProgressBar();
-			ToastUtils.showError(mContext, "Nepodarilo sa nastavi ako aktuálnu", "Skontrolujte pripojenie na internet");
+			ToastUtils
+					.showError(mContext, "Nepodarilo sa nastavi ako aktuálnu", "Skontrolujte pripojenie na internet");
 		}
 
 		@Override

@@ -11,12 +11,12 @@ import sk.tuke.ursus.redirecto.net.RestUtils;
 import sk.tuke.ursus.redirecto.net.processor.GetRoomsAndAPsProcessor;
 import sk.tuke.ursus.redirecto.ui.dialog.RoomPickerDialog;
 import sk.tuke.ursus.redirecto.ui.dialog.RoomPickerDialog.OnRoomPickedListener;
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -27,7 +27,7 @@ import android.widget.ListView;
 import com.awaboom.ursus.agave.LOG;
 import com.awaboom.ursus.agave.ToastUtils;
 
-public class RecordActivity extends ActionBarActivity implements OnClickListener, OnRoomPickedListener {
+public class RecordActivity extends FragmentActivity implements OnClickListener, OnRoomPickedListener {
 
 	private static final String EXTRA_VALUES_LIST = "values";
 	private static final String EXTRA_IS_RECORDING = "has_room_selected";
@@ -70,7 +70,7 @@ public class RecordActivity extends ActionBarActivity implements OnClickListener
 		mToggleButton.setText(mRecording ? "Stop [" + mValuesList.size() + "]" : "Štart");
 
 		if (mPickedRoom != null) {
-			ActionBar actionBar = getSupportActionBar();
+			ActionBar actionBar = getActionBar();
 			actionBar.setSubtitle("v miestnosti " + mPickedRoom.name + "[" + mPickedRoom.id + "]");
 			mToggleButton.setEnabled(true);
 		} else {
@@ -112,7 +112,7 @@ public class RecordActivity extends ActionBarActivity implements OnClickListener
 
 	@Override
 	public void onRoomPicked(Room room) {
-		ActionBar actionBar = getSupportActionBar();
+		ActionBar actionBar = getActionBar();
 		actionBar.setSubtitle("v miestnosti " + room.name + " [id=" + room.id + "]");
 
 		mToggleButton.setEnabled(true);

@@ -9,29 +9,28 @@
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#000"
+        android:layout_centerInParent="true"
+        android:fontFamily="sans-serif-light"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:fontFamily="sans-serif-light"
-        android:layout_centerInParent="true"
         android:paddingTop="16dp"
         android:text="A511"
+        android:textColor="#000"
         android:textSize="24sp" />
-    
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-condensed"
-        android:textStyle="italic"
-        android:textColor="#000"
         android:layout_below="@+id/textView1"
         android:layout_centerHorizontal="true"
+        android:fontFamily="sans-serif-condensed"
         android:paddingBottom="16dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:text="5. poschodie" />
+        android:text="5. poschodie"
+        android:textColor="#000"
+        android:textStyle="italic" />
 
     <View
         android:layout_width="match_parent"
@@ -41,23 +40,23 @@
 
     <LinearLayout
         android:id="@+id/buttonBar"
-        android:background="#FFF"
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#FFF"
         android:orientation="horizontal" >
 
         <Button
             android:id="@+id/button_previous"
-            android:drawableTop="@drawable/ic_action_new"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/item_selector"
+            android:drawableTop="@drawable/ic_action_discard_dark"
             android:fontFamily="sans-serif-condensed"
-            android:textColor="#000"
             android:padding="12dp"
             android:text="ODSTRÁNIŤ"
+            android:textColor="@color/dark_gray"
             android:textSize="14sp" />
 
         <View
@@ -68,16 +67,16 @@
             android:background="@color/separator_color" />
 
         <Button
-            android:drawableTop="@drawable/ic_action_new"
             android:id="@+id/button_next"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/item_selector"
-            android:textColor="@color/base_green"
+            android:drawableTop="@drawable/ic_action_location_found_dark"
             android:fontFamily="sans-serif-condensed"
             android:padding="12dp"
-            android:text="AKTUÁLNA"
+            android:text="NASTAVIŤ"
+            android:textColor="@color/dark_gray"
             android:textSize="14sp" />
     </LinearLayout>
 

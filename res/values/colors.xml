@@ -3,15 +3,10 @@
 
     <color name="action_item_pressed">#77FFFFFF</color>
     <color name="item_pressed">#5500be8f</color>
-    
     <color name="base_green">#00be8f</color>
     <color name="accent_green">#00be8f</color>
     <color name="separator_color">#E6E6E6</color>
     <color name="medium_gray">#6E6E6E</color>
-    
-<!--     <color name="toast_gray">#EE585858</color> -->
-<!--     <color name="toast_red">#EEFA5858</color> -->
-<!--     <color name="toast_green">#EE01DF3A</color> -->
-<!--     <color name="toast_blue">#EE2E9AFE</color> -->
+    <color name="dark_gray">#585858</color>
 
 </resources>

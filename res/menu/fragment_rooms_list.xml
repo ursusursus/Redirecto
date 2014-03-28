@@ -1,42 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
         android:id="@+id/action_localize"
         android:icon="@drawable/ic_action_location_found"
         android:orderInCategory="94"
-        android:title="Lokalizuj"
-        app:showAsAction="ifRoom"/>
+        android:showAsAction="ifRoom"
+        android:title="Lokalizuj"/>
     <item
         android:id="@+id/action_add_room"
         android:orderInCategory="95"
-        android:title="Pridať miestnosť"
-        app:showAsAction="never"/>
+        android:showAsAction="never"
+        android:title="Pridať miestnosť"/>
     <item
         android:id="@+id/action_sync_rooms"
         android:orderInCategory="96"
-        android:title="Synchronizovať miestnosti"
-        app:showAsAction="never"/>
+        android:showAsAction="never"
+        android:title="Synchronizovať miestnosti"/>
     <item
         android:id="@+id/action_record"
         android:orderInCategory="97"
-        android:title="Záznam odtlačkov"
-        app:showAsAction="never"/>
+        android:showAsAction="never"
+        android:title="Záznam odtlačkov"/>
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="98"
-        android:title="@string/menu_settings"
-        app:showAsAction="never"/>
+        android:showAsAction="never"
+        android:title="@string/menu_settings"/>
     <item
         android:id="@+id/action_about"
         android:orderInCategory="99"
-        android:title="O aplikácií"
-        app:showAsAction="never"/>
+        android:showAsAction="never"
+        android:title="O aplikácií"/>
     <item
         android:id="@+id/action_logout"
         android:orderInCategory="100"
-        android:title="Odhlásiť sa"
-        app:showAsAction="never"/>
+        android:showAsAction="never"
+        android:title="Odhlásiť sa"/>
 
 </menu>

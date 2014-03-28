@@ -9,8 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.SeekBar;
 
-import com.awaboom.ursus.agave.LOG;
-
 public class SeekBarDialogPreference extends DialogPreference {
 
 	private static final int DEFAULT_PROGRESS = 70;

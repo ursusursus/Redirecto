@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" tools:ignore="NewApi">
 
-    <style name="Theme.MyStyle" parent="@style/Theme.AppCompat.Light.DarkActionBar">
-        <item name="actionBarItemBackground">@drawable/action_item_selector</item>
-        <item name="actionBarStyle">@style/SolidActionBar.MyStyle</item>
+    <style name="Theme.MyStyle" parent="@android:style/Theme.Holo.Light">
         <item name="android:actionBarItemBackground">@drawable/action_item_selector</item>
         <item name="android:actionBarStyle">@style/SolidActionBar.MyStyle</item>
+        <item name="android:actionOverflowButtonStyle">@android:style/Widget.Holo.ActionButton.Overflow</item>
+        <item name="android:homeAsUpIndicator">@drawable/up_button_dark</item>
     </style>
 
     <style name="Theme.MyStyle.Login" parent="@style/Theme.MyStyle">
@@ -13,28 +13,25 @@
         <item name="android:windowDisablePreview">true</item>
     </style>
 
-    <style name="SolidActionBar.MyStyle" parent="@style/Widget.AppCompat.Light.ActionBar.Solid">
-        <item name="background">@color/base_green</item>
-        <item name="titleTextStyle">@style/ActionBarTitleTextStyle.MyStyle</item>
-        <item name="subtitleTextStyle">@style/ActionBarSubTitleTextStyle.MyStyle</item>
+    <style name="SolidActionBar.MyStyle" parent="@android:style/Widget.Holo.Light.ActionBar.Solid">
         <item name="android:background">@color/base_green</item>
         <item name="android:titleTextStyle">@style/ActionBarTitleTextStyle.MyStyle</item>
         <item name="android:subtitleTextStyle">@style/ActionBarSubTitleTextStyle.MyStyle</item>
         <item name="android:indeterminateProgressStyle">@style/ActionBarProgressBar.MyStyle</item>
     </style>
 
-    <style name="ActionBarTitleTextStyle.MyStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+    <style name="ActionBarTitleTextStyle.MyStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
         <item name="android:textColor">#FFFFFF</item>
         <item name="android:fontFamily">sans-serif-condensed</item>
         <item name="android:textStyle">italic|bold</item>
     </style>
-    
-    <style name="ActionBarSubTitleTextStyle.MyStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle">
+
+    <style name="ActionBarSubTitleTextStyle.MyStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Subtitle">
         <item name="android:textColor">#BBFFFFFF</item>
         <item name="android:fontFamily">sans-serif-condensed</item>
         <item name="android:textStyle">italic</item>
     </style>
-    
+
     <style name="ActionBarProgressBar.MyStyle" parent="@android:style/Widget.Holo.ProgressBar.Small">
         <item name="android:minWidth">28dp</item>
         <item name="android:maxWidth">28dp</item>
