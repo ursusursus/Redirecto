@@ -12,7 +12,7 @@
         android:fadingEdge="none"
         android:horizontalSpacing="6dp"
         android:listSelector="@drawable/item_selector"
-        android:numColumns="3"
+        android:numColumns="@integer/column_count"
         android:padding="8dp"
         android:verticalSpacing="6dp" />
 

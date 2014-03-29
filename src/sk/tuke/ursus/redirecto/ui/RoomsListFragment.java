@@ -304,12 +304,12 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 			String phoneNumber = cursor.getString(cursor.getColumnIndex(Rooms.COLUMN_PHONE_NUMBER));
 			boolean isCurrent = (cursor.getInt(cursor.getColumnIndex(Rooms.COLUMN_CURRENT)) == 1);
 
-			Intent intent = new Intent(mContext, DetailActivity.class);
-			intent.putExtra(DetailActivity.EXTRA_ID, id);
-			intent.putExtra(DetailActivity.EXTRA_NAME, name);
-			intent.putExtra(DetailActivity.EXTRA_DESC, desc);
-			intent.putExtra(DetailActivity.EXTRA_PHONE_NUMBER, phoneNumber);
-			intent.putExtra(DetailActivity.EXTRA_IS_CURRENT, isCurrent);
+			Intent intent = new Intent(mContext, RoomActivity.class);
+			intent.putExtra(RoomFragment.EXTRA_ID, id);
+			intent.putExtra(RoomFragment.EXTRA_NAME, name);
+			intent.putExtra(RoomFragment.EXTRA_DESC, desc);
+			intent.putExtra(RoomFragment.EXTRA_PHONE_NUMBER, phoneNumber);
+			intent.putExtra(RoomFragment.EXTRA_IS_CURRENT, isCurrent);
 
 			Bundle bundle = ActivityOptionsCompat.makeScaleUpAnimation(
 					view, 0, 0,

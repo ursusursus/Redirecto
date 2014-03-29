@@ -6,6 +6,7 @@
         <item name="android:actionBarStyle">@style/SolidActionBar.MyStyle</item>
         <item name="android:actionOverflowButtonStyle">@android:style/Widget.Holo.ActionButton.Overflow</item>
         <item name="android:homeAsUpIndicator">@drawable/up_button_dark</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 
     <style name="Theme.MyStyle.Login" parent="@style/Theme.MyStyle">
@@ -14,7 +15,7 @@
     </style>
 
     <style name="SolidActionBar.MyStyle" parent="@android:style/Widget.Holo.Light.ActionBar.Solid">
-        <item name="android:background">@color/base_green</item>
+        <item name="android:background">@drawable/ab_solid_redirecto</item>
         <item name="android:titleTextStyle">@style/ActionBarTitleTextStyle.MyStyle</item>
         <item name="android:subtitleTextStyle">@style/ActionBarSubTitleTextStyle.MyStyle</item>
         <item name="android:indeterminateProgressStyle">@style/ActionBarProgressBar.MyStyle</item>

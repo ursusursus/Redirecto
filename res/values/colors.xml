@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="action_item_pressed">#77FFFFFF</color>
+    <color name="action_item_pressed">#66FFFFFF</color>
     <color name="item_pressed">#5500be8f</color>
-    <color name="base_green">#00be8f</color>
-    <color name="accent_green">#00be8f</color>
+    <color name="accent_green">#00BE8F</color>
     <color name="separator_color">#E6E6E6</color>
     <color name="medium_gray">#6E6E6E</color>
     <color name="dark_gray">#585858</color>
