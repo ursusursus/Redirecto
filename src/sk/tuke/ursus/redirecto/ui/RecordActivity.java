@@ -31,7 +31,7 @@ import com.awaboom.ursus.agave.ToastUtils;
 public class RecordActivity extends FragmentActivity implements OnClickListener, OnRoomPickedListener {
 
 	private static final String EXTRA_VALUES_LIST = "values";
-	private static final String EXTRA_IS_RECORDING = "has_room_selected";
+	private static final String EXTRA_IS_RECORDING = "is_recording";
 	private static final String EXTRA_PICKED_ROOM = "picked_room";
 
 	private boolean mRecording;

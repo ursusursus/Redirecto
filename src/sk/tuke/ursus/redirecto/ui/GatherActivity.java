@@ -1,19 +1,12 @@
 package sk.tuke.ursus.redirecto.ui;
 
-import java.util.List;
-
 import sk.tuke.ursus.redirecto.AccessPointsAdapter;
 import sk.tuke.ursus.redirecto.R;
+import sk.tuke.ursus.redirecto.SnifferService;
 import sk.tuke.ursus.redirecto.provider.RedirectoContract.AccessPoints;
-import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.Cursor;
-import android.net.wifi.ScanResult;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -30,13 +23,11 @@ import android.widget.Toast;
 public class GatherActivity extends FragmentActivity implements LoaderCallbacks<Cursor> {
 
 	private static final String FILTERED_ROOM = "TUNET-guest";
-	private WifiManager mWifiManager;
-	private ScanReceiver mReceiver;
-	private AccessPointsAdapter mAdapter;
-	private ContentResolver mResolver;
 
-	protected boolean mRunning = false;
+	private AccessPointsAdapter mAdapter;
 	private Button mToggleButton;
+
+	protected boolean mGathering = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +46,7 @@ public class GatherActivity extends FragmentActivity implements LoaderCallbacks<
 
 			@Override
 			public void onClick(View v) {
-				if (mRunning) {
+				if (mGathering) {
 					stop();
 				} else {
 					start();
@@ -63,41 +54,38 @@ public class GatherActivity extends FragmentActivity implements LoaderCallbacks<
 			}
 		});
 
-		// Hook up receiver
-		mReceiver = new ScanReceiver();
-		IntentFilter filter = new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
-		registerReceiver(mReceiver, filter);
-
-		mResolver = getContentResolver();
-
-		// Start sniffing RSSI values
-		mWifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
-		if (!mWifiManager.isWifiEnabled()) {
-			mWifiManager.setWifiEnabled(true);
-		}
-
 		getSupportLoaderManager().initLoader(0, null, this);
 	}
 
 	private void start() {
-		mWifiManager.startScan();
+		Intent intent = new Intent(this, SnifferService.class);
+		intent.setAction(SnifferService.ACTION_START_GATHER_APS);
+		startService(intent);
+
 		mToggleButton.setText("STOP");
-		mRunning = true;
+		mGathering = true;
 	}
 
 	private void stop() {
+		Intent intent = new Intent(this, SnifferService.class);
+		intent.setAction(SnifferService.ACTION_STOP_GATHER_APS);
+		startService(intent);
+
 		mToggleButton.setText("ŠTART");
-		mRunning = false;
+		mGathering = false;
 	}
 
 	private void export() {
-		Cursor c = mResolver.query(AccessPoints.CONTENT_URI, null, AccessPoints.COLUMN_SSID + "=\"" + FILTERED_ROOM
-				+ "\"", null,
-				AccessPoints.COLUMN_SSID + ","
-						+ AccessPoints.COLUMN_BSSID + " ASC");
+		ContentResolver r = getContentResolver();
+		Cursor c = r.query(
+				AccessPoints.CONTENT_URI,
+				null,
+				AccessPoints.COLUMN_SSID + "='" + FILTERED_ROOM + "'",
+				null,
+				AccessPoints.COLUMN_SSID + "," + AccessPoints.COLUMN_BSSID + " ASC");
 
 		if (!c.moveToFirst()) {
-			Toast.makeText(this, "Unable to share", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Nepodarilo sa exportova", Toast.LENGTH_SHORT).show();
 			return;
 		}
 
@@ -145,12 +133,6 @@ public class GatherActivity extends FragmentActivity implements LoaderCallbacks<
 	}
 
 	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		unregisterReceiver(mReceiver);
-	}
-
-	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_gather, menu);
 		return true;
@@ -166,7 +148,7 @@ public class GatherActivity extends FragmentActivity implements LoaderCallbacks<
 			case R.id.action_export:
 				export();
 				return true;
-				
+
 			case R.id.action_clear:
 				clear();
 				return true;
@@ -178,36 +160,17 @@ public class GatherActivity extends FragmentActivity implements LoaderCallbacks<
 	}
 
 	private void clear() {
-		mResolver.delete(AccessPoints.CONTENT_URI, null, null);
-		mResolver.notifyChange(AccessPoints.CONTENT_URI, null);
-	}
-
-	private class ScanReceiver extends BroadcastReceiver {
-
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			if (!mRunning) {
-				return;
-			}
-
-			List<ScanResult> results = mWifiManager.getScanResults();
-
-			for (ScanResult r : results) {
-				ContentValues values = new ContentValues();
-				values.put(AccessPoints.COLUMN_SSID, r.SSID);
-				values.put(AccessPoints.COLUMN_BSSID, r.BSSID);
-				mResolver.insert(AccessPoints.CONTENT_URI, values);
-			}
-
-			mResolver.notifyChange(AccessPoints.CONTENT_URI, null);
-			mWifiManager.startScan();
-		}
+		ContentResolver r = getContentResolver();
+		r.delete(AccessPoints.CONTENT_URI, null, null);
+		r.notifyChange(AccessPoints.CONTENT_URI, null);
 	}
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
-		return new CursorLoader(this, AccessPoints.CONTENT_URI, null, null, null, AccessPoints.COLUMN_SSID + ","
-				+ AccessPoints.COLUMN_BSSID + " ASC");
+		return new CursorLoader(this,
+				AccessPoints.CONTENT_URI,
+				null, null, null,
+				AccessPoints.COLUMN_SSID + "," + AccessPoints.COLUMN_BSSID + " ASC");
 
 	}
 

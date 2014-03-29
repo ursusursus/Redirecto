@@ -1,6 +1,7 @@
 package sk.tuke.ursus.redirecto.util;
 
 import sk.tuke.ursus.redirecto.R;
+import sk.tuke.ursus.redirecto.ui.GatherActivity;
 import sk.tuke.ursus.redirecto.ui.RecordActivity;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -23,7 +24,7 @@ public class Utils {
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
 	}
 
-	public static Notification makeNotification(Context context) {
+	public static Notification makeRecordingNotif(Context context) {
 		Intent intent = new Intent(context, RecordActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
@@ -35,6 +36,24 @@ public class Utils {
 				.setTicker("")
 				.setContentIntent(pendingIntent)
 				.setContentTitle("Zaznamenávam odtlaèky")
+				.setContentText("REDIRECTO")
+				.build();
+
+		return notification;
+	}
+	
+	public static Notification makeGatheringNotif(Context context) {
+		Intent intent = new Intent(context, GatherActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+		PendingIntent pendingIntent = PendingIntent.getActivity(context, 1234, intent,
+				PendingIntent.FLAG_UPDATE_CURRENT);
+
+		Notification notification = new NotificationCompat.Builder(context)
+				.setSmallIcon(R.drawable.ic_launcher)
+				.setTicker("")
+				.setContentIntent(pendingIntent)
+				.setContentTitle("Zbieram prístupové body")
 				.setContentText("REDIRECTO")
 				.build();
 

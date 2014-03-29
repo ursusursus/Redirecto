@@ -9,11 +9,13 @@ import org.json.JSONObject;
 
 import sk.tuke.ursus.redirecto.net.RestService;
 import sk.tuke.ursus.redirecto.net.RestUtils.Callback;
+import sk.tuke.ursus.redirecto.provider.RedirectoContract.AccessPoints;
 import sk.tuke.ursus.redirecto.util.QueryUtils;
 import sk.tuke.ursus.redirecto.util.Utils;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -32,6 +34,8 @@ public class SnifferService extends Service {
 	public static final String ACTION_START_RECORD_FINGERPRINTS = "sk.tuke.ursus.redirecto.ACTION_START_RECORD_FINGERPRINTS";
 	public static final String ACTION_STOP_RECORD_FINGERPRINTS = "sk.tuke.ursus.redirecto.ACTION_STOP_RECORD_FINGERPRINTS";
 	public static final String ACTION_LOC_AND_FORWARD = "sk.tuke.ursus.redirecto.ACTION_LOC_AND_FORWARD";
+	public static final String ACTION_START_GATHER_APS = "sk.tuke.ursus.redirecto.ACTION_START_GATHER_APS";
+	public static final String ACTION_STOP_GATHER_APS = "sk.tuke.ursus.redirecto.ACTION_STOP_GATHER_APS";
 
 	public static final int CODE_ACTION_START = 0;
 	public static final int CODE_ACTION_SUCCESS = 1;
@@ -51,6 +55,8 @@ public class SnifferService extends Service {
 	private List<List<ScanResult>> mCollectedScanResults;
 	private int mRecoredRoomId;
 	private boolean mLocalizing;
+	private boolean mGathering;
+	private ContentResolver mResolver;
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
@@ -75,13 +81,27 @@ public class SnifferService extends Service {
 				mCollectedScanResults = new ArrayList<List<ScanResult>>();
 
 				startScanningWifis();
-				startForeground(123, Utils.makeNotification(this));
+				startForeground(123, Utils.makeRecordingNotif(this));
 			}
 
 		} else if (ACTION_STOP_RECORD_FINGERPRINTS.equals(mAction)) {
 			if (mRecoredRoomId != -1 && mCollectedScanResults != null) {
 				processRecordedResults(mRecoredRoomId, mCollectedScanResults);
 			}
+
+		} else if (ACTION_START_GATHER_APS.equals(mAction)) {
+			LOG.d("ACTION_START_GATHER_APS");
+			if (mGathering) {
+				return START_STICKY;
+			}
+
+			mResolver = getContentResolver();
+			startScanningWifis();
+			startForeground(124, Utils.makeGatheringNotif(this));
+			
+		} else if (ACTION_STOP_GATHER_APS.equals(mAction)) {
+			LOG.d("ACTION_STOP_GATHER_APS");
+			stopSelf();
 		}
 
 		return START_STICKY;
@@ -182,8 +202,6 @@ public class SnifferService extends Service {
 
 	private class ScanReceiver extends BroadcastReceiver {
 
-		private Bundle mBundle;
-
 		@Override
 		public void onReceive(Context arg0, Intent arg1) {
 			if (ACTION_LOC_AND_FORWARD.equals(mAction)) {
@@ -198,15 +216,26 @@ public class SnifferService extends Service {
 				// and post them back to activity
 				// to display in UI
 				String string = scanResultsToString(results);
-				if (mBundle == null) {
-					mBundle = new Bundle();
-				}
-				mBundle.putString(EXTRA_VALUES, string);
-				mResultReceiver.send(CODE_ACTION_PROGRESS, mBundle);
+				Bundle b = new Bundle();
+				b.putString(EXTRA_VALUES, string);
+				mResultReceiver.send(CODE_ACTION_PROGRESS, b);
 
 				// Collect
 				mCollectedScanResults.add(results);
 				// Restart
+				mWifiManager.startScan();
+				
+			} else if (ACTION_START_GATHER_APS.equals(mAction)) {
+				List<ScanResult> results = mWifiManager.getScanResults();
+
+				for (ScanResult r : results) {
+					ContentValues values = new ContentValues();
+					values.put(AccessPoints.COLUMN_SSID, r.SSID);
+					values.put(AccessPoints.COLUMN_BSSID, r.BSSID);
+					mResolver.insert(AccessPoints.CONTENT_URI, values);
+				}
+
+				mResolver.notifyChange(AccessPoints.CONTENT_URI, null);
 				mWifiManager.startScan();
 			}
 		}
