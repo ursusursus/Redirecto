@@ -14,6 +14,7 @@ public class Utils {
 
 	public static final String PREFS_TOKEN_KEY = "token";
 	public static final String PREFS_USERNAME_KEY = "username";
+	public static final String PREFS_IS_ADMIN_KEY = "is_admin";
 	public static final String PREFS_DIRECTORY_NUMBER_KEY = "directory_number";
 	public static final String PREFS_AUTO_LOC_KEY = "auto_loc";
 	public static final String PREFS_LOC_FREQUENCY_KEY = "loc_frequency";

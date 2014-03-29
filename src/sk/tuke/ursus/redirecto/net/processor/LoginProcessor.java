@@ -29,6 +29,7 @@ public class LoginProcessor extends Processor {
 		LoginResult result = loginResponse.result;
 		results.putString(RestService.RESULT_TOKEN, result.token);
 		results.putString(RestService.RESULT_EMAIL, result.email);
+		results.putBoolean(RestService.RESULT_IS_ADMIN, result.isAdmin);
 		results.putString(RestService.RESULT_DIRECTORY_NUMBER, result.directoryNumber);
 		return Status.OK;
 	}

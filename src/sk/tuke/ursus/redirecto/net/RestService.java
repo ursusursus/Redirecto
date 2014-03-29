@@ -47,6 +47,7 @@ public class RestService extends AbstractRestService {
 
 	public static final String RESULT_TOKEN = "token";
 	public static final String RESULT_EMAIL = "email";
+	public static final String RESULT_IS_ADMIN = "is_admin";
 	public static final String RESULT_DIRECTORY_NUMBER = "directory_number";
 	public static final String RESULT_ROOMS = "rooms";
 	public static final String RESULT_INSERTED_ID = "inserted_id";

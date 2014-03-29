@@ -112,10 +112,11 @@ public class LoginActivity extends FragmentActivity {
 
 			String token = data.getString(RestService.RESULT_TOKEN);
 			String email = data.getString(RestService.RESULT_EMAIL);
+			boolean isAdmin = data.getBoolean(RestService.RESULT_IS_ADMIN);
 			String directoryNumber = data.getString(RestService.RESULT_DIRECTORY_NUMBER);
 
 			if (token != null) {
-				mApp.setTokenAndMetadata(token, email, directoryNumber);
+				mApp.setTokenAndMetadata(token, email, isAdmin, directoryNumber);
 
 				boolean relogin = getIntent().getBooleanExtra(ACTION_RELOGIN, false);
 				if (relogin) {
@@ -149,3 +150,4 @@ public class LoginActivity extends FragmentActivity {
 	};
 
 }
+

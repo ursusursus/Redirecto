@@ -12,6 +12,7 @@ public class LoginResponse extends JsonRpcResponse {
 		public String token;
 		public String email;
 		@SerializedName("directory_number") public String directoryNumber;
+		@SerializedName("is_admin") public boolean isAdmin;
 	}
 
 }

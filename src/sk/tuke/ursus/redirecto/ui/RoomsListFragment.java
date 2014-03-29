@@ -125,6 +125,15 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 	}
 
 	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		if (!mApp.isAdmin()) {
+			menu.findItem(R.id.action_record).setVisible(false);
+			menu.findItem(R.id.action_gather).setVisible(false);
+		}
+		super.onPrepareOptionsMenu(menu);
+	}
+
+	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.fragment_rooms_list, menu);
 	}
@@ -151,7 +160,7 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 				startActivity(intent);
 				return true;
 			}
-			
+
 			case R.id.action_gather: {
 				Intent intent = new Intent(mContext, GatherActivity.class);
 				startActivity(intent);
@@ -216,6 +225,9 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		// Remove data
 		mApp.removeTokenAndMetadata();
 
+		// Stop auto-loc
+		AlarmUtils.stopAutoLocalization(mContext);
+
 		// Finish and start login activity
 		Intent intent = new Intent(mContext, LoginActivity.class);
 		startActivity(intent);
@@ -233,10 +245,6 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 	}
 
 	protected void hideProgressBar() {
-		/* ActionBarActivity activity = (ActionBarActivity) getActivity();
-		if (activity != null) {
-			activity.setSupportProgressBarIndeterminateVisibility(false);
-		} */
 		FragmentActivity activity = getActivity();
 		if (activity != null) {
 			activity.setProgressBarIndeterminateVisibility(false);
@@ -244,10 +252,6 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 	}
 
 	protected void showProgressBar() {
-		/* ActionBarActivity activity = (ActionBarActivity) getActivity();
-		if (activity != null) {
-			activity.setSupportProgressBarIndeterminateVisibility(true);
-		} */
 		FragmentActivity activity = getActivity();
 		if (activity != null) {
 			activity.setProgressBarIndeterminateVisibility(true);

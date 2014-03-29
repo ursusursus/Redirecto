@@ -3,7 +3,7 @@
 
     <string name="app_name">Redirecto</string>
     <string name="menu_settings">Settings</string>
-    <string name="about">Diplomová práca na tému \"Mobilné zariadenie ako nástroj pre automatizované presmerovanie VoIP hovorov\"\n\nVlastimil Brečka\nv.brecka@gmail\nFEI TUKE, 2014</string>
+    <string name="about">Diplomová práca na tému \"Mobilné zariadenie ako nástroj pre automatizované presmerovanie VoIP hovorov\"\n\nVlastimil Brečka\nv.brecka@gmail.com\nFEI TUKE, 2014</string>
 
     <string-array name="frequency_names">
         <item>Každých 15 sekúnd</item>
