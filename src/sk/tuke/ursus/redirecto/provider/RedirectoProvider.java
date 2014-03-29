@@ -1,5 +1,7 @@
 package sk.tuke.ursus.redirecto.provider;
 
+import sk.tuke.ursus.redirecto.provider.RedirectoContract.AccessPoints;
+import sk.tuke.ursus.redirecto.provider.RedirectoContract.Rooms;
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
@@ -7,14 +9,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
-import sk.tuke.ursus.redirecto.model.Room;
-import sk.tuke.ursus.redirecto.provider.RedirectoContract.Rooms;
-
 public class RedirectoProvider extends ContentProvider {
 
 	private static final UriMatcher sUriMatcher = buildUriMatcher();
 
 	private static final int ROOMS = 100;
+	private static final int ACCESSPOINTS = 101;
 
 	private RedirectoDatabase mDbHelper;
 
@@ -30,6 +30,7 @@ public class RedirectoProvider extends ContentProvider {
 		final String authority = RedirectoContract.CONTENT_AUTHORITY;
 
 		matcher.addURI(authority, Rooms.PATH, ROOMS);
+		matcher.addURI(authority, AccessPoints.PATH, ACCESSPOINTS);
 
 		return matcher;
 	}
@@ -43,6 +44,10 @@ public class RedirectoProvider extends ContentProvider {
 		switch (match) {
 			case ROOMS:
 				count = db.delete(Rooms.TABLE, selection, selectionArgs);
+				break;
+				
+			case ACCESSPOINTS:
+				count = db.delete(AccessPoints.TABLE, selection, selectionArgs);
 				break;
 
 			default:
@@ -60,14 +65,18 @@ public class RedirectoProvider extends ContentProvider {
 	@Override
 	public Uri insert(Uri uri, ContentValues values) {
 		final SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
+		long insertedId = -1;
 		final int match = sUriMatcher.match(uri);
 		switch (match) {
 			case ROOMS:
-				long insertedId = db.insert(Rooms.TABLE, null, values);
+				insertedId = db.insert(Rooms.TABLE, null, values);
 				Uri.withAppendedPath(uri, String.valueOf(insertedId));
 				break;
 
+			case ACCESSPOINTS:
+				insertedId = db.insert(AccessPoints.TABLE, null, values);
+				Uri.withAppendedPath(uri, String.valueOf(insertedId));
+				break;
 			default:
 				throw new UnsupportedOperationException("Unknown uri: " + uri);
 
@@ -107,6 +116,10 @@ public class RedirectoProvider extends ContentProvider {
 		switch (match) {
 			case ROOMS:
 				cursor = db.query(Rooms.TABLE, projection, selection, selectionArgs, null, null, Rooms.COLUMN_NAME + " ASC");
+				cursor.setNotificationUri(getContext().getContentResolver(), uri);
+				break;
+			case ACCESSPOINTS:
+				cursor = db.query(AccessPoints.TABLE, projection, selection, selectionArgs, null, null, sortOrder);
 				cursor.setNotificationUri(getContext().getContentResolver(), uri);
 				break;
 

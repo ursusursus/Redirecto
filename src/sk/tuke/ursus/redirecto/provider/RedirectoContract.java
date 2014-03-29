@@ -24,5 +24,19 @@ public class RedirectoContract {
 		public static final String COLUMN_CHANGED_AT = "changed_at";
 		public static final String COLUMN_CURRENT = "current";
 	}
+	
+	public static class AccessPoints {
+		public static final String PATH = "accesspoints";
+		public static final String TABLE = "accesspoints";
+
+		public static final Uri CONTENT_URI = BASE_CONTENT_URI
+				.buildUpon()
+				.appendPath(PATH)
+				.build();
+
+		public static final String COLUMN_ID = "_id";
+		public static final String COLUMN_SSID = "ssid";
+		public static final String COLUMN_BSSID = "bssid";
+	}
 
 }

@@ -43,6 +43,11 @@
             android:label="Záznam odtlačkov" >
         </activity>
         <activity
+            android:name="sk.tuke.ursus.redirecto.ui.GatherActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="Zber prístupových bodov" >
+        </activity>
+        <activity
             android:name="sk.tuke.ursus.redirecto.ui.AboutActivity"
             android:label="O aplikácií" >
         </activity>

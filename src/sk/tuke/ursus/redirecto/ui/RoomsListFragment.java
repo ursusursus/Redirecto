@@ -151,6 +151,12 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 				startActivity(intent);
 				return true;
 			}
+			
+			case R.id.action_gather: {
+				Intent intent = new Intent(mContext, GatherActivity.class);
+				startActivity(intent);
+				return true;
+			}
 
 			case R.id.action_settings: {
 				Intent intent = new Intent(mContext, MyPreferencesActivity.class);

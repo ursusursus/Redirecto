@@ -1,7 +1,7 @@
 package sk.tuke.ursus.redirecto.provider;
 
+import sk.tuke.ursus.redirecto.provider.RedirectoContract.AccessPoints;
 import sk.tuke.ursus.redirecto.provider.RedirectoContract.Rooms;
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -25,6 +25,11 @@ public class RedirectoDatabase extends SQLiteOpenHelper {
 				+ Rooms.COLUMN_PHONE_NUMBER + " TEXT NOT NULL,"
 				+ Rooms.COLUMN_CREATED_AT + " TEXT NOT NULL,"
 				+ Rooms.COLUMN_CHANGED_AT + " TEXT NOT NULL)");
+		
+		db.execSQL("CREATE TABLE " + AccessPoints.TABLE + "("
+				+ AccessPoints.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+				+ AccessPoints.COLUMN_SSID + " TEXT NOT NULL,"
+				+ AccessPoints.COLUMN_BSSID + " TEXT NOT NULL UNIQUE)");
 	}
 
 	@Override
