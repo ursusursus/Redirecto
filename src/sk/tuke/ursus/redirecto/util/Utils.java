@@ -36,13 +36,13 @@ public class Utils {
 				.setSmallIcon(R.drawable.ic_launcher)
 				.setTicker("")
 				.setContentIntent(pendingIntent)
-				.setContentTitle("Zaznamenávam odtlaèky")
-				.setContentText("REDIRECTO")
+				.setContentTitle(context.getString(R.string.recording_fingerprints))
+				.setContentText(context.getString(R.string.app_name))
 				.build();
 
 		return notification;
 	}
-	
+
 	public static Notification makeGatheringNotif(Context context) {
 		Intent intent = new Intent(context, GatherActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -54,8 +54,8 @@ public class Utils {
 				.setSmallIcon(R.drawable.ic_launcher)
 				.setTicker("")
 				.setContentIntent(pendingIntent)
-				.setContentTitle("Zbieram prístupové body")
-				.setContentText("REDIRECTO")
+				.setContentTitle(context.getString(R.string.gathering_aps))
+				.setContentText(context.getString(R.string.app_name))
 				.build();
 
 		return notification;

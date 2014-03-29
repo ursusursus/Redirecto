@@ -1,7 +1,5 @@
 package sk.tuke.ursus.redirecto.net;
 
-import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,18 +9,15 @@ import sk.tuke.ursus.redirecto.net.RestUtils.Callback;
 import sk.tuke.ursus.redirecto.net.RestUtils.Methods;
 import sk.tuke.ursus.redirecto.net.RestUtils.RequestBuilder;
 import sk.tuke.ursus.redirecto.net.processor.AddMyRoomProcessor;
-import sk.tuke.ursus.redirecto.net.processor.GetRoomsAndAPsProcessor;
 import sk.tuke.ursus.redirecto.net.processor.GetAllRoomsProcessor;
 import sk.tuke.ursus.redirecto.net.processor.GetMyRoomsProcessor;
+import sk.tuke.ursus.redirecto.net.processor.GetRoomsAndAPsProcessor;
 import sk.tuke.ursus.redirecto.net.processor.LocalizeProcessor;
 import sk.tuke.ursus.redirecto.net.processor.LoginProcessor;
 import sk.tuke.ursus.redirecto.net.processor.LogoutProcessor;
 import sk.tuke.ursus.redirecto.net.processor.RemoveMyRoomProcessor;
 import sk.tuke.ursus.redirecto.net.processor.SimpleProcessor;
 import android.content.Context;
-import android.net.wifi.ScanResult;
-
-import com.awaboom.ursus.agave.LOG;
 
 /**
  * 
@@ -54,9 +49,7 @@ public class RestService extends AbstractRestService {
 	public static final String RESULT_NO_ROOMS = "no_rooms";
 	public static final String RESULT_LOCALIZED_ROOM = "loc_room";
 
-
-
-
+	
 	public RestService() {
 		super(RestService.class.toString());
 	}
@@ -204,7 +197,6 @@ public class RestService extends AbstractRestService {
 		}
 	}
 
-
 	public static void getRoomsAndAPs(Context context, String token, Callback callback) {
 		try {
 			String params = new JSONObject()
@@ -241,7 +233,7 @@ public class RestService extends AbstractRestService {
 		} catch (JSONException e) {
 		}
 	}
-	
+
 	public static void changeCoefSetting(Context context, String token, int coefSetting, Callback callback) {
 		try {
 			String params = new JSONObject()

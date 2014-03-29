@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.awaboom.ursus.agave.LOG;
 import com.awaboom.ursus.agave.ToastUtils;
 
 public class RoomFragment extends Fragment {
@@ -88,7 +87,7 @@ public class RoomFragment extends Fragment {
 
 	private void displayState(View view, boolean isCurrent) {
 		TextView stateTextView = (TextView) view.findViewById(R.id.stateTextView);
-		stateTextView.setText(isCurrent ? "Miestnosù aktu·lna. Hovory presmerovanÈ sem" : "Miestnosù nie je aktu·lna");
+		stateTextView.setText(isCurrent ? R.string.room_current : R.string.room_not_current);
 
 	}
 
@@ -148,8 +147,8 @@ public class RoomFragment extends Fragment {
 			hideProgressBar();
 			ToastUtils.showError(
 					mContext,
-					"Nepodarilo sa nastaviù ako aktu·lnu",
-					"Skontrolujte pripojenie na internet");
+					R.string.unable_to_set_as_current,
+					R.string.check_internet_connection);
 		}
 
 		@Override
@@ -157,7 +156,7 @@ public class RoomFragment extends Fragment {
 			hideProgressBar();
 			ToastUtils.showError(
 					mContext,
-					"Nepodarilo sa nastaviù ako aktu·lnu",
+					R.string.unable_to_set_as_current,
 					message);
 		}
 	};
@@ -180,8 +179,8 @@ public class RoomFragment extends Fragment {
 			hideProgressBar();
 			ToastUtils.showError(
 					mContext,
-					"Nepodarilo sa odstr·niù miestnosù",
-					"Skontrolujte pripojenie na internet");
+					R.string.unable_to_remove,
+					R.string.check_internet_connection);
 		}
 
 		@Override
@@ -189,7 +188,7 @@ public class RoomFragment extends Fragment {
 			hideProgressBar();
 			ToastUtils.showError(
 					mContext,
-					"Nepodarilo sa odstr·niù miestnosù",
+					R.string.unable_to_remove,
 					message);
 		}
 	};

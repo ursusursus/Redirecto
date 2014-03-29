@@ -9,7 +9,6 @@
     android:paddingTop="16dp" >
 
     <TextView
-        android:id="@+id/titleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
@@ -18,31 +17,29 @@
         android:textSize="56sp" />
 
     <TextView
-        android:id="@+id/subtitleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:layout_marginLeft="4dp"
         android:fontFamily="sans-serif-condensed"
-        android:text="Automatizovaný interiérový lokalizačný systém s presmerovaním voip hovorov"
+        android:text="@string/app_desc"
         android:textAllCaps="true"
         android:textColor="@color/dark_gray"
         android:textSize="18sp" />
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="2dp"
         android:background="@color/gray" />
 
     <TextView
-        android:id="@+id/subtitleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:layout_marginLeft="4dp"
         android:layout_marginTop="16dp"
         android:fontFamily="sans-serif-condensed"
-        android:text="@string/about"
+        android:text="@string/about_text"
         android:textColor="@color/medium_gray"
         android:textSize="18sp" />
 

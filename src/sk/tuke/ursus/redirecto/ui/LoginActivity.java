@@ -52,7 +52,7 @@ public class LoginActivity extends FragmentActivity {
 
 		boolean relogin = getIntent().getBooleanExtra(ACTION_RELOGIN, false);
 		if (relogin) {
-			Toast.makeText(this, "Relácia vypršala, prihláste sa znova", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, R.string.session_expired, Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -61,7 +61,7 @@ public class LoginActivity extends FragmentActivity {
 		String password = mPasswordEditText.getText().toString();
 
 		if ((username == null || username.length() <= 0 || password == null || password.length() <= 0)) {
-			ToastUtils.showInfo(this, "Zadajte meno alebo heslo");
+			ToastUtils.showInfo(this, R.string.enter_name_and_password);
 
 		} else {
 			RestService.login(this, username, password, mLoginCallback);
@@ -78,7 +78,7 @@ public class LoginActivity extends FragmentActivity {
 
 	protected void showProgressDialog() {
 		if (mProgressDialog == null) {
-			mProgressDialog = ProgressDialogFragment.newInstance("Prihlasujem sa...");
+			mProgressDialog = ProgressDialogFragment.newInstance(getString(R.string.logging_in));
 		}
 		mProgressDialog.show(getSupportFragmentManager(), ProgressDialogFragment.TAG);
 	}
@@ -137,14 +137,14 @@ public class LoginActivity extends FragmentActivity {
 		public void onError(int code, String message) {
 			LOG.d("Login # Status.ERROR");
 			dismissProgressDialog();
-			ToastUtils.showError(LoginActivity.this, "Nepodarilo sa prihlási", message);
+			ToastUtils.showError(LoginActivity.this, R.string.unable_to_login, message);
 		}
 
 		@Override
 		public void onException() {
 			LOG.d("Login # Status.EXCEPTION");
 			dismissProgressDialog();
-			ToastUtils.showError(LoginActivity.this, "Nepodarilo sa prihlási", "Skontrolujte pripojenie na internet");
+			ToastUtils.showError(LoginActivity.this, R.string.unable_to_login, R.string.check_internet_connection);
 		}
 
 	};

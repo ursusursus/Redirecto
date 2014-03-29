@@ -167,7 +167,7 @@ public class NewRoomFragment extends Fragment {
 			if (newRooms != null) {
 
 				if (newRooms.size() == 0) {
-					mErrorTextView.setText("éiadne miestnosti na pridanie");
+					mErrorTextView.setText(R.string.no_rooms_to_add);
 					mErrorTextView.setVisibility(View.VISIBLE);
 				} else {
 					mErrorTextView.setVisibility(View.GONE);
@@ -190,13 +190,13 @@ public class NewRoomFragment extends Fragment {
 		@Override
 		public void onException() {
 			hideProgressBar();
-			showError("Nepodarilo sa naËÌtaù miestnosti", null);
+			showError(getString(R.string.unable_to_load_rooms), null);
 		}
 
 		@Override
 		public void onError(int code, String message) {
 			hideProgressBar();
-			showError("Nepodarilo sa naËÌtaù miestnosti", message);
+			showError(getString(R.string.unable_to_load_rooms), message);
 		}
 	};
 
@@ -218,12 +218,12 @@ public class NewRoomFragment extends Fragment {
 
 		@Override
 		public void onException() {
-			showError("Nepodarilo sa pridaù miestnosù", null);
+			showError(getString(R.string.unable_to_add_room), null);
 		}
 
 		@Override
 		public void onError(int code, String message) {
-			showError("Nepodarilo sa pridaù miestnosù", message);
+			showError(getString(R.string.unable_to_add_room), message);
 		}
 	};
 }

@@ -90,7 +90,6 @@ public class SnifferService extends Service {
 			}
 
 		} else if (ACTION_START_GATHER_APS.equals(mAction)) {
-			LOG.d("ACTION_START_GATHER_APS");
 			if (mGathering) {
 				return START_STICKY;
 			}
@@ -100,7 +99,6 @@ public class SnifferService extends Service {
 			startForeground(124, Utils.makeGatheringNotif(this));
 			
 		} else if (ACTION_STOP_GATHER_APS.equals(mAction)) {
-			LOG.d("ACTION_STOP_GATHER_APS");
 			stopSelf();
 		}
 

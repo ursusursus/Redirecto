@@ -20,6 +20,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.awaboom.ursus.agave.ToastUtils;
+
 public class GatherActivity extends FragmentActivity implements LoaderCallbacks<Cursor> {
 
 	private static final String FILTERED_ROOM = "TUNET-guest";
@@ -62,7 +64,7 @@ public class GatherActivity extends FragmentActivity implements LoaderCallbacks<
 		intent.setAction(SnifferService.ACTION_START_GATHER_APS);
 		startService(intent);
 
-		mToggleButton.setText("STOP");
+		mToggleButton.setText(R.string.stop);
 		mGathering = true;
 	}
 
@@ -71,7 +73,7 @@ public class GatherActivity extends FragmentActivity implements LoaderCallbacks<
 		intent.setAction(SnifferService.ACTION_STOP_GATHER_APS);
 		startService(intent);
 
-		mToggleButton.setText("ŠTART");
+		mToggleButton.setText(R.string.start);
 		mGathering = false;
 	}
 
@@ -85,7 +87,7 @@ public class GatherActivity extends FragmentActivity implements LoaderCallbacks<
 				AccessPoints.COLUMN_SSID + "," + AccessPoints.COLUMN_BSSID + " ASC");
 
 		if (!c.moveToFirst()) {
-			Toast.makeText(this, "Nepodarilo sa exportova", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, R.string.unable_to_export, Toast.LENGTH_SHORT).show();
 			return;
 		}
 
@@ -128,7 +130,7 @@ public class GatherActivity extends FragmentActivity implements LoaderCallbacks<
 		intent.putExtra(Intent.EXTRA_TEXT, sbCreate.toString() + "\n\n--------------\n\n" + sbArray.toString());
 		intent.setType("text/plain");
 
-		Intent chooser = Intent.createChooser(intent, "Exportova cez...");
+		Intent chooser = Intent.createChooser(intent, getString(R.string.export_via));
 		startActivity(chooser);
 	}
 
@@ -177,7 +179,7 @@ public class GatherActivity extends FragmentActivity implements LoaderCallbacks<
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 		mAdapter.swapCursor(cursor);
-		Toast.makeText(this, "Zozbieraných prístupových bodov : " + cursor.getCount(), Toast.LENGTH_SHORT).show();
+		ToastUtils.show(this, getString(R.string.gathered_aps_count) + cursor.getCount());
 	}
 
 	@Override

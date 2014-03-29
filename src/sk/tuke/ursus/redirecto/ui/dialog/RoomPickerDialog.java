@@ -2,14 +2,9 @@ package sk.tuke.ursus.redirecto.ui.dialog;
 
 import java.util.ArrayList;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-
 import sk.tuke.ursus.redirecto.R;
 import sk.tuke.ursus.redirecto.model.Room;
-import sk.tuke.ursus.redirecto.provider.RedirectoContract.Rooms;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;

@@ -33,7 +33,7 @@
             android:layout_marginBottom="124dp"
             android:layout_marginLeft="4dp"
             android:fontFamily="sans-serif-condensed"
-            android:text="Automatizovaný interiérový lokalizačný systém s presmerovaním voip hovorov"
+            android:text="@string/app_desc"
             android:textAllCaps="true"
             android:textColor="#CCFFFFFF"
             android:textSize="18sp" />
@@ -49,7 +49,7 @@
             android:background="@drawable/text_field1"
             android:fontFamily="sans-serif-condensed"
             android:gravity="center"
-            android:hint="Vložte meno"
+            android:hint="@string/enter_name"
             android:inputType="textEmailAddress"
             android:lines="1"
             android:padding="12dp"
@@ -68,7 +68,7 @@
             android:background="@drawable/text_field1"
             android:fontFamily="sans-serif-condensed"
             android:gravity="center"
-            android:hint="Vložte heslo"
+            android:hint="@string/enter_password"
             android:inputType="textPassword"
             android:lines="1"
             android:padding="12dp"
@@ -82,7 +82,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/passwordEditText"
-            android:text="PRIHLÁSIŤ SA" />
+            android:text="@string/login" />
     </RelativeLayout>
 
 </ScrollView>

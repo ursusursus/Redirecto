@@ -44,7 +44,7 @@ public class RecordActivity extends FragmentActivity implements OnClickListener,
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_record);
-		
+
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		if (savedInstanceState == null) {
@@ -70,11 +70,12 @@ public class RecordActivity extends FragmentActivity implements OnClickListener,
 
 		mToggleButton = (Button) findViewById(R.id.toggleButton);
 		mToggleButton.setOnClickListener(this);
-		mToggleButton.setText(mRecording ? "Stop [" + mValuesList.size() + "]" : "ätart");
+		mToggleButton.setText(mRecording ? getString(R.string.stop) + " [" + mValuesList.size() + "]"
+				: getString(R.string.start));
 
 		if (mPickedRoom != null) {
 			ActionBar actionBar = getActionBar();
-			actionBar.setSubtitle("v miestnosti " + mPickedRoom.name + "[" + mPickedRoom.id + "]");
+			actionBar.setSubtitle(getString(R.string.in_room) + mPickedRoom.name + "[" + mPickedRoom.id + "]");
 			mToggleButton.setEnabled(true);
 		} else {
 			mToggleButton.setEnabled(false);
@@ -86,7 +87,7 @@ public class RecordActivity extends FragmentActivity implements OnClickListener,
 	public void onClick(View v) {
 		if (!mRecording) {
 
-			ToastUtils.show(this, "Sp˙öùam meranie v " + mPickedRoom.name + " [id=" + mPickedRoom.id + "]...");
+			ToastUtils.show(this, getString(R.string.starting_recording) + mPickedRoom.name + " [id=" + mPickedRoom.id + "]...");
 
 			Intent intent = new Intent(this, SnifferService.class);
 			intent.setAction(SnifferService.ACTION_START_RECORD_FINGERPRINTS);
@@ -95,27 +96,27 @@ public class RecordActivity extends FragmentActivity implements OnClickListener,
 			startService(intent);
 
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-			mToggleButton.setText("Stop");
+			mToggleButton.setText(R.string.stop);
 			mValuesList.clear();
 			mRecording = true;
 
 		} else {
-			ToastUtils.show(this, "UkonËujem meranie v " + mPickedRoom.name + " [id=" + mPickedRoom.id + "]...");
+			ToastUtils.show(this, getString(R.string.stopping_recording) + mPickedRoom.name + " [id=" + mPickedRoom.id + "]...");
 
 			Intent intent = new Intent(this, SnifferService.class);
 			intent.setAction(SnifferService.ACTION_STOP_RECORD_FINGERPRINTS);
 			startService(intent);
 
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-			mToggleButton.setText("ätart");
+			mToggleButton.setText(R.string.start);
 			mRecording = false;
 		}
 
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if(item.getItemId() == android.R.id.home) {
+		if (item.getItemId() == android.R.id.home) {
 			finish();
 			return true;
 		}
@@ -125,13 +126,11 @@ public class RecordActivity extends FragmentActivity implements OnClickListener,
 	@Override
 	public void onRoomPicked(Room room) {
 		ActionBar actionBar = getActionBar();
-		actionBar.setSubtitle("v miestnosti " + room.name + " [id=" + room.id + "]");
+		actionBar.setSubtitle(getString(R.string.in_room) + room.name + " [id=" + room.id + "]");
 
 		mToggleButton.setEnabled(true);
 		mPickedRoom = room;
 	}
-	
-	
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
@@ -155,11 +154,12 @@ public class RecordActivity extends FragmentActivity implements OnClickListener,
 					mValuesList.add(values);
 					mAdapter.notifyDataSetChanged();
 
-					mToggleButton.setText(mRecording ? "Stop [" + mValuesList.size() + "]" : "ätart");
+					mToggleButton.setText(mRecording ? getString(R.string.stop) + " [" + mValuesList.size() + "]"
+							: getString(R.string.start));
 					break;
 
 				case SnifferService.CODE_ACTION_SUCCESS:
-					ToastUtils.showInfo(RecordActivity.this, "OdtlaËky ˙speöne odoslanÈ");
+					ToastUtils.showInfo(RecordActivity.this, R.string.fingerprints_sent_successfully);
 					break;
 
 				case SnifferService.CODE_ACTION_ERROR:
@@ -167,14 +167,14 @@ public class RecordActivity extends FragmentActivity implements OnClickListener,
 					if (msg != null) {
 						ToastUtils.showError(
 								RecordActivity.this,
-								"Nepodarilo sa odoslaù odtlaËky",
+								R.string.unable_to_send_fingerprints,
 								msg);
 
 					} else {
 						ToastUtils.showError(
 								RecordActivity.this,
-								"Nepodarilo sa odoslaù odtlaËky",
-								"Skontrolujte pripojenie na internet");
+								R.string.unable_to_send_fingerprints,
+								R.string.check_internet_connection);
 					}
 					break;
 			}
@@ -186,9 +186,7 @@ public class RecordActivity extends FragmentActivity implements OnClickListener,
 		@Override
 		public void onSuccess(Bundle data) {
 			LOG.d("GetRoomsAndAPs # onSuccess");
-
 			ArrayList<Room> rooms = data.getParcelableArrayList(GetRoomsAndAPsProcessor.EXTRA_ROOMS);
-			ArrayList<String> aps = data.getStringArrayList(GetRoomsAndAPsProcessor.EXTRA_APS);
 
 			RoomPickerDialog d = RoomPickerDialog.newInstance(rooms);
 			d.setOnRoomPickedListener(RecordActivity.this);
@@ -204,8 +202,8 @@ public class RecordActivity extends FragmentActivity implements OnClickListener,
 			LOG.d("GetRoomsAndAPs # onException");
 			ToastUtils.showError(
 					RecordActivity.this,
-					"Nepodarilo sa prevziaù zoznam miestnostÌ",
-					"Skontrolujte pripojenie na internet");
+					R.string.unable_to_get_rooms,
+					R.string.check_internet_connection);
 		}
 
 		@Override
@@ -213,7 +211,7 @@ public class RecordActivity extends FragmentActivity implements OnClickListener,
 			LOG.d("GetRoomsAndAPs # onError: " + message);
 			ToastUtils.showError(
 					RecordActivity.this,
-					"Nepodarilo sa prevziaù zoznam miestnostÌ",
+					R.string.unable_to_get_rooms,
 					message);
 		}
 	};

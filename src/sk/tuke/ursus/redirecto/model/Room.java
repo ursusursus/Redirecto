@@ -1,11 +1,11 @@
 package sk.tuke.ursus.redirecto.model;
 
-import com.google.gson.annotations.SerializedName;
-
 import sk.tuke.ursus.redirecto.provider.RedirectoContract.Rooms;
 import android.content.ContentValues;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.google.gson.annotations.SerializedName;
 
 public class Room implements Parcelable {
 

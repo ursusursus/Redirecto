@@ -5,8 +5,6 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import com.awaboom.ursus.agave.LOG;
-
 public class QueryUtils {
 
 	public static final int NO_ROOM_ID = -1;

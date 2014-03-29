@@ -1,13 +1,10 @@
 package sk.tuke.ursus.redirecto.ui;
 
 import sk.tuke.ursus.redirecto.R;
-import sk.tuke.ursus.redirecto.util.Utils;
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.view.MenuItem;
-import android.widget.Button;
 
 public class MyPreferencesActivity extends PreferenceActivity {
 
@@ -17,8 +14,7 @@ public class MyPreferencesActivity extends PreferenceActivity {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.prefs);
 
-		ActionBar actionBar = getActionBar();
-		actionBar.setDisplayHomeAsUpEnabled(true);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 
 	}
 

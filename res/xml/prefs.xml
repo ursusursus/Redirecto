@@ -5,8 +5,8 @@
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="auto_loc"
-            android:summary="Automatická lokalizácia"
-            android:title="Automatická lokalizácia" />
+            android:summary="@string/auto_loc_summary"
+            android:title="@string/auto_loc" />
 
         <ListPreference
             android:defaultValue="15000"
@@ -14,14 +14,14 @@
             android:entries="@array/frequency_names"
             android:entryValues="@array/frequency_values"
             android:key="loc_frequency"
-            android:summary="Frekvencia lokalizácie"
-            android:title="Frekvencia lokalizácie" />
+            android:summary="@string/loc_frequency_summary"
+            android:title="@string/loc_frequency" />
 
         <sk.tuke.ursus.redirecto.util.SeekBarDialogPreference
             android:defaultValue="50"
             android:key="max_acc_coef"
-            android:summary="Maximálny koeficient presnosti lokalizácie. Čím väčší, tým väčšia povolená odchýlka"
-            android:title="Max Koeficient" />
+            android:summary="@string/max_coef_summary"
+            android:title="@string/max_coef" />
     </PreferenceCategory>
 
 </PreferenceScreen>

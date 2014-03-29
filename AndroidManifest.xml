@@ -36,30 +36,29 @@
         </activity>
         <activity
             android:name="sk.tuke.ursus.redirecto.ui.NewRoomActivity"
-            android:label="Pridať miestnosť" >
+            android:label="@string/add_room" >
         </activity>
         <activity
             android:name="sk.tuke.ursus.redirecto.ui.RecordActivity"
             android:configChanges="orientation|screenSize"
-            android:label="Záznam odtlačkov" >
+            android:label="@string/record_fingerprints" >
         </activity>
         <activity
             android:name="sk.tuke.ursus.redirecto.ui.GatherActivity"
             android:configChanges="orientation|screenSize"
-            android:label="Zber prístupových bodov" >
+            android:label="@string/gather_aps" >
         </activity>
         <activity
             android:name="sk.tuke.ursus.redirecto.ui.AboutActivity"
-            android:label="O aplikácií" >
+            android:label="@string/about" >
         </activity>
         <activity
             android:name="sk.tuke.ursus.redirecto.ui.MyPreferencesActivity"
             android:label="Nastavenia" >
         </activity>
         <activity
-            android:name="sk.tuke.ursus.redirecto.ui.DetailActivity"
-            android:label="Detail"
-            android:theme="@android:style/Theme.Holo.Dialog.NoActionBar" >
+            android:name="sk.tuke.ursus.redirecto.ui.RoomActivity"
+            android:label="Detail miestnosti" >
         </activity>
 
         <service android:name="sk.tuke.ursus.redirecto.net.RestService" />

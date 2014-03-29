@@ -5,6 +5,6 @@
         android:id="@+id/action_refresh"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="Obnoviť"/>
+        android:title="@string/refresh"/>
 
 </menu>

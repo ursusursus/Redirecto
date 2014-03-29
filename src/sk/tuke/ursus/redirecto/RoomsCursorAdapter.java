@@ -39,7 +39,7 @@ public class RoomsCursorAdapter extends CursorAdapter {
 		final CursorViewHolder holder = (CursorViewHolder) view.getTag();
 
 		holder.title.setText(cursor.getString(cursor.getColumnIndex(Rooms.COLUMN_NAME)));
-		
+
 		String desc = cursor.getString(cursor.getColumnIndex(Rooms.COLUMN_DESC));
 		String phoneNumber = cursor.getString(cursor.getColumnIndex(Rooms.COLUMN_PHONE_NUMBER));
 		holder.subTitle.setText(Utils.dotConcat(desc, phoneNumber));
@@ -63,18 +63,18 @@ public class RoomsCursorAdapter extends CursorAdapter {
 					@Override
 					public boolean onMenuItemClick(MenuItem item) {
 						switch (item.getItemId()) {
-						case R.id.action_delete_room:
-							//
-							mCallback.onRoomRemoved(id);
-							return true;
+							case R.id.action_delete_room:
+								//
+								mCallback.onRoomRemoved(id);
+								return true;
 
-						case R.id.action_localize_manually:
-							//
-							mCallback.onLocalizedManually(id);
-							return true;
+							case R.id.action_localize_manually:
+								//
+								mCallback.onLocalizedManually(id);
+								return true;
 
-						default:
-							return false;
+							default:
+								return false;
 						}
 					}
 				});

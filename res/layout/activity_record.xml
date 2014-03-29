@@ -12,7 +12,7 @@
         
     <Button 
         android:id="@+id/toggleButton"
-        android:text="Štart"
+        android:text="@string/start"
         android:textStyle="bold"
         android:textSize="14sp"
         android:layout_width="match_parent"

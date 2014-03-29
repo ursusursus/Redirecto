@@ -6,27 +6,27 @@
         android:icon="@drawable/ic_action_location_found"
         android:orderInCategory="93"
         android:showAsAction="ifRoom"
-        android:title="Lokalizuj"/>
+        android:title="@string/localize_me"/>
     <item
         android:id="@+id/action_add_room"
         android:orderInCategory="94"
         android:showAsAction="never"
-        android:title="Pridať miestnosť"/>
+        android:title="@string/add_rooms"/>
     <item
         android:id="@+id/action_sync_rooms"
         android:orderInCategory="95"
         android:showAsAction="never"
-        android:title="Synchronizovať miestnosti"/>
+        android:title="@string/sync_rooms"/>
     <item
         android:id="@+id/action_record"
         android:orderInCategory="96"
         android:showAsAction="never"
-        android:title="Záznam odtlačkov"/>
+        android:title="@string/record_fingerprints"/>
     <item
         android:id="@+id/action_gather"
         android:orderInCategory="97"
         android:showAsAction="never"
-        android:title="Zber prístupových bodov"/>
+        android:title="@string/gather_aps"/>
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="98"
@@ -36,11 +36,11 @@
         android:id="@+id/action_about"
         android:orderInCategory="99"
         android:showAsAction="never"
-        android:title="O aplikácii"/>
+        android:title="@string/about"/>
     <item
         android:id="@+id/action_logout"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="Odhlásiť sa"/>
+        android:title="@string/logout"/>
 
 </menu>

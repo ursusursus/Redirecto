@@ -28,8 +28,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -260,7 +258,7 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 
 	protected void showProgressDialog() {
 		if (mProgressDialog == null) {
-			mProgressDialog = ProgressDialogFragment.newInstance("Odhlasujem sa...");
+			mProgressDialog = ProgressDialogFragment.newInstance(getString(R.string.logging_out));
 		}
 		mProgressDialog.show(getFragmentManager(), ProgressDialogFragment.TAG);
 	}
@@ -346,8 +344,8 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 					hideProgressBar();
 					if (resultData.containsKey(SnifferService.EXTRA_VALUES)) {
 						String localizedRoom = resultData.getString(SnifferService.EXTRA_VALUES);
-						ToastUtils.showInfo(mContext, "Lokalizovaný v " + localizedRoom
-								+ "\nHovory úspešne presmerované");
+						ToastUtils.showInfo(mContext, getString(R.string.localized_in) + localizedRoom
+								+ getString(R.string.calls_redirected));
 					}
 					break;
 
@@ -355,10 +353,10 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 					hideProgressBar();
 					String errorMessage = resultData.getString(SnifferService.EXTRA_ERROR);
 					if (errorMessage != null) {
-						ToastUtils.showError(mContext, "Nepodarilo sa lokalizova a presmerova", errorMessage);
+						ToastUtils.showError(mContext, R.string.unable_to_log_and_fwd, errorMessage);
 					} else {
-						ToastUtils.showError(mContext, "Nepodarilo sa lokalizova a presmerova",
-								"Skontrolujte pripojenie na internet");
+						ToastUtils.showError(mContext, R.string.unable_to_log_and_fwd,
+								R.string.check_internet_connection);
 					}
 					break;
 			}
@@ -389,13 +387,13 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		@Override
 		public void onError(int code, String message) {
 			dismissProgressDialog();
-			ToastUtils.showError(mContext, "Nepodarilo sa odhlási", message);
+			ToastUtils.showError(mContext, R.string.unable_to_logout, message);
 		}
 
 		@Override
 		public void onException() {
 			dismissProgressDialog();
-			ToastUtils.showError(mContext, "Nepodarilo sa odhlási", "Skontrolujte pripojenie na internet");
+			ToastUtils.showError(mContext, R.string.unable_to_logout, R.string.check_internet_connection);
 		}
 
 	};
@@ -416,13 +414,13 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		public void onException() {
 			hideProgressBar();
 			ToastUtils
-					.showError(mContext, "Nepodarilo sa nastavi ako aktuálnu", "Skontrolujte pripojenie na internet");
+					.showError(mContext, R.string.unable_to_set_as_current, R.string.check_internet_connection);
 		}
 
 		@Override
 		public void onError(int code, String message) {
 			hideProgressBar();
-			ToastUtils.showError(mContext, "Nepodarilo sa nastavi ako aktuálnu", message);
+			ToastUtils.showError(mContext, R.string.unable_to_set_as_current, message);
 		}
 	};
 
@@ -469,14 +467,18 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		@Override
 		public void onException() {
 			hideProgressBar();
-			ToastUtils.showError(mContext, "Nepodarilo sa synchronizova miestnosti",
-					"Skontrolujte pripojenie na internet");
+			ToastUtils.showError(
+					mContext,
+					R.string.unable_to_sync_rooms,
+					R.string.check_internet_connection);
 		}
 
 		@Override
 		public void onError(int code, String message) {
 			hideProgressBar();
-			ToastUtils.showError(mContext, "Nepodarilo sa synchronizova miestnosti", message);
+			ToastUtils.showError(
+					mContext,
+					R.string.unable_to_sync_rooms, message);
 		}
 	};
 
@@ -496,13 +498,16 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		@Override
 		public void onException() {
 			hideProgressBar();
-			ToastUtils.showError(mContext, "Nepodarilo sa odstráni miestnos", "Skontrolujte pripojenie na internet");
+			ToastUtils.showError(
+					mContext,
+					R.string.unable_to_remove,
+					R.string.check_internet_connection);
 		}
 
 		@Override
 		public void onError(int code, String message) {
 			hideProgressBar();
-			ToastUtils.showError(mContext, "Nepodarilo sa odstráni miestnos", message);
+			ToastUtils.showError(mContext, R.string.unable_to_remove, message);
 		}
 	};
 
@@ -522,13 +527,19 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		@Override
 		public void onException() {
 			hideProgressBar();
-			ToastUtils.showError(mContext, "Nepodarilo sa zmeni koeficient", "Skontrolujte pripojenie na internet");
+			ToastUtils.showError(
+					mContext,
+					R.string.unable_to_change_coef,
+					R.string.check_internet_connection);
 		}
 
 		@Override
 		public void onError(int code, String message) {
 			hideProgressBar();
-			ToastUtils.showError(mContext, "Nepodarilo sa zmeni koeficient", message);
+			ToastUtils.showError(
+					mContext,
+					R.string.unable_to_change_coef,
+					message);
 		}
 	};
 
