@@ -7,23 +7,42 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="18dp" >
+        android:paddingBottom="16dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:paddingTop="16dp" >
 
-        <ImageView
-            android:id="@+id/logo"
+        <TextView
+            android:id="@+id/titleTextView"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginBottom="42dp"
             android:layout_marginTop="36dp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/ic_launcher" />
+            android:fontFamily="sans-serif-thin"
+            android:text="@string/app_name"
+            android:textColor="#FFF"
+            android:textSize="56sp" />
+
+        <TextView
+            android:id="@+id/subtitleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/titleTextView"
+            android:layout_alignRight="@+id/titleTextView"
+            android:layout_below="@+id/titleTextView"
+            android:layout_marginBottom="124dp"
+            android:layout_marginLeft="4dp"
+            android:fontFamily="sans-serif-condensed"
+            android:text="Automatizovaný interiérový lokalizačný systém s presmerovaním voip hovorov"
+            android:textAllCaps="true"
+            android:textColor="#CCFFFFFF"
+            android:textSize="18sp" />
 
         <EditText
             android:id="@+id/usernameEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/logo"
+            android:layout_below="@+id/subtitleTextView"
             android:layout_marginBottom="12dp"
             android:layout_marginLeft="3dp"
             android:layout_marginRight="3dp"
@@ -60,6 +79,8 @@
         <Button
             android:id="@+id/loginButton"
             style="@style/BigButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/passwordEditText"
             android:text="PRIHLÁSIŤ SA" />
     </RelativeLayout>
