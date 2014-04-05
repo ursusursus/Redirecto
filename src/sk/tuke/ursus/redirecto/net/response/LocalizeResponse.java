@@ -4,6 +4,12 @@ import sk.tuke.ursus.redirecto.net.RestUtils.JsonRpcResponse;
 
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * Objekt odpovede API volania Localize
+ * 
+ * @author Vlastimil Breèka
+ * 
+ */
 public class LocalizeResponse extends JsonRpcResponse {
 
 	public LocalizeResult result;

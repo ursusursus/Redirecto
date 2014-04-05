@@ -6,6 +6,12 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+/**
+ * SQL databázový helper
+ * 
+ * @author Vlastimil Breèka
+ * 
+ */
 public class RedirectoDatabase extends SQLiteOpenHelper {
 
 	private static final String DB_NAME = "redirecto.db";
@@ -25,7 +31,7 @@ public class RedirectoDatabase extends SQLiteOpenHelper {
 				+ Rooms.COLUMN_PHONE_NUMBER + " TEXT NOT NULL,"
 				+ Rooms.COLUMN_CREATED_AT + " TEXT NOT NULL,"
 				+ Rooms.COLUMN_CHANGED_AT + " TEXT NOT NULL)");
-		
+
 		db.execSQL("CREATE TABLE " + AccessPoints.TABLE + "("
 				+ AccessPoints.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
 				+ AccessPoints.COLUMN_SSID + " TEXT NOT NULL,"
@@ -37,4 +43,3 @@ public class RedirectoDatabase extends SQLiteOpenHelper {
 		//
 	}
 }
-

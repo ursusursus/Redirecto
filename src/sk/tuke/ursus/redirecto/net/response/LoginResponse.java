@@ -4,6 +4,12 @@ import com.google.gson.annotations.SerializedName;
 
 import sk.tuke.ursus.redirecto.net.RestUtils.JsonRpcResponse;
 
+/**
+ * Objekt odpovede API volania Login
+ * 
+ * @author Vlastimil Breèka
+ * 
+ */
 public class LoginResponse extends JsonRpcResponse {
 
 	public LoginResult result;

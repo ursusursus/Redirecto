@@ -11,6 +11,12 @@ import sk.tuke.ursus.redirecto.net.response.GetRoomsAndAPsResponse.GetRoomsAndAP
 import android.content.Context;
 import android.os.Bundle;
 
+/**
+ * Procesor odpovede API volania GetRoomsAndAPs
+ * 
+ * @author Vlastimil Breèka
+ * 
+ */
 public class GetRoomsAndAPsProcessor extends Processor {
 
 	public static final String EXTRA_ROOMS = "rooms";

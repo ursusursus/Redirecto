@@ -20,7 +20,7 @@ import sk.tuke.ursus.redirecto.net.processor.SimpleProcessor;
 import android.content.Context;
 
 /**
- * Služba ktorá ma na staroti komunikáciu so servrom predstavuje REST API klienta
+ * Služba ktorá ma na starsoti komunikáciu so serverom, predstavuje REST API klienta
  * 
  * @author Vlastimil Breèka
  * 

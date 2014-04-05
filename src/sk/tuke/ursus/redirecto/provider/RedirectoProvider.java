@@ -9,13 +9,32 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
+/**
+ * Content Provider, rozhranie pre prístup k databáze
+ * 
+ * @author Vlastimil Breèka
+ * 
+ */
 public class RedirectoProvider extends ContentProvider {
 
+	/**
+	 * URI matcher
+	 */
 	private static final UriMatcher sUriMatcher = buildUriMatcher();
 
+	/**
+	 * Miestnosti
+	 */
 	private static final int ROOMS = 100;
+
+	/**
+	 * Prístupové body
+	 */
 	private static final int ACCESSPOINTS = 101;
 
+	/**
+	 * Databázový helper
+	 */
 	private RedirectoDatabase mDbHelper;
 
 	@Override
@@ -45,7 +64,7 @@ public class RedirectoProvider extends ContentProvider {
 			case ROOMS:
 				count = db.delete(Rooms.TABLE, selection, selectionArgs);
 				break;
-				
+
 			case ACCESSPOINTS:
 				count = db.delete(AccessPoints.TABLE, selection, selectionArgs);
 				break;
@@ -115,7 +134,8 @@ public class RedirectoProvider extends ContentProvider {
 		final int match = sUriMatcher.match(uri);
 		switch (match) {
 			case ROOMS:
-				cursor = db.query(Rooms.TABLE, projection, selection, selectionArgs, null, null, Rooms.COLUMN_NAME + " ASC");
+				cursor = db.query(Rooms.TABLE, projection, selection, selectionArgs, null, null, Rooms.COLUMN_NAME
+						+ " ASC");
 				cursor.setNotificationUri(getContext().getContentResolver(), uri);
 				break;
 			case ACCESSPOINTS:

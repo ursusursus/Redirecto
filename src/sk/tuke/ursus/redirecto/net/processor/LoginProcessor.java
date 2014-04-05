@@ -12,6 +12,12 @@ import sk.tuke.ursus.redirecto.net.response.LoginResponse.LoginResult;
 import android.content.Context;
 import android.os.Bundle;
 
+/**
+ * Procesor odpovede API volania Login
+ * 
+ * @author Vlastimil Breèka
+ * 
+ */
 public class LoginProcessor extends Processor {
 
 	@Override

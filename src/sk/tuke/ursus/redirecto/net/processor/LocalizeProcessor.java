@@ -15,6 +15,12 @@ import android.os.Bundle;
 
 import com.awaboom.ursus.agave.LOG;
 
+/**
+ * Procesor odpovede API volania Localize
+ * 
+ * @author Vlastimil Breèka
+ * 
+ */
 public class LocalizeProcessor extends Processor {
 
 	@Override

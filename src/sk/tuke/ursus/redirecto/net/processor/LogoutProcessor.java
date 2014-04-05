@@ -13,6 +13,12 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Bundle;
 
+/**
+ * Procesor odpovede API volania Logout
+ * 
+ * @author Vlastimil Breèka
+ * 
+ */
 public class LogoutProcessor extends Processor {
 
 	@Override

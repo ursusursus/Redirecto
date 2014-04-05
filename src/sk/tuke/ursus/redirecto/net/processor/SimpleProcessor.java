@@ -10,6 +10,12 @@ import sk.tuke.ursus.redirecto.net.response.SimpleResponse;
 import android.content.Context;
 import android.os.Bundle;
 
+/**
+ * Jednoduchý procesor
+ * 
+ * @author Vlastimil Breèka
+ * 
+ */
 public class SimpleProcessor extends Processor {
 
 	@Override

@@ -18,6 +18,12 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Bundle;
 
+/**
+ * Procesor odpovede API volania GetMyRooms
+ * 
+ * @author Vlastimil Breèka
+ * 
+ */
 public class GetMyRoomsProcessor extends Processor {
 
 	@Override

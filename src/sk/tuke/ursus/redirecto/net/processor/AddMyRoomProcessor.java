@@ -14,12 +14,19 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Bundle;
 
+/**
+ * Procesor odpovede API volania AddMyRoom
+ * 
+ * @author Vlastimil Breèka
+ * 
+ */
 public class AddMyRoomProcessor extends Processor {
 
 	@Override
-	public int onProcessResponse(Context context, String contentType, InputStream stream, Bundle results) throws Exception {
+	public int onProcessResponse(Context context, String contentType, InputStream stream, Bundle results)
+			throws Exception {
 		AddMyRoomResponse response = RestUtils.fromJson(stream, AddMyRoomResponse.class);
-		
+
 		if (response.hasError()) {
 			// Post error
 			Error error = response.error;
@@ -30,12 +37,12 @@ public class AddMyRoomProcessor extends Processor {
 
 		//
 		Room newRoom = response.insertedRoom;
-		
+
 		//
 		ContentResolver resolver = context.getContentResolver();
 		resolver.insert(Rooms.CONTENT_URI, newRoom.toContentValues());
 		resolver.notifyChange(Rooms.CONTENT_URI, null);
-		
+
 		results.putInt(RestService.RESULT_INSERTED_ID, newRoom.id);
 		return Status.OK;
 	}

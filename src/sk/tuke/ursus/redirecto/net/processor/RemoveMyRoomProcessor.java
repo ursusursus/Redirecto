@@ -12,6 +12,12 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Bundle;
 
+/**
+ * Procesor odpovede API volania RemoveMyRoom
+ * 
+ * @author Vlastimil Breèka
+ * 
+ */
 public class RemoveMyRoomProcessor extends Processor {
 
 	@Override

@@ -11,10 +11,17 @@ import sk.tuke.ursus.redirecto.net.response.GetRoomsResponse;
 import android.content.Context;
 import android.os.Bundle;
 
+/**
+ * Procesor odpovede API volania GetAllRooms
+ * 
+ * @author Vlastimil Breèka
+ * 
+ */
 public class GetAllRoomsProcessor extends Processor {
 
 	@Override
-	public int onProcessResponse(Context context, String contentType, InputStream stream, Bundle results) throws Exception {
+	public int onProcessResponse(Context context, String contentType, InputStream stream, Bundle results)
+			throws Exception {
 		GetRoomsResponse response = RestUtils.fromJson(stream, GetRoomsResponse.class);
 		if (response.hasError()) {
 			// Post error
