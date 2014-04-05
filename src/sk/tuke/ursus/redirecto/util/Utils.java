@@ -10,21 +10,61 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
+/**
+ * Pomocná trieda
+ * 
+ * @author Vlastimil Breèka
+ * 
+ */
 public class Utils {
 
+	/**
+	 * K¾úè autentifikaèného tokenu
+	 */
 	public static final String PREFS_TOKEN_KEY = "token";
+
+	/**
+	 * K¾úè pouívate¾ského mena
+	 */
 	public static final String PREFS_USERNAME_KEY = "username";
+
+	/**
+	 * K¾úè èi je pouívate¾ administrátor
+	 */
 	public static final String PREFS_IS_ADMIN_KEY = "is_admin";
+
+	/**
+	 * K¾úè telefónneho èísla pouívate¾a
+	 */
 	public static final String PREFS_DIRECTORY_NUMBER_KEY = "directory_number";
+
+	/**
+	 * K¾úè èi je auto-lokalizácia zapnutá
+	 */
 	public static final String PREFS_AUTO_LOC_KEY = "auto_loc";
+
+	/**
+	 * K¾úè frekvencie lokalizácie
+	 */
 	public static final String PREFS_LOC_FREQUENCY_KEY = "loc_frequency";
+
+	/**
+	 * K¾úè maximálneho koeficientu tolerancie
+	 */
 	public static final String PREFS_MAX_ACC_COEFICIENT_KEY = "max_acc_coef";
+
+	/**
+	 * Vıchodia hodnota maximálneho koeficientu tolerancie
+	 */
 	public static final int DEFAULT_MAX_ACC_COEFICIENT = 50;
 
-	public static boolean hasHoneycomb() {
-		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
-	}
-
+	/**
+	 * Vytvorí notifikáciu zobrazovanú pri meraní odtlaèkov
+	 * 
+	 * @param context
+	 *        Kontext
+	 * @return Notifikáciu
+	 */
 	public static Notification makeRecordingNotif(Context context) {
 		Intent intent = new Intent(context, RecordActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -43,6 +83,13 @@ public class Utils {
 		return notification;
 	}
 
+	/**
+	 * Vytvorí notifikáciu zobrazovanú pri zbere prístupovıch bodov
+	 * 
+	 * @param context
+	 *        Kontext
+	 * @return Notifikáciu
+	 */
 	public static Notification makeGatheringNotif(Context context) {
 		Intent intent = new Intent(context, GatherActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -61,6 +108,15 @@ public class Utils {
 		return notification;
 	}
 
+	/**
+	 * Skonkatenuje dva stringy cez bodku
+	 * 
+	 * @param string1
+	 *        Prvı reazec
+	 * @param string2
+	 *        Druhı reazec
+	 * @return Skonkatenovanı reazec
+	 */
 	public static String dotConcat(String string1, String string2) {
 		return string1 + " · " + string2;
 	}

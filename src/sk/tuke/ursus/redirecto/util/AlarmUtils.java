@@ -16,14 +16,47 @@ import android.content.SharedPreferences;
 
 import com.awaboom.ursus.agave.LOG;
 
+/**
+ * Pomocná trieda pre automatizácie
+ * 
+ * @author Vlastimil Breèka
+ * 
+ */
 public class AlarmUtils {
-	
+
+	/**
+	 * Východzia frekvencia lokalizácie
+	 */
 	public static final String DEFAULT_LOC_FREQUENCY = "15000";
+
+	/**
+	 * Východzia hodnota zapnutej auto-lokalizácie
+	 */
 	public static final boolean DEFAULT_AUTO_LOC = false;
+
+	/**
+	 * Interval auto-synchronizácie
+	 */
 	private static final long AUTOSYNC_INTERVAL = 24 * 60 * 60 * 1000; // 24 hodin
+
+	/**
+	 * ID synchronizaèného alarmu
+	 */
 	private static final int SYNC_ALARM_ID = 1234;
+
+	/**
+	 * ID lokalizaèného alarmu
+	 */
 	private static final int LOC_ALARM_ID = 1235;
 
+	/**
+	 * Zapne automatizovanú lokalizáciu
+	 * 
+	 * @param context
+	 *        Kontext
+	 * @param prefs
+	 *        Preferences
+	 */
 	public static void startAutoLocalization(Context context, SharedPreferences prefs) {
 		Intent intent = new Intent(context, SnifferService.class)
 				.setAction(SnifferService.ACTION_LOC_AND_FORWARD);
@@ -48,6 +81,11 @@ public class AlarmUtils {
 		LOG.i("AutoLocalization started with frequency " + frequency);
 	}
 
+	/**
+	 * Vypne automatizovanú lokalizáciu
+	 * 
+	 * @param context
+	 */
 	public static void stopAutoLocalization(Context context) {
 		Intent intent = new Intent(context, SnifferService.class)
 				.setAction(SnifferService.ACTION_LOC_AND_FORWARD);
@@ -63,6 +101,14 @@ public class AlarmUtils {
 		LOG.d("AutoLocalization stopped");
 	}
 
+	/**
+	 * Zapne automatizovanú synchronizáciu dát
+	 * 
+	 * @param context
+	 *        Kontext
+	 * @param token
+	 *        Autentifikaèný token
+	 */
 	public static void setupAutoSync(Context context, String token) {
 		try {
 			String params = new JSONObject()

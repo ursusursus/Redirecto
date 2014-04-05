@@ -5,13 +5,36 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+/**
+ * Pomocná trieda pre prácu s databázou
+ * 
+ * @author Vlastimil Breèka
+ * 
+ */
 public class QueryUtils {
 
+	/**
+	 * Konštanta žiadnej miestnosti
+	 */
 	public static final int NO_ROOM_ID = -1;
-	
+
+	/**
+	 * Príznak ne-aktuálnej miestnosti
+	 */
 	private static final int FLAG_NOT_CURRENT = 0;
+
+	/**
+	 * Príznak aktuálnej miestnosti
+	 */
 	private static final int FLAG_CURRENT = 1;
 
+	/**
+	 * Vráti ID aktuálnej miestnosti
+	 * 
+	 * @param resolver
+	 *        ContentResolver
+	 * @return ID aktuálnej miestnosti
+	 */
 	public static int getCurrentRoomId(ContentResolver resolver) {
 		String[] columns = new String[] { Rooms.COLUMN_ID };
 		String where = Rooms.COLUMN_CURRENT + "=" + FLAG_CURRENT;
@@ -26,6 +49,15 @@ public class QueryUtils {
 		return currentRoomId;
 	}
 
+	/**
+	 * Nastaví ID novej lokalizovanej miestnosti
+	 * 
+	 * @param resolver
+	 *        ContentResolver
+	 * @param newCurrentRoom
+	 *        ID novej miestnosti
+	 * @return Úspechu operácie
+	 */
 	public static boolean setNewCurrentRoomId(ContentResolver resolver, int newCurrentRoom) {
 		// Set flag for new current room
 		ContentValues values = new ContentValues();
