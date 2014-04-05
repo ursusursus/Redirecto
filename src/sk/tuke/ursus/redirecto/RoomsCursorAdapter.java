@@ -17,17 +17,55 @@ import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
+/**
+ * Cursor adaptÈr pre GridView v RoomListFragment
+ * 
+ * @author Vlastimil BreËka
+ * 
+ */
 public class RoomsCursorAdapter extends CursorAdapter {
 
+	/**
+	 * Rozhranie pre sp‰tnÈ volanie kliknutia na overflow
+	 * 
+	 * @author Vlastimil BreËka
+	 * 
+	 */
 	public interface RoomOverflowCallback {
+		/**
+		 * MetÛda volan· pri kliknutÌ na "Odstr·niù"
+		 * 
+		 * @param id
+		 *        ID miestnosti
+		 */
 		public void onRoomRemoved(int id);
 
+		/**
+		 * MetÛda volan· pri kliknutÌ na "Nastaviù ako aktu·lnu"
+		 * 
+		 * @param id
+		 */
 		public void onLocalizedManually(int id);
 	}
 
+	/**
+	 * Inflater
+	 */
 	private LayoutInflater mInflater;
+
+	/**
+	 * Sp‰tnÈ volanie
+	 */
 	private RoomOverflowCallback mCallback;
 
+	/**
+	 * Konötruktor
+	 * 
+	 * @param c
+	 *        Kontext
+	 * @param callback
+	 *        Sp‰tnÈ volanie
+	 */
 	public RoomsCursorAdapter(Context c, RoomOverflowCallback callback) {
 		super(c, null, FLAG_REGISTER_CONTENT_OBSERVER);
 		mInflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

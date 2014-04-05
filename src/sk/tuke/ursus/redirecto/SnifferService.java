@@ -29,33 +29,123 @@ import android.os.ResultReceiver;
 import com.awaboom.ursus.agave.LOG;
 import com.awaboom.ursus.agave.ToastUtils;
 
+/**
+ * Sluûba, ktor· ma nastarosti komunik·ciu s Wi-Fi hardvÈrom a vykon·va naËÌtanie aktu·lnych hodnÙt prÌstupov˝ch bodov,
+ * z·znam odtlaËkov a zber prÌstupov˝ch bodov
+ * 
+ * @author Vlastimil BreËka
+ * 
+ */
 public class SnifferService extends Service {
 
+	/**
+	 * Akcia zaËatia z·znamu odtlaËkov
+	 */
 	public static final String ACTION_START_RECORD_FINGERPRINTS = "sk.tuke.ursus.redirecto.ACTION_START_RECORD_FINGERPRINTS";
+
+	/**
+	 * Akcia ukonËenia z·znamu odtlaËkov
+	 */
 	public static final String ACTION_STOP_RECORD_FINGERPRINTS = "sk.tuke.ursus.redirecto.ACTION_STOP_RECORD_FINGERPRINTS";
+
+	/**
+	 * Akcia lokaliz·cie a presmerovania
+	 */
 	public static final String ACTION_LOC_AND_FORWARD = "sk.tuke.ursus.redirecto.ACTION_LOC_AND_FORWARD";
+
+	/**
+	 * Akcia zaËatia zberu prÌstupov˝ bodov
+	 */
 	public static final String ACTION_START_GATHER_APS = "sk.tuke.ursus.redirecto.ACTION_START_GATHER_APS";
+
+	/**
+	 * Akcia ukonËenia prÌstupov˝ch bodov
+	 */
 	public static final String ACTION_STOP_GATHER_APS = "sk.tuke.ursus.redirecto.ACTION_STOP_GATHER_APS";
 
+	/**
+	 * KÛd zaËatia akcie
+	 */
 	public static final int CODE_ACTION_START = 0;
+
+	/**
+	 * KÛd ˙speönÈho ukonËenia akcie
+	 */
 	public static final int CODE_ACTION_SUCCESS = 1;
+
+	/**
+	 * KÛd chybovÈho ukonËenia akcie
+	 */
 	public static final int CODE_ACTION_ERROR = 2;
+
+	/**
+	 * KÛd priebeûn˝ch v˝sledkov akcie
+	 */
 	public static final int CODE_ACTION_PROGRESS = 3;
 
+	/**
+	 * Extra nahr·van· miestnosù
+	 */
 	public static final String EXTRA_RECORDED_ROOM = "sk.tuke.ursus.redirecto.EXTRA_RECORDED_ROOM";
+
+	/**
+	 * Extra receiver
+	 */
 	public static final String EXTRA_RECEIVER = "sk.tuke.ursus.redirecto.EXTRA_RECEIVER";
+
+	/**
+	 * Extra hodnoty
+	 */
 	public static final String EXTRA_VALUES = "sk.tuke.ursus.redirecto.EXTRA_VALUES";
+
+	/**
+	 * Extra chybov· spr·va
+	 */
 	public static final String EXTRA_ERROR = "sk.tuke.ursus.redirecto.EXTRA_ERROR_MESSAGE";
 
+	/**
+	 * PrÌjmaË Wi-Fi meranÌ
+	 */
 	private ScanReceiver mScanReceiver;
+
+	/**
+	 * WiFiManager
+	 */
 	private WifiManager mWifiManager;
+
+	/**
+	 * ResultReceiver
+	 */
 	private ResultReceiver mResultReceiver;
+
+	/**
+	 * Akcia
+	 */
 	private String mAction;
 
+	/**
+	 * Zoznam zozbieran˝ch nameran˝ch v˝sledkov skenov
+	 */
 	private List<List<ScanResult>> mCollectedScanResults;
+
+	/**
+	 * ID nahr·vanej miestnosti
+	 */
 	private int mRecoredRoomId;
+
+	/**
+	 * »i lokaliz·cia prebieha
+	 */
 	private boolean mLocalizing;
+
+	/**
+	 * »i prebieha zber
+	 */
 	private boolean mGathering;
+
+	/**
+	 * ContentResolver
+	 */
 	private ContentResolver mResolver;
 
 	@Override
@@ -97,7 +187,7 @@ public class SnifferService extends Service {
 			mResolver = getContentResolver();
 			startScanningWifis();
 			startForeground(124, Utils.makeGatheringNotif(this));
-			
+
 		} else if (ACTION_STOP_GATHER_APS.equals(mAction)) {
 			stopSelf();
 		}
@@ -105,6 +195,9 @@ public class SnifferService extends Service {
 		return START_STICKY;
 	}
 
+	/**
+	 * ZaËne skenova Wi-Fi v okolÌ
+	 */
 	private void startScanningWifis() {
 		// Hook up receiver
 		mScanReceiver = new ScanReceiver();
@@ -120,6 +213,14 @@ public class SnifferService extends Service {
 		mLocalizing = true;
 	}
 
+	/**
+	 * Spracuje a odoöle nameranÈ v˝sledky odtlaËkovania
+	 * 
+	 * @param roomId
+	 *        ID meranej miestnosti
+	 * @param resultsList
+	 *        Zoznam skenov
+	 */
 	protected void processRecordedResults(int roomId, List<List<ScanResult>> resultsList) {
 		// ScanResults to JSON
 		JSONArray fingerprints = new JSONArray();
@@ -133,6 +234,11 @@ public class SnifferService extends Service {
 		RestService.newFingerprints(this, myApp.getToken(), roomId, fingerprints, mNewFingerprintsCallback);
 	}
 
+	/**
+	 * Spracuje a odoöle nameranÈ v˝sledky lokaliz·cie
+	 * 
+	 * @param results
+	 */
 	protected void processSniffedResults(List<ScanResult> results) {
 		// ScanResults to JSON
 		JSONArray fingerprint = scanResultsToJsonArray(results);
@@ -147,6 +253,12 @@ public class SnifferService extends Service {
 		RestService.localize(this, myApp.getToken(), roomId, fingerprint, mLocalizeCallback);
 	}
 
+	/**
+	 * PremenÌ v˝sledky skenov do JSON form·tu
+	 * 
+	 * @param scanResults
+	 * @return
+	 */
 	protected JSONArray scanResultsToJsonArray(List<ScanResult> scanResults) {
 		JSONArray jsonArray = new JSONArray();
 		for (ScanResult scanResult : scanResults) {
@@ -163,6 +275,12 @@ public class SnifferService extends Service {
 
 	}
 
+	/**
+	 * PremenÌ v˝sledky skenov na reùazec
+	 * 
+	 * @param results
+	 * @return
+	 */
 	protected String scanResultsToString(List<ScanResult> results) {
 		StringBuilder sb = new StringBuilder();
 		for (ScanResult result : results) {
@@ -172,13 +290,13 @@ public class SnifferService extends Service {
 
 	}
 
-	protected void showToast(final String string) {
+	/* protected void showToast(final String string) {
 		new Handler().post(new Runnable() {
 			public void run() {
 				ToastUtils.show(SnifferService.this, string);
 			}
 		});
-	}
+	} */
 
 	@Override
 	public void onDestroy() {
@@ -198,6 +316,12 @@ public class SnifferService extends Service {
 		return null;
 	}
 
+	/**
+	 * PrÌjmaË vysielanÌ meranÌ Wi-Fi v okolÌ
+	 * 
+	 * @author Vlastimil BreËka
+	 * 
+	 */
 	private class ScanReceiver extends BroadcastReceiver {
 
 		@Override
@@ -222,7 +346,7 @@ public class SnifferService extends Service {
 				mCollectedScanResults.add(results);
 				// Restart
 				mWifiManager.startScan();
-				
+
 			} else if (ACTION_START_GATHER_APS.equals(mAction)) {
 				List<ScanResult> results = mWifiManager.getScanResults();
 
@@ -239,6 +363,9 @@ public class SnifferService extends Service {
 		}
 	}
 
+	/**
+	 * Sp‰tnÈ volanie REST API lokaliz·cie
+	 */
 	private Callback mLocalizeCallback = new Callback() {
 
 		@Override
@@ -285,6 +412,9 @@ public class SnifferService extends Service {
 		}
 	};
 
+	/**
+	 * Sp‰tnÈ volanie REST API nov˝ch odtlaËkov
+	 */
 	private Callback mNewFingerprintsCallback = new Callback() {
 
 		@Override

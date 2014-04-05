@@ -16,17 +16,54 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+/**
+ * ArrayAdapter pre ListView v NewRoomFragment
+ * 
+ * @author Vlastimil Breèka
+ * 
+ */
 public class RoomsArrayAdapter extends ArrayAdapter<Room> {
 
+	/**
+	 * Rozhranie pre spätné volanie pridanej miesnosti
+	 * 
+	 * @author Vlastimil Breèka
+	 * 
+	 */
 	public interface OnRoomAddedListener {
 		public void onRoomAdded(int position, int id);
 	}
 
+	/**
+	 * Inflater
+	 */
 	private LayoutInflater mInflater;
+
+	/**
+	 * Zoznam miestností
+	 */
 	private ArrayList<Room> mItems;
+
+	/**
+	 * Kópia zoznamu miestností
+	 */
 	private ArrayList<Room> mItemsCopy;
+
+	/**
+	 * Spätné volanie
+	 */
 	private OnRoomAddedListener mListener;
 
+	/**
+	 * Konštruktor
+	 * 
+	 * @param context
+	 *        Kontext
+	 * @param items
+	 *        Zoznam miestností
+	 * @param listener
+	 *        Spätné volanie
+	 */
 	public RoomsArrayAdapter(Context context, ArrayList<Room> items, OnRoomAddedListener listener) {
 		super(context, -1, items);
 		mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -50,7 +87,7 @@ public class RoomsArrayAdapter extends ArrayAdapter<Room> {
 		final Room room = mItems.get(position);
 		holder.name.setText(room.name);
 		holder.floor.setText(Utils.dotConcat(room.description, room.phoneNumber));
-		
+
 		if (room.isAdded()) {
 			holder.add.setEnabled(false);
 			holder.add.setImageResource(R.drawable.ic_action_success);
@@ -71,6 +108,13 @@ public class RoomsArrayAdapter extends ArrayAdapter<Room> {
 		return view;
 	}
 
+	/**
+	 * Vráti objekt miestnosti pod¾a ID
+	 * 
+	 * @param id
+	 *        miestnosti
+	 * @return objekt miestnosti
+	 */
 	public Room roomById(int id) {
 		for (Room room : mItems) {
 			if (room.id == id) {
@@ -85,6 +129,12 @@ public class RoomsArrayAdapter extends ArrayAdapter<Room> {
 		return mItems.size();
 	}
 
+	/**
+	 * Vyfiltruje obsah adaptéra pod¾a k¾úèového slova
+	 * 
+	 * @param keyword
+	 *        k¾úèové slovo
+	 */
 	public void filter(String keyword) {
 		ArrayList<Room> filteredItems = new ArrayList<Room>();
 		for (Room room : mItemsCopy) {

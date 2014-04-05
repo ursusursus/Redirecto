@@ -9,6 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+/**
+ * Cursor adaptér pre ListView v GatherActivity
+ * @author Vlastimil Breèka
+ *
+ */
 public class AccessPointsAdapter extends CursorAdapter {
 
 	private LayoutInflater mInflater;

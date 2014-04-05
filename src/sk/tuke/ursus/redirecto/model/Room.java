@@ -7,24 +7,63 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * Miestnosù
+ */
 public class Room implements Parcelable {
 
+	/**
+	 * ID miestnosti
+	 */
 	public int id;
+
+	/**
+	 * Meno miestnosti
+	 */
 	public String name;
+
+	/**
+	 * Popis miestnosti
+	 */
 	@SerializedName("floor") public String description;
+
+	/**
+	 * TelefÛnne ËÌslo miestnosti
+	 */
 	@SerializedName("phone_number") public String phoneNumber;
+
+	/**
+	 * Timestamp poslednej zmeny
+	 */
 	@SerializedName("created_at") public String createdAt;
+
+	/**
+	 * Timestamp vytvorenia
+	 */
 	@SerializedName("changed_at") public String changedAt;
+
+	/**
+	 * Pridan˝
+	 */
 	private boolean isAdded = false;
 
+	/**
+	 * NastavÌ priadanie
+	 */
 	public void setAdded(boolean isAdded) {
 		this.isAdded = isAdded;
 	}
 
+	/**
+	 * Vr·ti Ëi je miestnosù pridan·
+	 */
 	public boolean isAdded() {
 		return isAdded;
 	}
 
+	/**
+	 * NaplnÌ ContentValues Ëlensk˝mi premenn˝mi miestnosti
+	 */
 	public ContentValues toContentValues() {
 		ContentValues values = new ContentValues();
 		values.put(Rooms.COLUMN_ID, id);
@@ -36,13 +75,16 @@ public class Room implements Parcelable {
 		return values;
 	}
 
+	/**
+	 * Miestnosù vo forme stringu
+	 */
 	@Override
 	public String toString() {
 		return name + "(" + description + " ∑ " + phoneNumber + ")";
 	}
 
 	/**
-	 * Parcelable boiler plate
+	 * Parcelable boilerplate, nevöÌmaù si
 	 */
 	public static final Parcelable.Creator<Room> CREATOR = new Parcelable.Creator<Room>() {
 
