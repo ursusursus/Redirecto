@@ -30,8 +30,9 @@ import com.awaboom.ursus.agave.LOG;
 import com.awaboom.ursus.agave.ToastUtils;
 
 /**
- * Služba, ktorá ma nastarosti komunikáciu s Wi-Fi hardvérom a vykonáva naèítanie aktuálnych hodnôt prístupových bodov,
- * záznam odtlaèkov a zber prístupových bodov
+ * Služba, ktorá ma nastarosti komunikáciu s Wi-Fi hardvérom a vykonáva
+ * naèítanie aktuálnych hodnôt prístupových bodov, záznam odtlaèkov a zber
+ * prístupových bodov
  * 
  * @author Vlastimil Breèka
  * 

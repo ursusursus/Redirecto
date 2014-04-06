@@ -22,13 +22,32 @@ import android.widget.Toast;
 
 import com.awaboom.ursus.agave.ToastUtils;
 
+/**
+ * Aktivita zberu prístupovıch bodov
+ * 
+ * @author Vlastimil Breèka
+ * 
+ */
 public class GatherActivity extends FragmentActivity implements LoaderCallbacks<Cursor> {
 
-	private static final String FILTERED_ROOM = "TUNET-guest";
+	/**
+	 * SSID siete ktoré chceme vyfiltrova zo zoznamu všetkıch zozberanıch
+	 */
+	private static final String FILTERED_SSID = "TUNET-guest";
 
+	/**
+	 * Adaptér
+	 */
 	private AccessPointsAdapter mAdapter;
+
+	/**
+	 * Tlaèidlo
+	 */
 	private Button mToggleButton;
 
+	/**
+	 * Èi prebieha zber
+	 */
 	protected boolean mGathering = false;
 
 	@Override
@@ -59,6 +78,9 @@ public class GatherActivity extends FragmentActivity implements LoaderCallbacks<
 		getSupportLoaderManager().initLoader(0, null, this);
 	}
 
+	/**
+	 * Spustí zber prístupovıch bodov
+	 */
 	private void start() {
 		Intent intent = new Intent(this, SnifferService.class);
 		intent.setAction(SnifferService.ACTION_START_GATHER_APS);
@@ -68,6 +90,9 @@ public class GatherActivity extends FragmentActivity implements LoaderCallbacks<
 		mGathering = true;
 	}
 
+	/**
+	 * Zastaví zber prístupovıch bodov
+	 */
 	private void stop() {
 		Intent intent = new Intent(this, SnifferService.class);
 		intent.setAction(SnifferService.ACTION_STOP_GATHER_APS);
@@ -77,12 +102,17 @@ public class GatherActivity extends FragmentActivity implements LoaderCallbacks<
 		mGathering = false;
 	}
 
+	/**
+	 * Vyexportuje z databázy prístupové body pod¾a filtrovaného SSID
+	 * 
+	 * Vygeneruje SQL skript pre tabu¾ku odtlaèkov a pole akceptovanıch BSSID
+	 */
 	private void export() {
 		ContentResolver r = getContentResolver();
 		Cursor c = r.query(
 				AccessPoints.CONTENT_URI,
 				null,
-				AccessPoints.COLUMN_SSID + "='" + FILTERED_ROOM + "'",
+				AccessPoints.COLUMN_SSID + "='" + FILTERED_SSID + "'",
 				null,
 				AccessPoints.COLUMN_SSID + "," + AccessPoints.COLUMN_BSSID + " ASC");
 
@@ -161,6 +191,9 @@ public class GatherActivity extends FragmentActivity implements LoaderCallbacks<
 
 	}
 
+	/**
+	 * Vyprázdni databázu
+	 */
 	private void clear() {
 		ContentResolver r = getContentResolver();
 		r.delete(AccessPoints.CONTENT_URI, null, null);

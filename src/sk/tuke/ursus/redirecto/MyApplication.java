@@ -77,7 +77,8 @@ public class MyApplication extends Application {
 	}
 
 	/**
-	 * Nastaví token, metadáta a èi je používate¾ administrátor do pamäte aj do Preferences
+	 * Nastaví token, metadáta a èi je používate¾ administrátor do pamäte aj do
+	 * Preferences
 	 * 
 	 * @param token
 	 *        Autentifikaèný token
@@ -104,7 +105,8 @@ public class MyApplication extends Application {
 	}
 
 	/**
-	 * Odstráni token, metadáta a èi je používate¾ administrátor z pamäte a z Preferences
+	 * Odstráni token, metadáta a èi je používate¾ administrátor z pamäte a z
+	 * Preferences
 	 */
 	public void removeTokenAndMetadata() {
 		// Remove token from preferences

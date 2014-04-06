@@ -47,26 +47,77 @@ import butterknife.OnClick;
 import com.awaboom.ursus.agave.LOG;
 import com.awaboom.ursus.agave.ToastUtils;
 
+/**
+ * Hlavný fragment, zobrazujúci používate¾ove miestnosti. Miestnosti sú
+ * zobrazované z databázy pomocou mriežky GridView
+ * 
+ * @author Vlastimil Breèka
+ * 
+ */
 public class RoomsListFragment extends Fragment implements LoaderCallbacks<Cursor> {
 
+	/**
+	 * ID databázového loadera
+	 */
 	private static final int LOADER_ID = 1234;
 
+	/**
+	 * Kontext
+	 */
 	private Context mContext;
+
+	/**
+	 * Aplikaèný singleton
+	 */
 	private MyApplication mApp;
+
+	/**
+	 * Adaptér
+	 */
 	private RoomsCursorAdapter mAdapter;
+
+	/**
+	 * Dialóg pokroku
+	 */
 	private ProgressDialogFragment mProgressDialog;
 
+	/**
+	 * GridView
+	 */
 	@InjectView(R.id.gridView) GridView mGridView;
+
+	/**
+	 * ProgressBar
+	 */
 	@InjectView(R.id.progressBar) ProgressBar mProgressBar;
+
+	/**
+	 * TextView chyby
+	 */
 	@InjectView(R.id.errorTextView) TextView mErrorTextView;
+
+	/**
+	 * Tlaèidlo prvého spustenia
+	 */
 	@InjectView(R.id.boardingButton) Button mBoardingButton;
 
+	/**
+	 * Preferences
+	 */
 	private SharedPreferences mPrefs;
 
+	/**
+	 * Vytvorí novú inštanciu
+	 * 
+	 * @return Fragment
+	 */
 	public static RoomsListFragment newInstance() {
 		return new RoomsListFragment();
 	}
 
+	/**
+	 * Povinný prázdny konštruktor
+	 */
 	public RoomsListFragment() {
 	}
 
@@ -125,6 +176,9 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
 		if (!mApp.isAdmin()) {
+			// If user is not a admin, disable some
+			// buttons to make sure he doesnt even
+			// get to restricted areas
 			menu.findItem(R.id.action_record).setVisible(false);
 			menu.findItem(R.id.action_gather).setVisible(false);
 		}
@@ -187,6 +241,9 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		}
 	}
 
+	/**
+	 * Spustí manuálne lokalizáciu. Spustí meraciu službu za úèelom lokalizácie
+	 */
 	protected void localizeNow() {
 		Intent intent = new Intent(mContext, SnifferService.class);
 		intent.setAction(SnifferService.ACTION_LOC_AND_FORWARD);
@@ -195,18 +252,38 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		mContext.startService(intent);
 	}
 
+	/**
+	 * Synchronizuje miestnosti lokálne v databáze aplikácie so vzdialenou
+	 * databázou na serveri
+	 */
 	protected void syncMyRooms() {
 		RestService.getMyRooms(mContext, mApp.getToken(), mGetMyRoomsCallback);
 	}
 
+	/**
+	 * API volanie, ruène nastavi miestnos ako aktuálnu, teda do nej presmeruje
+	 * VoIP hovory
+	 * 
+	 * @param id
+	 *        ID miestnosti do ktorej chceme presmerova
+	 */
 	protected void forceLocalize(int id) {
 		RestService.forceLocalize(mContext, id, mApp.getToken(), mForceLocAndForwardCallback);
 	}
 
+	/**
+	 * API volanie, odstráni miestnos zo zoznamu svojich
+	 * 
+	 * @param id
+	 *        ID miestnosti na zmazanie
+	 */
 	protected void removeMyRoom(int id) {
 		RestService.removeMyRoom(mContext, id, mApp.getToken(), mRemoveMyRoomCallback);
 	}
 
+	/**
+	 * Odhlási používate¾a
+	 */
 	private void logout() {
 		// When token is invalid, I cant go
 		// logout out as it requires a token
@@ -232,23 +309,29 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		getActivity().finish();
 	}
 
+	/**
+	 * API volanie, zmení maximálny koeficient tolerancie presnosti lokalizácie
+	 * 
+	 * @param coef
+	 *        Nový koeficient
+	 */
 	protected void changeCoeficientSettings(int coef) {
 		RestService.changeCoefSetting(mContext, mApp.getToken(), coef, mChangeCoefCallback);
 	}
 
+	/**
+	 * Prejde do aktivity NewRoomActivity pre pridanie ïalších miestností do
+	 * zoznamu svojich
+	 */
 	@OnClick(R.id.boardingButton)
 	protected void goToNewRoomActivity() {
 		Intent intent = new Intent(mContext, NewRoomActivity.class);
 		startActivity(intent);
 	}
 
-	protected void hideProgressBar() {
-		FragmentActivity activity = getActivity();
-		if (activity != null) {
-			activity.setProgressBarIndeterminateVisibility(false);
-		}
-	}
-
+	/**
+	 * Zobrazí ProgressBar v ActionBare
+	 */
 	protected void showProgressBar() {
 		FragmentActivity activity = getActivity();
 		if (activity != null) {
@@ -256,6 +339,20 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		}
 	}
 
+	/**
+	 * Skryje ProgressBar v ActionBare
+	 */
+	protected void hideProgressBar() {
+		FragmentActivity activity = getActivity();
+		if (activity != null) {
+			activity.setProgressBarIndeterminateVisibility(false);
+		}
+	}
+
+	/**
+	 * Zobrazí dialóg pokroku, ktorý oznamuje používate¾ovi, že aplikácia na
+	 * nieèom pracuje
+	 */
 	protected void showProgressDialog() {
 		if (mProgressDialog == null) {
 			mProgressDialog = ProgressDialogFragment.newInstance(getString(R.string.logging_out));
@@ -263,6 +360,9 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		mProgressDialog.show(getFragmentManager(), ProgressDialogFragment.TAG);
 	}
 
+	/**
+	 * Skryje dialóg pokroku
+	 */
 	protected void dismissProgressDialog() {
 		if (mProgressDialog != null) {
 			mProgressDialog.dismiss();
@@ -291,10 +391,15 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		mAdapter.swapCursor(null);
 	}
 
+	/**
+	 * Naèúvaè kliknutí na položky v ListView. Zobrazí novú aktivitu s detailom
+	 * danej miestnosti
+	 */
 	private OnItemClickListener mItemClickListener = new OnItemClickListener() {
 
 		@Override
 		public void onItemClick(AdapterView<?> arg0, View view, int position, long arg3) {
+			// Get cursor row data
 			Cursor cursor = (Cursor) mAdapter.getItem(position);
 			int id = cursor.getInt(cursor.getColumnIndex(Rooms.COLUMN_ID));
 			String name = cursor.getString(cursor.getColumnIndex(Rooms.COLUMN_NAME));
@@ -302,6 +407,7 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 			String phoneNumber = cursor.getString(cursor.getColumnIndex(Rooms.COLUMN_PHONE_NUMBER));
 			boolean isCurrent = (cursor.getInt(cursor.getColumnIndex(Rooms.COLUMN_CURRENT)) == 1);
 
+			// Bundle it
 			Intent intent = new Intent(mContext, RoomActivity.class);
 			intent.putExtra(RoomFragment.EXTRA_ID, id);
 			intent.putExtra(RoomFragment.EXTRA_NAME, name);
@@ -309,6 +415,7 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 			intent.putExtra(RoomFragment.EXTRA_PHONE_NUMBER, phoneNumber);
 			intent.putExtra(RoomFragment.EXTRA_IS_CURRENT, isCurrent);
 
+			// Start new activity
 			Bundle bundle = ActivityOptionsCompat.makeScaleUpAnimation(
 					view, 0, 0,
 					view.getWidth(), view.getHeight()
@@ -317,6 +424,9 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		}
 	};
 
+	/**
+	 * Spätné volanie pre kliknutie na overflow položky v GridView
+	 */
 	private RoomOverflowCallback mRoomOverflowCallback = new RoomOverflowCallback() {
 
 		@Override
@@ -330,6 +440,9 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		}
 	};
 
+	/**
+	 * ResultReceiver, prostriedok komunikácie medzi Aktivitou a Službou
+	 */
 	ResultReceiver mLocalizeReceiver = new ResultReceiver(new Handler()) {
 		@Override
 		protected void onReceiveResult(int resultCode, Bundle resultData) {
@@ -363,6 +476,9 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		}
 	};
 
+	/**
+	 * Spätné volanie API volania odhlásenia sa
+	 */
 	private RestUtils.Callback mLogoutCallback = new RestUtils.Callback() {
 
 		@Override
@@ -398,6 +514,9 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 
 	};
 
+	/**
+	 * Spatné volanie API volania ForceLocalize
+	 */
 	private RestUtils.Callback mForceLocAndForwardCallback = new RestUtils.Callback() {
 
 		@Override
@@ -424,6 +543,9 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		}
 	};
 
+	/**
+	 * Spätné volanie API volania GetMyRooms
+	 */
 	private RestUtils.Callback mGetMyRoomsCallback = new RestUtils.Callback() {
 
 		@Override
@@ -482,6 +604,9 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		}
 	};
 
+	/**
+	 * Spätné volanie API volania RemoveMyRoom
+	 */
 	private RestUtils.Callback mRemoveMyRoomCallback = new RestUtils.Callback() {
 
 		@Override
@@ -511,6 +636,9 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		}
 	};
 
+	/**
+	 * Spätné volanie API volania ChangeCoefSetting
+	 */
 	private RestUtils.Callback mChangeCoefCallback = new RestUtils.Callback() {
 
 		@Override
@@ -543,11 +671,15 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 		}
 	};
 
+	/**
+	 * Naèúvaè zmien v Preferences nastaveniach
+	 */
 	private OnSharedPreferenceChangeListener mPrefsListener = new OnSharedPreferenceChangeListener() {
 
 		@Override
 		public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
 			if (Utils.PREFS_AUTO_LOC_KEY.equals(key)) {
+				// Auto-localization settings changed
 				boolean autoLocalize = prefs.getBoolean(
 						Utils.PREFS_AUTO_LOC_KEY,
 						AlarmUtils.DEFAULT_AUTO_LOC);
@@ -559,6 +691,7 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 				}
 
 			} else if (Utils.PREFS_LOC_FREQUENCY_KEY.equals(key)) {
+				// Auto-localization frequency changed
 				boolean autoLocalize = prefs.getBoolean(
 						Utils.PREFS_AUTO_LOC_KEY,
 						AlarmUtils.DEFAULT_AUTO_LOC);
@@ -568,6 +701,7 @@ public class RoomsListFragment extends Fragment implements LoaderCallbacks<Curso
 				}
 
 			} else if (Utils.PREFS_MAX_ACC_COEFICIENT_KEY.equals(key)) {
+				// Maximum accuracy coeficient changed
 				int coef = prefs.getInt(
 						Utils.PREFS_MAX_ACC_COEFICIENT_KEY,
 						Utils.DEFAULT_MAX_ACC_COEFICIENT);

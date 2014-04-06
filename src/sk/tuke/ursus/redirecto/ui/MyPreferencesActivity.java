@@ -1,14 +1,19 @@
 package sk.tuke.ursus.redirecto.ui;
 
 import sk.tuke.ursus.redirecto.R;
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.view.MenuItem;
 
+/**
+ * Aktivita nastavení
+ * 
+ * @author Vlastimil Breèka
+ * 
+ */
 public class MyPreferencesActivity extends PreferenceActivity {
 
-	@SuppressLint("NewApi")
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

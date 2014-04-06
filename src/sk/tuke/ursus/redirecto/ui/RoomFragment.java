@@ -16,21 +16,61 @@ import android.widget.TextView;
 
 import com.awaboom.ursus.agave.ToastUtils;
 
+/**
+ * Fragment zobrazuj˙ci detailnÈ inform·cie o miestnosti
+ * 
+ * @author Vlastimil BreËka
+ * 
+ */
 public class RoomFragment extends Fragment {
-
+	/**
+	 * Tag
+	 */
 	public static final String TAG = "room";
 
+	/**
+	 * Kæ˙Ë ID
+	 */
 	public static final String EXTRA_ID = "id";
+
+	/**
+	 * Kæ˙Ë mena miestnosti
+	 */
 	public static final String EXTRA_NAME = "name";
+
+	/**
+	 * Kæ˙Ë popisu
+	 */
 	public static final String EXTRA_DESC = "desc";
+
+	/**
+	 * Kæ˙Ë klapky miestnosti
+	 */
 	public static final String EXTRA_PHONE_NUMBER = "phone_number";
+
+	/**
+	 * Kæ˙Ë Ëi je miestnosù aktu·lna
+	 */
 	public static final String EXTRA_IS_CURRENT = "is_current";
 
+	/**
+	 * Kontext
+	 */
 	private FragmentActivity mContext;
+
+	/**
+	 * AplikaËn˝ singleton
+	 */
 	private MyApplication mApp;
 
+	/**
+	 * ID zobrazovanej miestnosti
+	 */
 	private int mRoomId;
 
+	/**
+	 * »i je zobrazovan· miestnosù aktu·lna
+	 */
 	private boolean mCurrent;
 
 	public static Fragment newInstance(Bundle args) {
@@ -59,7 +99,7 @@ public class RoomFragment extends Fragment {
 
 		Bundle args = getArguments();
 		mRoomId = args.getInt(EXTRA_ID);
-		
+
 		if (savedInstanceState != null) {
 			mCurrent = savedInstanceState.getBoolean(EXTRA_IS_CURRENT);
 		} else {
@@ -85,31 +125,50 @@ public class RoomFragment extends Fragment {
 		return view;
 	}
 
+	/**
+	 * ZobrazÌ stav aktu·lnosti miestnosti v pouûÌvateæskom rozhranÌ
+	 * 
+	 * @param view
+	 *        Pohæad
+	 * @param isCurrent
+	 *        »i je miestnosù aktu·lna
+	 */
 	private void displayState(View view, boolean isCurrent) {
 		TextView stateTextView = (TextView) view.findViewById(R.id.stateTextView);
 		stateTextView.setText(isCurrent ? R.string.room_current : R.string.room_not_current);
 
 	}
 
-	protected void hideProgressBar() {
-		getView().findViewById(R.id.progressBar).setVisibility(View.GONE);
-	}
-
+	/**
+	 * ZobrazÌ ProgressBar
+	 */
 	protected void showProgressBar() {
 		getView().findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
 	}
 
+	/**
+	 * Skryje ProgressBar
+	 */
+	protected void hideProgressBar() {
+		getView().findViewById(R.id.progressBar).setVisibility(View.GONE);
+	}
+
+	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putBoolean(EXTRA_IS_CURRENT, mCurrent);
 	};
 
+	/**
+	 * NaË˙vaË klinutÌ tlaËidla
+	 */
 	OnClickListener mClickListener = new OnClickListener() {
 
 		@Override
 		public void onClick(View v) {
 			switch (v.getId()) {
 				case R.id.removeButton:
+					// Call RemoveMyRoom API
 					RestService.removeMyRoom(
 							mContext,
 							mRoomId,
@@ -118,6 +177,7 @@ public class RoomFragment extends Fragment {
 					break;
 
 				case R.id.forceButton:
+					// Call ForceLocalize API
 					RestService.forceLocalize(
 							mContext,
 							mRoomId,
@@ -128,6 +188,9 @@ public class RoomFragment extends Fragment {
 		}
 	};
 
+	/**
+	 * Sp‰tnÈ volanie z API volania ForceLocalize
+	 */
 	private RestUtils.Callback mForceLocAndForwardCallback = new RestUtils.Callback() {
 
 		@Override
@@ -161,6 +224,9 @@ public class RoomFragment extends Fragment {
 		}
 	};
 
+	/**
+	 * Sp‰tnÈ volanie z API volania RemoveMyRoom
+	 */
 	private RestUtils.Callback mRemoveMyRoomCallback = new RestUtils.Callback() {
 
 		@Override

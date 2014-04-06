@@ -15,15 +15,58 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+/**
+ * Dialógovı fragment, ktorı zobrazí moné miestnosti pri meraní odtlaèkov
+ * 
+ * @author Vlastimil Breèka
+ * 
+ */
 public class RoomPickerDialog extends DialogFragment implements OnItemClickListener {
 
+	/**
+	 * Tag
+	 */
+	public static final String TAG = "room_picker_dialog";
+
+	/**
+	 * Rozhranie pre spätné volanie zvolenia miestnosti v dialógu a upovedomenia
+	 * aktivity
+	 * 
+	 * @author Vlastimil Breèka
+	 * 
+	 */
 	public interface OnRoomPickedListener {
+		/**
+		 * Miestnos bola zvolená
+		 * 
+		 * @param room
+		 *        Zvolená miestnos
+		 */
 		void onRoomPicked(Room room);
 	}
 
-	public static final String TAG = "room_picker_dialog";
+	/**
+	 * K¾úè miestnosti
+	 */
 	private static final String EXTRA_ROOMS = "rooms";
 
+	/**
+	 * Naèúvaè zvolenia miestnosti
+	 */
+	private OnRoomPickedListener mListener;
+
+	/**
+	 * Adaptér
+	 */
+	private ArrayAdapter<Room> mAdapter;
+
+	/**
+	 * Nová inštancia
+	 * 
+	 * @param rooms
+	 *        Zoznam miestností na zobrazenie
+	 * @return Fragment
+	 */
 	public static RoomPickerDialog newInstance(ArrayList<Room> rooms) {
 		Bundle args = new Bundle();
 		args.putParcelableArrayList(EXTRA_ROOMS, rooms);
@@ -34,11 +77,10 @@ public class RoomPickerDialog extends DialogFragment implements OnItemClickListe
 		return f;
 	}
 
-	private OnRoomPickedListener mListener;
-	private ArrayAdapter<Room> mAdapter;
-
+	/**
+	 * Povinnı prázdny konštruktor
+	 */
 	public RoomPickerDialog() {
-
 	}
 
 	@Override
@@ -75,6 +117,12 @@ public class RoomPickerDialog extends DialogFragment implements OnItemClickListe
 		dismiss();
 	}
 
+	/**
+	 * Nastaví novı naèúvaè zvolenia miestnosti
+	 * 
+	 * @param l
+	 *        Naèúvaè
+	 */
 	public void setOnRoomPickedListener(OnRoomPickedListener l) {
 		mListener = l;
 	}

@@ -28,16 +28,53 @@ import android.widget.ListView;
 import com.awaboom.ursus.agave.LOG;
 import com.awaboom.ursus.agave.ToastUtils;
 
+/**
+ * Aktivita z·znamu odtlaËkov, ovl·da sp˙öùanie meracej sluûby SnifferService a
+ * zobrazuje jej priebeûnÈ v˝sledky
+ * 
+ * @author Vlastimil BreËka
+ * 
+ */
 public class RecordActivity extends FragmentActivity implements OnClickListener, OnRoomPickedListener {
 
+	/**
+	 * Kæ˙Ë hodnÙt
+	 */
 	private static final String EXTRA_VALUES_LIST = "values";
+
+	/**
+	 * Kæ˙Ë Ëi je z·znam v priebehu
+	 */
 	private static final String EXTRA_IS_RECORDING = "is_recording";
+
+	/**
+	 * Kæ˙Ë zvolenej miestnosti
+	 */
 	private static final String EXTRA_PICKED_ROOM = "picked_room";
 
+	/**
+	 * »i prebieha z·znam
+	 */
 	private boolean mRecording;
+
+	/**
+	 * TlaËidlo
+	 */
 	private Button mToggleButton;
+
+	/**
+	 * Zvolen· miestnosù v ktorej sa vykon·va z·znam
+	 */
 	private Room mPickedRoom;
+
+	/**
+	 * Zoznam hodnÙt
+	 */
 	private ArrayList<String> mValuesList;
+
+	/**
+	 * AdaptÈr
+	 */
 	private ArrayAdapter<String> mAdapter;
 
 	@Override
@@ -86,32 +123,48 @@ public class RecordActivity extends FragmentActivity implements OnClickListener,
 	@Override
 	public void onClick(View v) {
 		if (!mRecording) {
-
-			ToastUtils.show(this, getString(R.string.starting_recording) + mPickedRoom.name + " [id=" + mPickedRoom.id + "]...");
-
-			Intent intent = new Intent(this, SnifferService.class);
-			intent.setAction(SnifferService.ACTION_START_RECORD_FINGERPRINTS);
-			intent.putExtra(SnifferService.EXTRA_RECORDED_ROOM, mPickedRoom.id);
-			intent.putExtra(SnifferService.EXTRA_RECEIVER, mReceiver);
-			startService(intent);
-
-			getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-			mToggleButton.setText(R.string.stop);
-			mValuesList.clear();
-			mRecording = true;
+			start();
 
 		} else {
-			ToastUtils.show(this, getString(R.string.stopping_recording) + mPickedRoom.name + " [id=" + mPickedRoom.id + "]...");
-
-			Intent intent = new Intent(this, SnifferService.class);
-			intent.setAction(SnifferService.ACTION_STOP_RECORD_FINGERPRINTS);
-			startService(intent);
-
-			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-			mToggleButton.setText(R.string.start);
-			mRecording = false;
+			stop();
 		}
 
+	}
+
+	/**
+	 * SpustÌ meraciu sluûbu pre meranie odtlaËkov, nastavÌ nevypÌnanie displeja
+	 */
+	private void start() {
+		ToastUtils.show(this, getString(R.string.starting_recording) + mPickedRoom.name + " [id=" + mPickedRoom.id
+				+ "]...");
+
+		// Launcher service with o
+		Intent intent = new Intent(this, SnifferService.class);
+		intent.setAction(SnifferService.ACTION_START_RECORD_FINGERPRINTS);
+		intent.putExtra(SnifferService.EXTRA_RECORDED_ROOM, mPickedRoom.id);
+		intent.putExtra(SnifferService.EXTRA_RECEIVER, mReceiver);
+		startService(intent);
+
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		mToggleButton.setText(R.string.stop);
+		mValuesList.clear();
+		mRecording = true;
+	}
+
+	/**
+	 * Vypne meraciu sluûbu, zruöÌ nev˝piananie displeja
+	 */
+	private void stop() {
+		ToastUtils.show(this, getString(R.string.stopping_recording) + mPickedRoom.name + " [id=" + mPickedRoom.id
+				+ "]...");
+
+		Intent intent = new Intent(this, SnifferService.class);
+		intent.setAction(SnifferService.ACTION_STOP_RECORD_FINGERPRINTS);
+		startService(intent);
+
+		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		mToggleButton.setText(R.string.start);
+		mRecording = false;
 	}
 
 	@Override
@@ -123,6 +176,10 @@ public class RecordActivity extends FragmentActivity implements OnClickListener,
 		return super.onOptionsItemSelected(item);
 	}
 
+	/**
+	 * Miestnosù v ktorej ma byù vykonan˝ z·znam bola zvolen·, uprav ActionBar a
+	 * povoæ ötart merania
+	 */
 	@Override
 	public void onRoomPicked(Room room) {
 		ActionBar actionBar = getActionBar();
@@ -140,6 +197,9 @@ public class RecordActivity extends FragmentActivity implements OnClickListener,
 		outState.putParcelable(EXTRA_PICKED_ROOM, mPickedRoom);
 	}
 
+	/**
+	 * Receiver, prostriedok komunik·cie Aktivity so Sluûbou
+	 */
 	private ResultReceiver mReceiver = new ResultReceiver(new Handler()) {
 
 		@Override
@@ -181,6 +241,10 @@ public class RecordActivity extends FragmentActivity implements OnClickListener,
 		};
 	};
 
+	/**
+	 * Sp‰tnÈ volanie z API volania zobrazenia vöetk˝ch miestnosti a
+	 * prÌstupov˝ch bodov
+	 */
 	private RestUtils.Callback mRoomsAndAPsCallback = new RestUtils.Callback() {
 
 		@Override

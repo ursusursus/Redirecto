@@ -15,20 +15,44 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.awaboom.ursus.agave.LOG;
 import com.awaboom.ursus.agave.ToastUtils;
 
+/**
+ * Aktivita prihlásenia používate¾a
+ * 
+ * @author Vlastimil Breèka
+ * 
+ */
 public class LoginActivity extends FragmentActivity {
 
-	public static final String ACTION_RELOGIN = "sk.tuke.ursus.redirecto.ACTION_RELOGIN";
+	// public static final String ACTION_RELOGIN =
+	// "sk.tuke.ursus.redirecto.ACTION_RELOGIN";
 
+	/**
+	 * EditText používate¾ského mena
+	 */
 	private EditText mUsernameEditText;
+
+	/**
+	 * EditText hesla
+	 */
 	private EditText mPasswordEditText;
+
+	/**
+	 * Tlaèidlo prihlásenia
+	 */
 	private Button mLoginButton;
 
+	/**
+	 * Dialóg pokroku
+	 */
 	private ProgressDialogFragment mProgressDialog;
+
+	/**
+	 * MyApplication
+	 */
 	private MyApplication mApp;
 
 	@Override
@@ -41,6 +65,8 @@ public class LoginActivity extends FragmentActivity {
 
 		mApp = (MyApplication) getApplication();
 		if (RestUtils.isTokenValid(mApp.getToken())) {
+			// Token is valid, processed to app
+			// right away
 			goToMainActivity();
 		}
 
@@ -50,12 +76,15 @@ public class LoginActivity extends FragmentActivity {
 		mLoginButton = (Button) findViewById(R.id.loginButton);
 		mLoginButton.setOnClickListener(mClickListener);
 
-		boolean relogin = getIntent().getBooleanExtra(ACTION_RELOGIN, false);
+		/* boolean relogin = getIntent().getBooleanExtra(ACTION_RELOGIN, false);
 		if (relogin) {
 			Toast.makeText(this, R.string.session_expired, Toast.LENGTH_SHORT).show();
-		}
+		} */
 	}
 
+	/**
+	 * Prihlási používate¾a Skontroluje textové polia a vykoná REST volanie
+	 */
 	protected void login() {
 		String username = mUsernameEditText.getText().toString();
 		String password = mPasswordEditText.getText().toString();
@@ -69,6 +98,9 @@ public class LoginActivity extends FragmentActivity {
 		}
 	}
 
+	/**
+	 * Odnaviguje do hlavnej aktivity a ukonèí aktuálnu
+	 */
 	private void goToMainActivity() {
 		Intent intent = new Intent(this, MainActivity.class);
 		startActivity(intent);
@@ -76,6 +108,9 @@ public class LoginActivity extends FragmentActivity {
 		finish();
 	}
 
+	/**
+	 * Zobrazí dialóg pokroku
+	 */
 	protected void showProgressDialog() {
 		if (mProgressDialog == null) {
 			mProgressDialog = ProgressDialogFragment.newInstance(getString(R.string.logging_in));
@@ -83,18 +118,27 @@ public class LoginActivity extends FragmentActivity {
 		mProgressDialog.show(getSupportFragmentManager(), ProgressDialogFragment.TAG);
 	}
 
+	/**
+	 * Zruší dialog pokroku
+	 */
 	protected void dismissProgressDialog() {
 		if (mProgressDialog != null) {
 			mProgressDialog.dismiss();
 		}
 	}
 
+	/**
+	 * Skryje softvérovú klávesnicu
+	 */
 	private void hideKeyboard() {
 		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromInputMethod(mUsernameEditText.getWindowToken(), 0);
 		imm.hideSoftInputFromWindow(mPasswordEditText.getWindowToken(), 0);
 	}
 
+	/**
+	 * Naèúvaè stlaèení tlaèidla
+	 */
 	private OnClickListener mClickListener = new OnClickListener() {
 
 		@Override
@@ -103,6 +147,9 @@ public class LoginActivity extends FragmentActivity {
 		}
 	};
 
+	/**
+	 * Spätné volanie API volania prihlásenia
+	 */
 	private RestUtils.Callback mLoginCallback = new RestUtils.Callback() {
 
 		@Override
@@ -116,15 +163,19 @@ public class LoginActivity extends FragmentActivity {
 			String directoryNumber = data.getString(RestService.RESULT_DIRECTORY_NUMBER);
 
 			if (token != null) {
+				// Set values to app singleton
 				mApp.setTokenAndMetadata(token, email, isAdmin, directoryNumber);
 
-				boolean relogin = getIntent().getBooleanExtra(ACTION_RELOGIN, false);
+				/* boolean relogin = getIntent().getBooleanExtra(ACTION_RELOGIN, false);
 				if (relogin) {
 					setResult(RESULT_OK);
 					finish();
 				} else {
 					goToMainActivity();
-				}
+				} */
+
+				// and navigate forward
+				goToMainActivity();
 			}
 		}
 
@@ -150,4 +201,3 @@ public class LoginActivity extends FragmentActivity {
 	};
 
 }
-

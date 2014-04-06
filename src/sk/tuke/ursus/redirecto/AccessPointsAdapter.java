@@ -11,8 +11,9 @@ import android.widget.TextView;
 
 /**
  * Cursor adaptér pre ListView v GatherActivity
+ * 
  * @author Vlastimil Breèka
- *
+ * 
  */
 public class AccessPointsAdapter extends CursorAdapter {
 
@@ -29,7 +30,7 @@ public class AccessPointsAdapter extends CursorAdapter {
 
 		String ssid = cursor.getString(cursor.getColumnIndex(AccessPoints.COLUMN_SSID));
 		String bssid = cursor.getString(cursor.getColumnIndex(AccessPoints.COLUMN_BSSID));
-		
+
 		holder.textView.setText(ssid + " [" + bssid + "]");
 	}
 

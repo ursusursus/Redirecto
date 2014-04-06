@@ -1,6 +1,5 @@
 package sk.tuke.ursus.redirecto.ui;
 
-
 import sk.tuke.ursus.redirecto.R;
 import android.app.ActionBar;
 import android.os.Bundle;
@@ -8,6 +7,12 @@ import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 
+/**
+ * Aktivita pridania miestnosti, kontainer pre NewRoomFragment
+ * 
+ * @author Vlastimil Breèka
+ * 
+ */
 public class NewRoomActivity extends FragmentActivity {
 
 	@Override
@@ -16,7 +21,8 @@ public class NewRoomActivity extends FragmentActivity {
 
 		final ActionBar actionBar = getActionBar();
 
-		// Inflate a "Done" custom action bar view to serve as the "Up" affordance.
+		// Inflate a "Done" custom action bar view to serve as the "Up"
+		// affordance.
 		final LayoutInflater inflater = (LayoutInflater) actionBar.getThemedContext()
 				.getSystemService(LAYOUT_INFLATER_SERVICE);
 
@@ -29,7 +35,8 @@ public class NewRoomActivity extends FragmentActivity {
 			}
 		});
 
-		// Show the custom action bar view and hide the normal Home icon and title.
+		// Show the custom action bar view and hide the normal Home icon and
+		// title.
 		actionBar.setDisplayOptions(
 				ActionBar.DISPLAY_SHOW_CUSTOM,
 				ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);

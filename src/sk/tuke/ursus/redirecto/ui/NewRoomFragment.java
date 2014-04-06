@@ -29,24 +29,72 @@ import butterknife.InjectView;
 
 import com.awaboom.ursus.agave.ToastUtils;
 
+/**
+ * Fragment pridania novej miestnosti, pouûÌvateæ si vyber· zo zoznamu
+ * dostupn˝ch a prid·va ich tak do svojho zoznamu
+ * 
+ * @author Vlastimil BreËka
+ * 
+ */
 public class NewRoomFragment extends Fragment {
 
+	/**
+	 * Kæ˙Ë miestnosti
+	 */
 	private static final String EXTRA_ROOMS_KEY = "rooms";
 
+	/**
+	 * Kontext
+	 */
+	private FragmentActivity mContext;
+
+	/**
+	 * AplikaËn˝ singleton
+	 */
+	private MyApplication mApp;
+
+	/**
+	 * Zoznam miestnostÌ
+	 */
+	private ArrayList<Room> mRooms;
+
+	/**
+	 * AdaptÈr
+	 */
+	private RoomsArrayAdapter mAdapter;
+
+	/**
+	 * ListView
+	 */
+	@InjectView(R.id.listView) ListView mListView;
+
+	/**
+	 * EditText filtr·cie obsahu
+	 */
+	@InjectView(R.id.filterEditText) EditText mFilterEditText;
+
+	/**
+	 * ProgressBar
+	 */
+	@InjectView(R.id.progressBar) ProgressBar mProgressBar;
+
+	/**
+	 * TextView chyby
+	 */
+	@InjectView(R.id.errorTextView) TextView mErrorTextView;
+
+	/**
+	 * VytvorÌ nov˙ inötanciu
+	 * 
+	 * @return nov˝ fragment
+	 */
 	public static NewRoomFragment newInstance() {
 		return new NewRoomFragment();
 	}
 
-	private FragmentActivity mContext;
-	private MyApplication mApp;
-	private ArrayList<Room> mRooms;
-	private RoomsArrayAdapter mAdapter;
-
-	@InjectView(R.id.listView) ListView mListView;
-	@InjectView(R.id.filterEditText) EditText mFilterEditText;
-	@InjectView(R.id.progressBar) ProgressBar mProgressBar;
-	@InjectView(R.id.errorTextView) TextView mErrorTextView;
-
+	/**
+	 * Pr·zdny konötruktor
+	 */
 	public NewRoomFragment() {
 	}
 
@@ -67,22 +115,46 @@ public class NewRoomFragment extends Fragment {
 		}
 	}
 
+	/**
+	 * API volanie pre vr·tenie vöetk˝ch miestnostÌ
+	 */
 	private void fetchAllRooms() {
 		RestService.getAllRooms(mContext, mApp.getToken(), mAllRoomsCallback);
 	}
 
+	/**
+	 * API volanie pre pridanie miestnosti medzi svojes
+	 * 
+	 * @param id
+	 *        ID miestnosti ktor˙ chceme pridaù
+	 */
 	protected void addMyNewRoom(int id) {
 		RestService.addMyRoom(mApp, id, mApp.getToken(), mAddMyRoomCallback);
 	}
 
+	/**
+	 * Skryje ProgressBar
+	 */
 	protected void hideProgressBar() {
 		mProgressBar.setVisibility(View.GONE);
 	}
 
+	/**
+	 * ZobrazÌ ProgressBar
+	 */
 	protected void showProgressBar() {
 		mProgressBar.setVisibility(View.VISIBLE);
 	}
-	
+
+	/**
+	 * ZobrazÌ chybu. Ak je uû zoznam zobrazen˝, zobrazÌ toast, inak zobrazÌ
+	 * TextView
+	 * 
+	 * @param message
+	 *        Hlavn· chybov· spr·va
+	 * @param submessage
+	 *        Vedæajöia chybov· spr·va
+	 */
 	protected void showError(String message, String submessage) {
 		if (mRooms.size() == 0) {
 			mErrorTextView.setVisibility(View.VISIBLE);
@@ -131,6 +203,10 @@ public class NewRoomFragment extends Fragment {
 		outState.putParcelableArrayList(EXTRA_ROOMS_KEY, mRooms);
 	}
 
+	/**
+	 * EditText naË˙vaË, naË˙va pre zmeny v EditText a tak dynamicky filtruje
+	 * zoznam po kaûdom znaku
+	 */
 	private TextWatcher mTextChangedListener = new TextWatcher() {
 
 		@Override
@@ -149,6 +225,9 @@ public class NewRoomFragment extends Fragment {
 		}
 	};
 
+	/**
+	 * Sp‰tnÈ volanie pridania miestnosti z ListView
+	 */
 	private OnRoomAddedListener mRoomAddedListener = new OnRoomAddedListener() {
 
 		@Override
@@ -157,6 +236,9 @@ public class NewRoomFragment extends Fragment {
 		}
 	};
 
+	/**
+	 * Sp‰tnÈ volanie API volania zobrazenia vöetk˝ch miestnostÌ
+	 */
 	private RestUtils.Callback mAllRoomsCallback = new RestUtils.Callback() {
 
 		@Override
@@ -200,6 +282,9 @@ public class NewRoomFragment extends Fragment {
 		}
 	};
 
+	/**
+	 * Sp‰tnÈ volanie API volania pridania miestnosti
+	 */
 	private RestUtils.Callback mAddMyRoomCallback = new RestUtils.Callback() {
 
 		@Override

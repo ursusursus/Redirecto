@@ -93,7 +93,8 @@ public class RestUtils {
 
 	}
 
-	public static int post(Context context, String endpoint, String params, Processor processor, Bundle results) throws Exception {
+	public static int post(Context context, String endpoint, String params, Processor processor, Bundle results)
+			throws Exception {
 		URL url;
 		try {
 			url = new URL(endpoint);
@@ -149,7 +150,8 @@ public class RestUtils {
 
 	}
 
-	public static int get(Context context, String endpoint, String params, Processor processor, Bundle results) throws Exception {
+	public static int get(Context context, String endpoint, String params, Processor processor, Bundle results)
+			throws Exception {
 		URL url;
 		try {
 			url = params != null ? new URL(endpoint + "?" + params) : new URL(endpoint);
@@ -182,7 +184,8 @@ public class RestUtils {
 		return resultCode;
 	}
 
-	public static int execute(Context context, int method, String url, String params, Processor processor, Bundle results)
+	public static int execute(Context context, int method, String url, String params, Processor processor,
+			Bundle results)
 			throws Exception {
 		if (method == Methods.GET) {
 			return get(context, url, params, processor, results);
@@ -229,8 +232,7 @@ public class RestUtils {
 
 	public static class JsonRpcResponse {
 
-		@SerializedName("jsonrpc")
-		public String jsonRpc;
+		@SerializedName("jsonrpc") public String jsonRpc;
 		public Error error;
 		public long id;
 
@@ -344,15 +346,16 @@ public class RestUtils {
 		} */
 
 		/**
-		 * Processes inputStream from URLConnection. Happens on the background thread, so do your database operations
-		 * here.
+		 * Processes inputStream from URLConnection. Happens on the background
+		 * thread, so do your database operations here.
 		 * 
 		 * Post results to main thread by putting stuff in getResults() bundle.
 		 * 
 		 * @param inputStream
 		 * @throws Exception
 		 */
-		public abstract int onProcessResponse(Context context, String contentType, InputStream stream, Bundle results) throws Exception;
+		public abstract int onProcessResponse(Context context, String contentType, InputStream stream, Bundle results)
+				throws Exception;
 
 		/* @Override
 		public int describeContents() {
@@ -382,7 +385,8 @@ public class RestUtils {
 		private static final long serialVersionUID = 1L;
 
 		@Override
-		public int onProcessResponse(Context context, String contentType, InputStream stream, Bundle results) throws Exception {
+		public int onProcessResponse(Context context, String contentType, InputStream stream, Bundle results)
+				throws Exception {
 			JSONObject json = new JSONObject(RestUtils.inputStreamToString(stream));
 			return onProcessResponse(context, json, results);
 		}
@@ -450,8 +454,8 @@ public class RestUtils {
 	}
 
 	/**
-	 * Our server error exception, i.e. {"error":{"text":"Already registered!"}} Handle it by Status.INVALID response
-	 * code in Callback.onResult()
+	 * Our server error exception, i.e. {"error":{"text":"Already registered!"}}
+	 * Handle it by Status.INVALID response code in Callback.onResult()
 	 * 
 	 * @author ursus
 	 * 
@@ -483,7 +487,8 @@ public class RestUtils {
 		public static final int EXCEPTION = 1;
 
 		/**
-		 * Our server response error, like {"error":{"text":"Already registered!"}}
+		 * Our server response error, like
+		 * {"error":{"text":"Already registered!"}}
 		 */
 		public static final int ERROR = 2;
 
