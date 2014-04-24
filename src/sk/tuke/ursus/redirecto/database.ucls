@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.5" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true">  
+  <class id="1" language="java" name="sk.tuke.ursus.redirecto.provider.RedirectoContract.Rooms" project="Redirecto" 
+    file="/Redirecto/src/sk/tuke/ursus/redirecto/provider/RedirectoContract.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="261" width="191" x="260" y="636"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="sk.tuke.ursus.redirecto.provider.RedirectoContract.AccessPoints" 
+    project="Redirecto" file="/Redirecto/src/sk/tuke/ursus/redirecto/provider/RedirectoContract.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="189" width="143" x="491" y="636"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="sk.tuke.ursus.redirecto.provider.RedirectoProvider" project="Redirecto" 
+    file="/Redirecto/src/sk/tuke/ursus/redirecto/provider/RedirectoProvider.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="279" width="247" x="4" y="317"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="sk.tuke.ursus.redirecto.provider.RedirectoDatabase" project="Redirecto" 
+    file="/Redirecto/src/sk/tuke/ursus/redirecto/provider/RedirectoDatabase.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="153" width="216" x="4" y="636"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="sk.tuke.ursus.redirecto.provider.RedirectoContract" project="Redirecto" 
+    file="/Redirecto/src/sk/tuke/ursus/redirecto/provider/RedirectoContract.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="117" width="171" x="376" y="317"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <nesting id="6">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="2"/>  
+  </nesting>  
+  <association id="7">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="8" name="mDbHelper"/>      
+      <multiplicity id="9" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="10">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="1"/>  
+  </nesting>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
