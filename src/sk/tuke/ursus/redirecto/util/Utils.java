@@ -18,6 +18,7 @@ import android.support.v4.app.NotificationCompat;
  */
 public class Utils {
 
+	//
 	/**
 	 * K¾úè autentifikaèného tokenu
 	 */
